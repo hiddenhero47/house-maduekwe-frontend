@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	color: aliceblue;
+	color: black;
+	display: flex;
+	height: 100%;
 `;

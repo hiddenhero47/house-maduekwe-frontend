@@ -1,52 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @font-face {
 	font-family: 'Outfit';
 	src:
-		local('../public/fonts/Outfit/static/Outfit-Regular.ttf'),
-		url('../public/fonts/Outfit/static/Outfit-Regular.ttf') format('truetype');
+		local('fonts/Outfit/static/Outfit-Regular.ttf'),
+		url('fonts/Outfit/static/Outfit-Regular.ttf') format('truetype');
 }
 
 @font-face {
 	font-family: 'Hanken Grotesk';
 	src:
-		local('../public/fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf'),
-		url('../public/fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf')
+		local('fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf'),
+		url('fonts/Hanken_Grotesk/static/HankenGrotesk-Regular.ttf')
 			format('truetype');
 }
 
 @font-face {
 	font-family: 'Inter';
 	src:
-		local('../public/fonts/Inter/static/Inter-Regular.ttf'),
-		url('../public/fonts/Inter/static/Inter-Regular.ttf') format('truetype');
-}
-
-body {
-	font-family: Outfit;
-	margin: 0px;
-	overflow-x: hidden;
-	overscroll-behavior-y: none;
-	display: flex;
-	justify-content: center;
-	color: #272f4e73;
-}
-
-.containerBody {
-	/* max-width: 1500px; */
-	width: 100vw;
-	height: auto;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	position: relative;
-	overflow: hidden;
-}
-
-div {
-	box-sizing: border-box;
+		local('fonts/Inter/static/Inter-Regular.ttf'),
+		url('fonts/Inter/static/Inter-Regular.ttf') format('truetype');
 }
 
 .ease {
@@ -119,4 +92,48 @@ div {
 }
 .-intro-y:nth-child(n + 1) {
 	animation-delay: calc((n - 1) * 0.1s);
+}
+
+/* Tailwind CSS v4.0 config */
+
+@layer utilities {
+  .imageHolder {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .imageHolder img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    object-fit: cover;
+    border: none;
+  }
+
+  .scroll_style::-webkit-scrollbar {
+    width: 0;
+    height: 3px;
+  }
+  .scroll_style::-webkit-scrollbar-thumb {
+    background-color: rgba(166, 171, 183, 0.7);
+    border-radius: 40px;
+  }
+  .scroll_style::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .Y_scroll_style::-webkit-scrollbar {
+    width: 3px;
+  }
+  .Y_scroll_style::-webkit-scrollbar-thumb {
+    background-color: rgba(166, 171, 183, 0.7);
+    border-radius: 40px;
+  }
+  .Y_scroll_style::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 }

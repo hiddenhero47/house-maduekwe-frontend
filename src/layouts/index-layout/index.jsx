@@ -8,23 +8,14 @@ import { LayoutWrapper } from "./index.style";
 
 function IndexLayout() {
   const { theme } = useSelector((state) => state.themes);
-
   (() => {
-    const bodyElement = document.querySelector("body");
-    const htmlElement = document.querySelector("html");
-
-    if (bodyElement) {
-      bodyElement.classList.add("bg-dashboardBg");
-    }
-    if (htmlElement) {
-      htmlElement.classList.add(theme === "dark" ? "nightMode" : "dayMode");
+    if (typeof document !== "undefined") {
+      document.body?.setAttribute("data-theme", theme);
     }
   })();
 
   return (
-    <ThemeProvider
-      theme={theme === "light" ? colors?.dayMode : colors?.nightMode}
-    >
+    <ThemeProvider theme={colors[theme]}>
       <ScrollToTop />
       <LayoutWrapper>
         <Outlet />

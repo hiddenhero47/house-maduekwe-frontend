@@ -15,12 +15,10 @@ import {
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
 import themes from './slice/app-theme';
-import wallet from './slice/wallet';
 
 // Combine all reducers
 const appReducer = combineReducers({
 	themes,
-	wallet,
 });
 
 // Create a no-op storage for environments without `window` (e.g., server-side rendering)
