@@ -3,43 +3,43 @@
 @font-face {
 	font-family: 'Outfit';
 	src:
-		local('./fonts/Outfit/static/Outfit-Regular.ttf'),
-		url('./fonts/Outfit/static/Outfit-Regular.ttf') format('truetype');
+		local('/fonts/Outfit/static/Outfit-Regular.ttf'),
+		url('/fonts/Outfit/static/Outfit-Regular.ttf') format('truetype');
 }
 
 @font-face {
 	font-family: 'Inter';
 	src:
-		local('./fonts/Inter/static/Inter-Regular.ttf'),
-		url('./fonts/Inter/static/Inter-Regular.ttf') format('truetype');
+		local('/fonts/Inter/static/Inter-Regular.ttf'),
+		url('/fonts/Inter/static/Inter-Regular.ttf') format('truetype');
 }
 
 @font-face {
 	font-family: 'ZeroG_standard';
 	src:
-		local('./fonts/ZeroG/Zero-G.otf'),
-		url('./fonts/ZeroG/Zero-G.otf') format('truetype');
+		local('/fonts/ZeroG/Zero-G.otf'),
+		url('/fonts/ZeroG/Zero-G.otf') format('truetype');
 }
 
 @font-face {
 	font-family: 'ZeroG';
 	src:
-		local('./fonts/ZeroG/Zero-G Regular.otf'),
-		url('./fonts/ZeroG/Zero-G Regular.otf') format('truetype');
+		local('/fonts/ZeroG/Zero-G Regular.otf'),
+		url('/fonts/ZeroG/Zero-G Regular.otf') format('truetype');
 }
 
 @font-face {
 	font-family: 'Exo_2';
 	src:
-		local('./fonts/Exo_2/static/Exo2-Regular.ttf'),
-		url('./fonts/Exo_2/static/Exo2-Regular.ttf') format('truetype');
+		local('/fonts/Exo_2/static/Exo2-Regular.ttf'),
+		url('/fonts/Exo_2/static/Exo2-Regular.ttf') format('truetype');
 }
 
 @font-face {
 	font-family: 'Orbitron';
 	src:
-		local('./fonts/Orbitron/static/Orbitron-Regular.ttf'),
-		url('./fonts/Orbitron/static/Orbitron-Regular.ttf') format('truetype');
+		local('/fonts/Orbitron/static/Orbitron-Regular.ttf'),
+		url('/fonts/Orbitron/static/Orbitron-Regular.ttf') format('truetype');
 }
 
 .ease {
