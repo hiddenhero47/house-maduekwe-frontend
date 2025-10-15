@@ -1,17 +1,15 @@
-import React from "react";
-import { Container } from "./elements/index.style";
-import Intro from "./elements/intro";
+import React from 'react';
+import { Container } from './elements/index.style';
+import Intro from '../../layouts/app-intros/intro';
 
 function Index() {
-  return (
-    <Container>
-      {/* <p className="text-5xl m-[auto]">House Maduekwe</p> */}
+	return (
+		<Container>
+			{/* <p className="text-5xl m-[auto]">House Maduekwe</p> */}
 
-      <div className="w-[500px] h-[500px] m-[auto]">
-        <Intro />
-      </div>
-    </Container>
-  );
+			<Intro />
+		</Container>
+	);
 }
 
 export default Index;
