@@ -6,6 +6,11 @@ import AppLogo from '../../assets/images/app-logo.svg?react';
 function Intro() {
 	return (
 		<IntroWrapper>
+			<svg width="0" height="0">
+				<mask id="concave-mask" maskContentUnits="objectBoundingBox">
+					<path fill="white" d="M 0 0 L 1 0 L 1 1 A 0.5 0.015 0 0 0 0 1 Z" />
+				</mask>
+			</svg>
 			<div id="introContainer">
 				<div id="introBox">
 					<VectorIcon width="90%" height="90%" vector={AppLogo} />
