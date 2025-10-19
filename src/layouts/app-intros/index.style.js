@@ -3,13 +3,14 @@ import styled from 'styled-components';
 export const IntroWrapper = styled.div`
 	width: 100%;
 	height: 100%;
+	z-index: 100;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	background: ${({theme}) => theme?.intro.background};
 	position: relative;
 	overflow: hidden;
-	animation: fadeOutUp 1.5s ease-in-out 4.5s forwards; /* ⬅ Outro starts after 4.5s */
+	animation: fadeOutUp 1.6s ease-in-out 4.6s forwards; /* ⬅ Outro starts after 4.5s */
 
 	/* ===================== */
 	/* 🔹 Intro Container */
