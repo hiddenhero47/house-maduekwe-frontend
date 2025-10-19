@@ -15,13 +15,6 @@
 }
 
 @font-face {
-	font-family: 'ZeroG_standard';
-	src:
-		local('/fonts/ZeroG/Zero-G.otf'),
-		url('/fonts/ZeroG/Zero-G.otf') format('truetype');
-}
-
-@font-face {
 	font-family: 'ZeroG';
 	src:
 		local('/fonts/ZeroG/Zero-G Regular.otf'),
@@ -33,6 +26,13 @@
 	src:
 		local('/fonts/Exo_2/static/Exo2-Regular.ttf'),
 		url('/fonts/Exo_2/static/Exo2-Regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Exo_2Bold';
+	src:
+		local('/fonts/Exo_2/static/Exo2-Medium.ttf'),
+		url('/fonts/Exo_2/static/Exo2-Medium.ttf') format('truetype');
 }
 
 @font-face {
