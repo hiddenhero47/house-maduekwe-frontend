@@ -3,11 +3,14 @@ import styled from 'styled-components';
 export const IntroWrapper = styled.div`
 	width: 100%;
 	height: 100%;
+	z-index: 100;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: #111;
+	background: ${({theme}) => theme?.intro.background};
 	position: relative;
+	overflow: hidden;
+	animation: fadeOutUp 1.6s ease-in-out 4.6s forwards; /* ⬅ Outro starts after 4.5s */
 
 	/* ===================== */
 	/* 🔹 Intro Container */
@@ -32,18 +35,16 @@ export const IntroWrapper = styled.div`
 		display: flex;
 		justify-content: center;
 		align-items: center;
-
 		width: clamp(45px, 14vw, 100px);
 		aspect-ratio: 1 / 1;
-		border: 2px solid rgba(185, 51, 26, 0.5);
+		border: 2px solid ${({theme}) => theme?.intro.boxBorder};
 		border-radius: 12px;
-		background: rgba(185, 51, 26, 0.05);
-		box-shadow: 0 0 25px rgba(185, 51, 26, 0.15);
-
+		background: ${({theme}) => theme?.intro.boxBg};
+		box-shadow: 0 0 25px ${({theme}) => theme?.intro.boxShadow};
 		animation: logoEnter 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
 		svg path {
-			fill: #b9331a;
+			fill: ${({theme}) => theme?.intro.logo};
 			animation: svgGlow 2.5s ease-in-out infinite alternate;
 		}
 
@@ -59,11 +60,10 @@ export const IntroWrapper = styled.div`
 			bottom: 0;
 			right: calc(-1 * clamp(14px, 2.5vw, 25px));
 			margin: auto;
-
 			display: block;
 			height: 80%;
 			width: clamp(1px, 0.5vw, 3px);
-			background: #d9d9d9;
+			background: ${({theme}) => theme?.intro.text};
 			border-radius: 9999px;
 
 			animation: expand 2s ease-in-out forwards;
@@ -86,8 +86,7 @@ export const IntroWrapper = styled.div`
 		font-size: clamp(0.625rem, 2.5vw, 1.25rem);
 		font-weight: 300;
 		letter-spacing: 2px;
-		color: #d9d9d9;
-
+		color: ${({theme}) => theme?.intro.text};
 		opacity: 0;
 		transform: translateY(10px);
 		animation: fadeIn 2.3s ease-out 0.5s forwards;
@@ -103,7 +102,7 @@ export const IntroWrapper = styled.div`
 		}
 
 		.second {
-			color: #b9331a;
+			color: ${({theme}) => theme?.intro.sbText};
 			font-weight: 500;
 			animation: wordFade 1s ease-out 2.1s forwards;
 		}
@@ -180,6 +179,40 @@ export const IntroWrapper = styled.div`
 		}
 		to {
 			filter: drop-shadow(0 0 6px rgba(185, 51, 26, 0.8));
+		}
+	}
+
+	/* ✨ Outro Fade-Up */
+	@keyframes fadeOutUp {
+		0% {
+			opacity: 1;
+			transform: translateY(0);
+
+			mask-image: url(#concave-mask);
+			-webkit-mask-image: url(#concave-mask);
+			mask-size: 100% 100%;
+			-webkit-mask-size: 100% 100%;
+		}
+		70% {
+			opacity: 0.5;
+			transform: translateY(-10px);
+
+			mask-image: url(#concave-mask);
+			-webkit-mask-image: url(#concave-mask);
+			mask-size: 100% 102%;
+			-webkit-mask-size: 100% 102%;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(-40px);
+			pointer-events: none;
+			/* visibility: hidden; */
+			display: none;
+
+			mask-image: url(#concave-mask);
+			-webkit-mask-image: url(#concave-mask);
+			mask-size: 100% 105%;
+			-webkit-mask-size: 100% 105%;
 		}
 	}
 `;

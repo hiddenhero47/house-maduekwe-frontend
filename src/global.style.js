@@ -24,6 +24,7 @@ const GlobalStyleInjector = createGlobalStyle`
     overscroll-behavior-y: none;
     display: flex;
     justify-content: center;
+    background-color: var(--mainBody-background);
   }
 
   #containerBody {
@@ -39,6 +40,10 @@ const GlobalStyleInjector = createGlobalStyle`
 
   div {
     box-sizing: border-box;
+  }
+
+  button {
+    cursor: pointer;
   }
 `;
 
