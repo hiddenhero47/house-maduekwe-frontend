@@ -4,12 +4,12 @@ export const LayoutWrapper = styled.div`
 	width: 100%;
 	height: 100vh;
 	display: grid;
-	grid-template-rows: 66px 1fr;
+	grid-template-rows: 64px 1fr;
 `;
 
 export const Navigation = styled.nav`
 	width: 100%;
-	height: 66px;
+	height: 64px;
 	position: relative;
 
 	#containerNav {
@@ -17,29 +17,45 @@ export const Navigation = styled.nav`
 		height: 64px;
 		padding-inline: clamp(10px, 2vw, 20px);
 		position: fixed;
-		border-bottom: 1.9px solid ${({ theme }) => theme?.mainBody.line};
+		border-bottom: 1.5px solid ${({ theme }) => theme?.mainBody.line};
 		display: flex;
 		align-items: center;
 		color: ${({ theme }) => theme?.mainBody.text};
-		background-color: ${({ theme }) => theme?.mainBody.background};
+		background-color: ${({ theme }) => theme?.mainBody.container};
 		z-index: 50;
 	}
 
-	#navTitle,#menuWrapper,#cartWrapper {
+	#navTitle,
+	#menuWrapper,
+	#cartWrapper {
 		animation-duration: 0.5s;
-		display: ${(props) => !props.$aftermath && "none"};
+		display: ${(props) => !props.$aftermath && 'none'};
 	}
 
 	#navTitle {
-		font-family: 'Exo_2Bold', sans-serif;
-		font-weight: 900;
+		font-family: 'Audiowide', sans-serif;
+		font-weight: 600;
+		font-size: clamp(19px, 2vw, 23px);
 		color: ${({ theme }) => theme?.mainBody.text};
+
+		@media (max-width: 500px) {
+			font-size: clamp(16px, 1.5vw, 23px);
+		}
 	}
 
 	button {
 		color: ${({ theme }) => theme?.mainBody.text};
 		position: relative;
 		z-index: 2;
+		font-weight: lighter;
+		
+		@media (max-width: 500px) {
+			font-size: 14px;
+
+			i {
+				font-size: 16px;
+			}
+		}
 	}
 
 	/* ===================== */
