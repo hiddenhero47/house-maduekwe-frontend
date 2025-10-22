@@ -53,7 +53,7 @@ function IndexLayout() {
 						<div id="menuWrapper" className="flex flex-col w-fit gap-[3px] -intro-x">
 							<button
 								id="myMenu"
-								className="flex items-center text-[18px] gap-[5px]"
+								className="flex items-center text-[17px] gap-[5px]"
 							>
 								<i className="text-[22px]">
 									<HiMenuAlt3 />
@@ -67,14 +67,14 @@ function IndexLayout() {
 							</div>
 						</div>
 
-						<h3 id="navTitle" className="mx-[auto] text-[30px] intro-y">
-							SHOWCASE
+						<h3 id="navTitle" className="mx-[auto] intro-y">
+							HOUSE MADUEKWE
 						</h3>
 
 						<div id="cartWrapper" className="flex flex-col w-fit gap-[3px] intro-x">
 							<button
 								id="myCart"
-								className="flex items-center text-[18px] gap-[5px]"
+								className="flex items-center text-[17px] gap-[5px]"
 							>
 								<span>Cart</span>
 								<i className="text-[20px]">

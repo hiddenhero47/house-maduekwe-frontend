@@ -1,13 +1,17 @@
 export const colors = {
 	light: {
 		mainBody: {
-			background: '#EFEFEF',
-			container: '#f2f2f2',
-			toolkitBg: '#F8F8F8',
+			background: '#f9f9f9',
+			container: '#ffffff',
+			toolkitBg: '#ededed',
+			toolkitBgGlass: 'rgb(232, 232, 232, 0.7)',
 			toolkitActive: '#E5E5E5',
 			text: '#000',
 			sbText: '#6F6F6F',
-			line: '#e6e6e6',
+			kitText: "#e9e9e9",
+			sbKitText: "#c5c5c5",
+			kitTextDark: "#8a8a8c",
+			line: '#ebebeb',
 		},
 
 		intro: {
@@ -18,6 +22,7 @@ export const colors = {
 			logo: '#b9331a',
 			text: '#d9d9d9',
 			sbText: '#b9331a',
+			logoGlass: 'rgb(185, 51, 26, 0)',
 		},
 	},
 
@@ -31,6 +36,10 @@ export const colors = {
 			toolkitActive: '#363636',
 			text: '#e4e4e4',
 			sbText: '#989898',
+			kitText: "#e9e9e9",
+			sbKitText: "#c5c5c5",
+			kitTextDark: "#8a8a8c",
+			line: '#333333',
 		},
 
 		intro: {
@@ -41,7 +50,7 @@ export const colors = {
 			logo: '#b9331a',
 			text: '#d9d9d9',
 			sbText: '#b9331a',
-			line: '#333333',
+			logoGlass: 'rgb(185, 51, 26, 0)',
 		},
 	},
 };
