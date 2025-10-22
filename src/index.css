@@ -22,24 +22,10 @@
 }
 
 @font-face {
-	font-family: 'Exo_2';
+	font-family: 'Audiowide';
 	src:
-		local('/fonts/Exo_2/static/Exo2-Regular.ttf'),
-		url('/fonts/Exo_2/static/Exo2-Regular.ttf') format('truetype');
-}
-
-@font-face {
-	font-family: 'Exo_2Bold';
-	src:
-		local('/fonts/Exo_2/static/Exo2-Medium.ttf'),
-		url('/fonts/Exo_2/static/Exo2-Medium.ttf') format('truetype');
-}
-
-@font-face {
-	font-family: 'Orbitron';
-	src:
-		local('/fonts/Orbitron/static/Orbitron-Regular.ttf'),
-		url('/fonts/Orbitron/static/Orbitron-Regular.ttf') format('truetype');
+		local('/fonts/Audiowide/Audiowide-Regular.ttf'),
+		url('/fonts/Audiowide/Audiowide-Regular.ttf') format('truetype');
 }
 
 .ease {
