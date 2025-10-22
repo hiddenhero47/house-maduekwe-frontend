@@ -69,9 +69,43 @@ export const IntroSection = styled.section`
 	flex-wrap: wrap;
 	padding-bottom: 10px;
 	border-bottom: 1px solid ${({ theme }) => theme?.mainBody.line};
+	gap: 20px;
+
+	@media (min-width: 741px) and (max-width: 1189px) {
+		width: 90%;
+	}
+
+	@media (min-width: 701px) and (max-width: 740px) {
+		width: 90%;
+		justify-content: center;
+		padding-bottom: 20px;
+
+		div:first-child {
+			align-items: center;
+		}
+	}
+
+	@media (min-width: 531px) and (max-width: 700px) {
+		width: 90%;
+	}
+
+	@media (max-width: 530px) {
+		width: 90%;
+		justify-content: center;
+		padding-bottom: 20px;
+		gap: 10px;
+
+		div:first-child {
+			align-items: center;
+		}
+	}
 
 	p {
 		font-family: 'Inter';
+
+		@media (max-width: 700px) {
+			font-size: 18px;
+		}
 	}
 
 	#authBtn {
@@ -87,6 +121,11 @@ export const IntroSection = styled.section`
 		transition: all 280ms ease-in-out;
 		text-align: center;
 		color: ${({ theme }) => theme?.intro.logo};
+
+		@media (max-width: 700px) {
+			font-size: 10px;
+			line-height: 35px;
+		}
 
 		&:hover {
 			letter-spacing: 3px;
@@ -134,6 +173,12 @@ export const IntroSection = styled.section`
 		transition: all 350ms ease-in-out;
 		position: relative;
 		overflow: hidden;
+		display: flex;
+		align-items: center;
+
+		@media (max-width: 700px) {
+			padding-block: 2px;
+		}
 
 		span {
 			font-size: 16px;
@@ -141,6 +186,10 @@ export const IntroSection = styled.section`
 			transition:
 				color 350ms ease-in-out,
 				transform 350ms ease-in-out;
+
+			@media (max-width: 700px) {
+				font-size: 10px;
+			}
 		}
 
 		i {
@@ -150,6 +199,10 @@ export const IntroSection = styled.section`
 			transition:
 				transform 350ms ease-in-out,
 				color 350ms ease-in-out;
+
+			@media (max-width: 700px) {
+				font-size: 12px;
+			}
 		}
 
 		&:hover span:first-child {
