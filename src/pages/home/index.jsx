@@ -6,6 +6,8 @@ import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
+import { items } from "../../dummyData/shopItems";
+import ShopItem from '../../components/shop-item-display-unit/index'
 
 function Index() {
 	const { aftermath } = useOutletContext();
@@ -56,7 +58,7 @@ function Index() {
 			</IntroSection>
 
 			<ContainerSection className='intro-y mt-[15vh]'>
-				<div className='w-[50%] h-[70vh] style_container'></div>
+				<ShopItem isLoading={false} product={items[0]} width="30%" height="50vh" />
 			</ContainerSection>
 		</Container>
 	);
