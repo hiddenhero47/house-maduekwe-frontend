@@ -67,6 +67,9 @@ export const ShopItemContent = styled.div`
 	flex-direction: column;
 	z-index: 1;
 	border-radius: inherit;
+	position: relative;
+	overflow: hidden;
+	container-type: inline-size;
 
 	.display_unit {
 		width: 100%;
@@ -89,14 +92,25 @@ export const ShopItemContent = styled.div`
 		cursor: grab;
 	}
 
+	/* 👇 Buttons default state (hidden + slightly moved) */
 	#addToHolding,
-	#addToCart {
+	#arrowsLeft,
+	#arrowsRight {
+		opacity: 0;
+		transition: all 0.4s ease;
+		pointer-events: none; /* avoid accidental clicks when hidden */
+	}
+
+	#addToHolding {
 		z-index: 5;
 		position: absolute;
 		top: 0;
-		margin-top: calc(3% + 5px);
-		color: ${({theme}) => theme?.mainBody.kitTextDark};
+		margin-top: calc(3% + 8px);
+		color: ${({ theme }) => theme?.mainBody.kitTextDark};
 		font-size: 1.4rem;
+		left: 0;
+		margin-left: calc(3% + 8px);
+		transform: translateX(-10px); /* 👈 slide from left */
 	}
 
 	#arrowsLeft,
@@ -105,28 +119,55 @@ export const ShopItemContent = styled.div`
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		color: ${({theme}) => theme?.mainBody.kitTextDark};
+		color: ${({ theme }) => theme?.mainBody.kitTextDark};
 		font-size: 1.5rem;
 	}
 
-	#addToHolding,
 	#arrowsLeft {
 		left: 0;
 		margin-left: 5%;
+		transform: translate(-10px, -50%); /* 👈 slide from left */
 	}
 
-	#addToHolding {
-		margin-left: calc(3% + 5px);
-	}
-
-	#addToCart,
 	#arrowsRight {
 		right: 0;
 		margin-right: 5%;
+		transform: translate(10px, -50%); /* 👉 slide from right */
 	}
 
-	#addToCart {
-		margin-right: calc(3% + 5px);
+	/* 👇 On hover, make them appear + slide in smoothly */
+	&:hover #addToHolding,
+	&:hover #arrowsLeft,
+	&:hover #arrowsRight {
+		opacity: 1;
+		transform: translate(0, -50%);
+		pointer-events: auto;
+	}
+
+	&:hover #addToHolding {
+		transform: translateX(0);
+	}
+
+	#addToHolding {
+		transition-delay: 0.05s;
+	}
+	#arrowsLeft {
+		transition-delay: 0.1s;
+	}
+	#arrowsRight {
+		transition-delay: 0.15s;
+	}
+
+	/* 🪄 Responsive tweaks when width <= 250px */
+	@container (max-width: 250px) {
+		#addToHolding {
+			font-size: 1rem;
+		}
+
+		#arrowsLeft,
+		#arrowsRight {
+			font-size: 1rem;
+		}
 	}
 `;
 
@@ -141,6 +182,7 @@ export const Controller = styled.div`
 		justify-content: center;
 		margin-top: 4px;
 		gap: 2px;
+		padding-inline: clamp(10px, 5%, 19px);
 
 		button {
 			flex-grow: 1;
@@ -198,6 +240,21 @@ export const Controller = styled.div`
 			gap: 5px;
 		}
 	}
+
+	/* 🪄 Adjust these when container width <= 250px */
+	@container (max-width: 250px) {
+		.display_navigator button {
+			max-width: 25px;
+		}
+
+		.attributes_display h3 {
+			font-size: 0.72rem;
+
+			span {
+				font-size: 0.62rem;
+			}
+		}
+	}
 `;
 
 const darken = (hex, percent = 10) => {
@@ -214,7 +271,7 @@ const darken = (hex, percent = 10) => {
 	const B = (num & 0x0000ff) - amt;
 
 	return (
-		"#" +
+		'#' +
 		(
 			0x1000000 +
 			(Math.max(0, R) << 16) +
@@ -227,17 +284,21 @@ const darken = (hex, percent = 10) => {
 };
 
 export const Color = styled.button`
-	width: clamp(9px, 5vw, 10px);
+	width: clamp(9px, 5vw, 12px);
 	aspect-ratio: 1 / 1;
 	border-radius: 9999px;
 	background-color: ${({ $value }) => $value};
 	border: 1px solid
 		${({ theme, $value, $active }) =>
-			$active ? theme?.mainBody.text : darken($value, 10)};
+			$active ? theme?.mainBody.kitTextDark : darken($value, 10)};
 
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 1.33vmin;
 		height: 1.33vmin;
+	}
+
+	@container (max-width: 250px) {
+		width: 9px;
 	}
 `;
 
@@ -248,11 +309,11 @@ export const Size = styled.button`
 	align-items: center;
 	justify-content: center;
 	border-radius: 5px;
-	font-size: clamp(9px, 0.5vw,0.6rem);
+	font-size: clamp(9px, 0.5vw, 0.6rem);
 	font-family: Inter;
 	font-weight: 600;
 	line-height: 0px;
-	color: ${({theme}) => theme?.mainBody.sbText};
+	color: ${({ theme }) => theme?.mainBody.sbText};
 	border: 1px solid
 		${({ theme, $active }) =>
 			$active ? theme?.mainBody.text : theme?.mainBody.sbKitText};
@@ -260,5 +321,10 @@ export const Size = styled.button`
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 2.33vmin;
 		height: 2.33vmin;
+	}
+
+	@container (max-width: 250px) {
+		width: 17px;
+		font-size: 0.5rem;
 	}
 `;

@@ -13,7 +13,7 @@ import { MdOutlineError } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import ModalSlider from '../sliders/modal-slider/index';
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
-import { FaBasketShopping, FaCartShopping } from 'react-icons/fa6';
+import { FaBasketShopping } from 'react-icons/fa6';
 import { attributeType } from '../../utilities/app-const';
 
 function ShopItem({
@@ -35,6 +35,14 @@ function ShopItem({
 		currentSize: null,
 		currentColor: null,
 	});
+
+	const holding = () => {
+		console.log('📦 Add to holding');
+	};
+
+	const cartServer = () => {
+		console.log('🛒 Add to cart');
+	};
 
 	// 🧠 Start dragging (only if mouse is held down)
 	const handleMouseDown = (e) => {
@@ -98,9 +106,9 @@ function ShopItem({
 		const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
 		const cart = document.getElementById('myCart');
 		if (cart && dropTarget && cart.contains(dropTarget)) {
-			console.log('🛒 Add to cart');
+			cartServer();
 		} else if (startPos.current.y - e.clientY > 150) {
-			console.log('📦 Add to holding');
+			holding();
 		}
 	};
 
@@ -152,8 +160,6 @@ function ShopItem({
 		if (newIndex >= 0 && newIndex < productDisplay.length) setIndex(newIndex);
 	};
 
-	const isSame = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
 	return (
 		<ShopItemWrapper
 			$useBackground={useBackground}
@@ -174,16 +180,11 @@ function ShopItem({
 			) : (
 				<ShopItemContent>
 					<div className="display_unit">
-						<button id="addToHolding">
+						<button id="addToHolding" onClick={() => holding()}>
 							<i>
 								<FaBasketShopping />
 							</i>
 						</button>
-						{/* <button id="addToCart">
-							<i>
-								<FaCartShopping />
-							</i>
-						</button> */}
 
 						<div className="display_container_screen">
 							<ModalSlider currentIndex={index}>
@@ -237,7 +238,10 @@ function ShopItem({
 												});
 											}}
 											key={i}
-											$active={attr?.Attribute?.display === attribute?.currentColor?.Attribute?.display}
+											$active={
+												attr?.Attribute?.display ===
+												attribute?.currentColor?.Attribute?.display
+											}
 										/>
 									))}
 								</div>
@@ -251,7 +255,10 @@ function ShopItem({
 												});
 											}}
 											key={i}
-											$active={attr?.Attribute?.display === attribute?.currentSize?.Attribute?.display}
+											$active={
+												attr?.Attribute?.display ===
+												attribute?.currentSize?.Attribute?.display
+											}
 										>
 											<span>{attr?.Attribute?.display}</span>
 										</Size>
