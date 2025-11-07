@@ -37,11 +37,29 @@ function ShopItem({
 	});
 
 	const holding = () => {
-		console.log('📦 Add to holding');
+		const selectedItem = {
+			shopItem: product,
+			quantity: 1,
+			selectedAttributes: [
+				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(attribute.currentSize ? [attribute.currentSize] : []),
+			],
+		};
+
+		console.log('📦 Add to holding', selectedItem);
 	};
 
 	const cartServer = () => {
-		console.log('🛒 Add to cart');
+		const selectedItem = {
+			shopItemId: product?._id,
+			quantity: 1,
+			selectedAttributes: [
+				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(attribute.currentSize ? [attribute.currentSize] : []),
+			],
+		};
+
+		console.log('🛒 Add to cart', selectedItem);
 	};
 
 	// 🧠 Start dragging (only if mouse is held down)
