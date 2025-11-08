@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
@@ -9,6 +9,8 @@ import Intro from '../app-intros/intro';
 import { useLocation } from 'react-router-dom';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { FaCartShopping } from 'react-icons/fa6';
+import Modal from '../../components/modal/index_modal';
+import LeftMenu from './sub-components/app-menu';
 
 function IndexLayout() {
 	const { theme } = useSelector((state) => state.themes);
@@ -34,7 +36,21 @@ function IndexLayout() {
 		setUseIntro(false);
 	};
 
-	console.log(aftermath);
+	const leftMenuRef = useRef(null);
+
+	// Open the modal
+	const openModal = () => {
+		if (leftMenuRef.current) {
+			leftMenuRef.current.open();
+		}
+	};
+
+	// Close the modal
+	const closeModal = () => {
+		if (leftMenuRef.current) {
+			leftMenuRef.current.close();
+		}
+	};
 
 	return (
 		<ThemeProvider theme={colors[theme]}>
@@ -50,10 +66,14 @@ function IndexLayout() {
 			<LayoutWrapper>
 				<Navigation $aftermath={aftermath}>
 					<div id="containerNav">
-						<div id="menuWrapper" className="flex flex-col w-fit gap-[3px] -intro-x">
+						<div
+							id="menuWrapper"
+							className="flex flex-col w-fit gap-[3px] -intro-x"
+						>
 							<button
 								id="myMenu"
 								className="flex items-center text-[17px] gap-[5px]"
+								onClick={() => openModal()}
 							>
 								<i className="text-[22px]">
 									<HiMenuAlt3 />
@@ -71,7 +91,10 @@ function IndexLayout() {
 							HOUSE MADUEKWE
 						</h3>
 
-						<div id="cartWrapper" className="flex flex-col w-fit gap-[3px] intro-x">
+						<div
+							id="cartWrapper"
+							className="flex flex-col w-fit gap-[3px] intro-x"
+						>
 							<button
 								id="myCart"
 								className="flex items-center text-[17px] gap-[5px]"
@@ -92,6 +115,18 @@ function IndexLayout() {
 
 				<Outlet context={{ aftermath }} />
 			</LayoutWrapper>
+
+			<Modal.Left
+				height="97vh"
+				width="clamp(200px, 30vw, 350px)"
+				marginOffset="15px"
+				onClose={() => {}}
+				onOpen={() => {}}
+				refName={leftMenuRef}
+				animation={true}
+			>
+				<LeftMenu closeMe={closeModal}></LeftMenu>
+			</Modal.Left>
 		</ThemeProvider>
 	);
 }
