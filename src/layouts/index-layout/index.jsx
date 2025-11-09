@@ -118,14 +118,14 @@ function IndexLayout() {
 
 			<Modal.Left
 				height="97vh"
-				width="clamp(200px, 30vw, 350px)"
+				width="clamp(200px, 31vw, 280px)"
 				marginOffset="15px"
 				onClose={() => {}}
 				onOpen={() => {}}
 				refName={leftMenuRef}
 				animation={true}
 			>
-				<LeftMenu closeMe={closeModal}></LeftMenu>
+				<LeftMenu closeMe={closeModal} />
 			</Modal.Left>
 		</ThemeProvider>
 	);

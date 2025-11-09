@@ -6,17 +6,17 @@ export const ShopItemWrapper = styled.div`
 	height: ${(props) =>
 		typeof props.height === 'number' ? `${props.height}px` : props.height};
 	border: ${({ $useBackground, theme }) =>
-		$useBackground ? `1px solid ${theme?.mainBody.line}` : ''};
+		$useBackground ? `1px solid ${theme?.showcaseBox.line}` : ''};
 
 	background-color: ${({ $useBackground, theme }) =>
-		$useBackground ? theme?.mainBody.container : ''};
+		$useBackground ? theme?.showcaseBox.container : ''};
 
 	border-radius: ${({ $useBackground }) => ($useBackground ? '10px' : '')};
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 14px;
-	color: ${({ theme }) => theme.mainBody.text};
+	color: ${({ theme }) => theme.showcaseBox.text};
 	position: relative;
 	overflow: hidden;
 	user-select: none;
