@@ -65,7 +65,7 @@ export const LeftShell = styled.div`
 	background-color: transparent;
 	width: ${(props) => props.width};
 	height: ${(props) => props.height};
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
 	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
 	border: 0px solid transparent;
 	margin-left: ${(props) => `calc(0px + ${props.$marginOffset || "0px"})`};

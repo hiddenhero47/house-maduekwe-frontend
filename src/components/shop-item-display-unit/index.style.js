@@ -6,17 +6,17 @@ export const ShopItemWrapper = styled.div`
 	height: ${(props) =>
 		typeof props.height === 'number' ? `${props.height}px` : props.height};
 	border: ${({ $useBackground, theme }) =>
-		$useBackground ? `1px solid ${theme?.mainBody.line}` : ''};
+		$useBackground ? `1px solid ${theme?.showcaseBox.line}` : ''};
 
 	background-color: ${({ $useBackground, theme }) =>
-		$useBackground ? theme?.mainBody.container : ''};
+		$useBackground ? theme?.showcaseBox.container : ''};
 
 	border-radius: ${({ $useBackground }) => ($useBackground ? '10px' : '')};
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 14px;
-	color: ${({ theme }) => theme.mainBody.text};
+	color: ${({ theme }) => theme.showcaseBox.text};
 	position: relative;
 	overflow: hidden;
 	user-select: none;
@@ -283,14 +283,44 @@ const darken = (hex, percent = 10) => {
 	);
 };
 
+const lighten = (hex, percent = 10) => {
+	if (!/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) return hex;
+
+	let c = hex.substring(1).split('');
+	if (c.length === 3) {
+		c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+	}
+	const num = parseInt(c.join(''), 16);
+	const amt = Math.round(2.55 * percent);
+	const R = (num >> 16) + amt;
+	const G = ((num >> 8) & 0x00ff) + amt;
+	const B = (num & 0x0000ff) + amt;
+
+	return (
+		'#' +
+		(
+			0x1000000 +
+			(Math.max(0, R) << 16) +
+			(Math.max(0, G) << 8) +
+			Math.max(0, B)
+		)
+			.toString(16)
+			.slice(1)
+	);
+};
+
 export const Color = styled.button`
-	width: clamp(9px, 5vw, 12px);
+	width: clamp(9px, 5vw, 14px);
 	aspect-ratio: 1 / 1;
 	border-radius: 9999px;
 	background-color: ${({ $value }) => $value};
 	border: 1px solid
-		${({ theme, $value, $active }) =>
-			$active ? theme?.mainBody.kitTextDark : darken($value, 10)};
+		${({ theme, $value }) =>
+			theme.mode === 'dark' ? lighten($value, 20) : darken($value, 20)};
+	transform: scale(${({ $active }) => ($active ? 0.9 : 1)});
+	transition:
+		transform 0.15s ease,
+		border-color 0.3s ease;
 
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 1.33vmin;
@@ -298,7 +328,7 @@ export const Color = styled.button`
 	}
 
 	@container (max-width: 250px) {
-		width: 9px;
+		width: 10px;
 	}
 `;
 
