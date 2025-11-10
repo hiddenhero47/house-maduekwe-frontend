@@ -4,7 +4,7 @@ import {
 	MenuHeader,
 	UserSection,
 	MenuSection,
-  SocialSection,
+	SocialSection,
 } from './app-menu.style';
 import PropTypes from 'prop-types';
 import { VectorIcon } from '../../../components/icon-components/index.style';
@@ -17,12 +17,14 @@ import { MdOutlineToggleOff } from 'react-icons/md';
 import { MdOutlineToggleOn } from 'react-icons/md';
 import { FaBasketShopping } from 'react-icons/fa6';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaShirt } from "react-icons/fa6";
-import { FaArchive } from "react-icons/fa";
-import { BiSolidInfoSquare } from "react-icons/bi";
-import { FaCartShopping } from "react-icons/fa6";
+import { FaShirt } from 'react-icons/fa6';
+import { FaArchive } from 'react-icons/fa';
+import { BiSolidInfoSquare } from 'react-icons/bi';
+import { FaCartShopping } from 'react-icons/fa6';
 import { toggleTheme } from '../../../store/slice/app-theme';
 import { Link, useLocation } from 'react-router-dom';
+import { FaInstagram, FaXTwitter, FaFacebookF } from "react-icons/fa6";
+
 
 function LeftMenu({ closeMe, openHolding }) {
 	const { theme } = useSelector((state) => state.themes);
@@ -123,7 +125,7 @@ function LeftMenu({ closeMe, openHolding }) {
 						</Link>
 					</li>
 
-          <li>
+					<li>
 						<Link
 							to="/"
 							onClick={() => {}}
@@ -141,7 +143,7 @@ function LeftMenu({ closeMe, openHolding }) {
 						</Link>
 					</li>
 
-          <li>
+					<li>
 						<Link
 							to="/"
 							onClick={() => {}}
@@ -159,7 +161,7 @@ function LeftMenu({ closeMe, openHolding }) {
 						</Link>
 					</li>
 
-          <li>
+					<li>
 						<Link
 							to="/"
 							onClick={() => {}}
@@ -179,9 +181,21 @@ function LeftMenu({ closeMe, openHolding }) {
 				</ul>
 			</MenuSection>
 
-      <SocialSection>
-        <div className='social_wrapper'></div>
-      </SocialSection>
+			<SocialSection>
+				<div className="social_wrapper">
+					<a href="https://instagram.com" target="_blank" rel="noreferrer">
+						<FaInstagram />
+					</a>
+					<a href="https://twitter.com" target="_blank" rel="noreferrer">
+						<FaXTwitter />
+					</a>
+					<a href="https://facebook.com" target="_blank" rel="noreferrer">
+						<FaFacebookF />
+					</a>
+				</div>
+
+				<div className="footer_text">© 2025 House Maduekwe</div>
+			</SocialSection>
 		</MenuWrapper>
 	);
 }
