@@ -1,5 +1,11 @@
 import React from 'react';
-import { MenuWrapper, MenuHeader, UserSection } from './app-menu.style';
+import {
+	MenuWrapper,
+	MenuHeader,
+	UserSection,
+	MenuSection,
+  SocialSection,
+} from './app-menu.style';
 import PropTypes from 'prop-types';
 import { VectorIcon } from '../../../components/icon-components/index.style';
 import AppLogo from '../../../assets/images/app-logo.svg?react';
@@ -11,7 +17,12 @@ import { MdOutlineToggleOff } from 'react-icons/md';
 import { MdOutlineToggleOn } from 'react-icons/md';
 import { FaBasketShopping } from 'react-icons/fa6';
 import { useSelector, useDispatch } from 'react-redux';
+import { FaShirt } from "react-icons/fa6";
+import { FaArchive } from "react-icons/fa";
+import { BiSolidInfoSquare } from "react-icons/bi";
+import { FaCartShopping } from "react-icons/fa6";
 import { toggleTheme } from '../../../store/slice/app-theme';
+import { Link, useLocation } from 'react-router-dom';
 
 function LeftMenu({ closeMe, openHolding }) {
 	const { theme } = useSelector((state) => state.themes);
@@ -50,45 +61,127 @@ function LeftMenu({ closeMe, openHolding }) {
 				</div>
 
 				{/* Theme toggle */}
-				<div className="w-full flex items-center justify-between mt-[25px]">
-            <div className="flex items-center gap-[8px]">
-              <i className="text-[20px] text-[var(--menu-icon)] theme_line_up">
-                {theme === 'light' ? <BsFillCloudSunFill /> : <FaCloudMoon />}
-              </i>
+				<div className="w-[95%] flex items-center justify-between mt-[25px]">
+					<div className="flex items-center gap-[8px]">
+						<i className="text-[20px] text-[var(--menu-icon)] theme_line_up">
+							{theme === 'light' ? <BsFillCloudSunFill /> : <FaCloudMoon />}
+						</i>
 
-              <span className="text-[13px] font-medium text-[var(--menu-text)]">
-                {theme === 'light' ? 'Light Theme' : 'Dark Theme'}
-              </span>
-            </div>
+						<span className="text-[13px] font-medium text-[var(--menu-text)]">
+							{theme === 'light' ? 'Light Theme' : 'Dark Theme'}
+						</span>
+					</div>
 
-            <button
-              onClick={() => dispatch(toggleTheme())}
-              className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
-            >
-              {theme === 'light' ? <MdOutlineToggleOff /> : <MdOutlineToggleOn />}
-            </button>
+					<button
+						onClick={() => dispatch(toggleTheme())}
+						className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
+					>
+						{theme === 'light' ? <MdOutlineToggleOff /> : <MdOutlineToggleOn />}
+					</button>
 				</div>
 
 				{/* Holdings toggle */}
-				<div className="w-full flex items-center justify-between mt-[18px]">
-            <div className="flex items-center gap-[8px]">
-              <i className="text-[19px] text-[var(--menu-icon)]">
-                <FaBasketShopping />
-              </i>
-              
-              <span className="text-[13px] font-medium text-[var(--menu-text)]">
-                Show Holdings
-              </span>
-            </div>
+				<div className="w-[95%] flex items-center justify-between mt-[18px]">
+					<div className="flex items-center gap-[8px]">
+						<i className="text-[19px] text-[var(--menu-icon)]">
+							<FaBasketShopping />
+						</i>
 
-            <button
-              onClick={openHolding}
-              className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
-            >
-              <MdOutlineToggleOn />
-            </button>
+						<span className="text-[13px] font-medium text-[var(--menu-text)]">
+							Show Holdings
+						</span>
+					</div>
+
+					<button
+						onClick={openHolding}
+						className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
+					>
+						<MdOutlineToggleOn />
+					</button>
 				</div>
 			</UserSection>
+
+			<MenuSection>
+				<h3>MENU</h3>
+
+				<ul className="Y_scroll_style">
+					<li>
+						<Link
+							to="/"
+							onClick={() => {}}
+							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+						>
+							<div className="flex items-center gap-[8px]">
+								<i className="text-[19px] text-[var(--menu-icon)]">
+									<FaShirt />
+								</i>
+
+								<span className="text-[13px] font-medium text-[var(--menu-text)]">
+									Fashion Gallery
+								</span>
+							</div>
+						</Link>
+					</li>
+
+          <li>
+						<Link
+							to="/"
+							onClick={() => {}}
+							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+						>
+							<div className="flex items-center gap-[8px]">
+								<i className="text-[19px] text-[var(--menu-icon)]">
+									<FaArchive />
+								</i>
+
+								<span className="text-[13px] font-medium text-[var(--menu-text)]">
+									New Arrival
+								</span>
+							</div>
+						</Link>
+					</li>
+
+          <li>
+						<Link
+							to="/"
+							onClick={() => {}}
+							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+						>
+							<div className="flex items-center gap-[8px]">
+								<i className="text-[19px] text-[var(--menu-icon)]">
+									<BiSolidInfoSquare />
+								</i>
+
+								<span className="text-[13px] font-medium text-[var(--menu-text)]">
+									About House Maduekwe
+								</span>
+							</div>
+						</Link>
+					</li>
+
+          <li>
+						<Link
+							to="/"
+							onClick={() => {}}
+							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+						>
+							<div className="flex items-center gap-[8px]">
+								<i className="text-[19px] text-[var(--menu-icon)]">
+									<FaCartShopping />
+								</i>
+
+								<span className="text-[13px] font-medium text-[var(--menu-text)]">
+									User Cart
+								</span>
+							</div>
+						</Link>
+					</li>
+				</ul>
+			</MenuSection>
+
+      <SocialSection>
+        <div className='social_wrapper'></div>
+      </SocialSection>
 		</MenuWrapper>
 	);
 }

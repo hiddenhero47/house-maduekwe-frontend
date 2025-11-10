@@ -53,7 +53,7 @@ function IndexLayout() {
 	};
 
 	return (
-		<ThemeProvider theme={colors[theme]}>
+		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
 			{useIntro && (
 				<header className="w-full h-full absolute">

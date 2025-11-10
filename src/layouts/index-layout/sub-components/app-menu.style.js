@@ -64,11 +64,12 @@ export const MenuHeader = styled.div`
 
 export const UserSection = styled.div`
 	width: 100%;
-	padding-inline: clamp(10px, 9%, 18px);
+	padding-inline: clamp(10px, 8%, 15px);
 	margin-top: 30px;
 	padding-bottom: 5px;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 
 	#overview {
 		width: 100%;
@@ -108,5 +109,54 @@ export const UserSection = styled.div`
 
 	.theme_line_up {
 		transform: translateY(-2px);
+	}
+`;
+
+export const MenuSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 30px;
+
+	h3 {
+		font-size: 14px;
+		font-weight: 900;
+		margin-left: clamp(10px, 8%, 15px);
+		color: ${({ theme }) => theme?.menu.sbText};
+	}
+
+	ul {
+		width: 100%;
+		padding-inline: clamp(10px, 8%, 15px);
+		padding-bottom: 10px;
+		margin-top: 10px;
+		height: fit-content;
+		max-height: 799px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+
+		li {
+			width: 100%;
+			margin: 0;
+			list-style: none;
+
+			a {
+				padding-block: calc(3% + 2px);
+			}
+		}
+	}
+`;
+
+export const SocialSection = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: clamp(20px, 30%, 100px);
+	padding-inline: clamp(10px, 8%, 15px);
+	padding-bottom: 10px;
+	
+	.social_wrapper {
+		border-top: 1px solid ${({ theme }) => theme?.mainBody.line};
 	}
 `;

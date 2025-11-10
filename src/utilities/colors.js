@@ -73,7 +73,7 @@ export const colors = {
 			background: '#121212',
 			container: '#1d1d1d',
 			// container: "#292a35",
-			line: 'rgb(51, 51, 51, 0.6)',
+			line: '#333333',
 			text: '#e4e4e4',
 			sbText: '#989898',
 		},
