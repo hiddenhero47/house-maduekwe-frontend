@@ -51,10 +51,7 @@ function ModalLeft(
 		}
 		closeModal();
 	}
-
-	console.log(height);
 	
-
 	return (
 		<LeftDialog
 			open={isOpen}

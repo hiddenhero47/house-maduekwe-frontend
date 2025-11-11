@@ -15,6 +15,8 @@ import ModalSlider from '../sliders/modal-slider/index';
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
 import { FaBasketShopping } from 'react-icons/fa6';
 import { attributeType } from '../../utilities/app-const';
+import { useDispatch } from 'react-redux';
+import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 
 function ShopItem({
 	useBackground = true,
@@ -25,6 +27,7 @@ function ShopItem({
 	isLoading,
 }) {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [isDragging, setIsDragging] = useState(false);
 	const [index, setIndex] = useState(0);
 	const startPos = useRef({ x: 0, y: 0 });
@@ -47,6 +50,7 @@ function ShopItem({
 		};
 
 		console.log('📦 Add to holding', selectedItem);
+		dispatch(resetDrag()); // ♻️ reset drag after holding
 	};
 
 	const cartServer = () => {
@@ -60,6 +64,7 @@ function ShopItem({
 		};
 
 		console.log('🛒 Add to cart', selectedItem);
+		dispatch(endDrag({ data: selectedItem })); // ✅ mark drag as ended
 	};
 
 	// 🧠 Start dragging (only if mouse is held down)
@@ -75,6 +80,8 @@ function ShopItem({
 		const timeoutId = setTimeout(() => {
 			setIsDragging(true);
 			startPos.current = { x: e.clientX, y: e.clientY };
+
+			dispatch(startDrag({ dragType: 'shop-item' }));
 
 			// ✅ use saved reference here
 			const ghost = target.cloneNode(true);
