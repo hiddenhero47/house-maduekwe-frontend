@@ -6,6 +6,7 @@ const generateTempId = () =>
 
 const initialState = {
 	holdings: [],
+	show: true,
 };
 
 const holdingSlice = createSlice({
@@ -40,6 +41,17 @@ const holdingSlice = createSlice({
 		clearHoldings: (state) => {
 			state.holdings = [];
 		},
+
+		// 👁️ Show / hide / toggle
+		showHoldings: (state) => {
+			state.show = true;
+		},
+		hideHoldings: (state) => {
+			state.show = false;
+		},
+		toggleHoldings: (state) => {
+			state.show = !state.show;
+		},
 	},
 });
 
@@ -51,7 +63,14 @@ export const selectPreparedHoldings = (state) =>
 		selectedAttributes: item.selectedAttributes,
 	}));
 
-export const { addToHoldings, removeFromHoldings, clearHoldings } =
-	holdingSlice.actions;
+// ✅ Export actions
+export const {
+	addToHoldings,
+	removeFromHoldings,
+	clearHoldings,
+	showHoldings,
+	hideHoldings,
+	toggleHoldings,
+} = holdingSlice.actions;
 
 export default holdingSlice.reducer;

@@ -17,6 +17,7 @@ import { FaBasketShopping } from 'react-icons/fa6';
 import { attributeType } from '../../utilities/app-const';
 import { useDispatch } from 'react-redux';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
+import { addToHoldings } from '../../store/slice/holding';
 
 function ShopItem({
 	useBackground = true,
@@ -51,6 +52,7 @@ function ShopItem({
 
 		console.log('📦 Add to holding', selectedItem);
 		dispatch(resetDrag()); // ♻️ reset drag after holding
+		dispatch(addToHoldings(selectedItem));
 	};
 
 	const cartServer = () => {

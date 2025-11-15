@@ -1,0 +1,105 @@
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
+import {
+	removeFromHoldings,
+	clearHoldings,
+} from '../../../store/slice/holding';
+import { HoldingWrapper, Footer, ShopItem } from './holding.style';
+import { attributeType } from '../../../utilities/app-const';
+
+function Holding({ close }) {
+	const dispatch = useDispatch();
+	const { holdings } = useSelector((state) => state.holdings);
+
+	const removeItem = (tempId) => {
+		dispatch(removeFromHoldings({ tempId }));
+	};
+
+	const moveToCart = () => {
+		// you can dispatch move-to-cart logic here
+		console.log('Move to cart clicked');
+		close();
+	};
+
+	const anonymousCheckout = () => {
+		console.log('Anonymous checkout clicked');
+		close();
+	};
+
+	const selectPlaceholder = (data) => {
+		if (!data) return '';
+
+		const colorAttr = data.selectedAttributes?.find(
+			(attr) => attr?.Attribute?.type === attributeType.COLOR
+		);
+
+		const attrImage = colorAttr?.images?.[0]?.url;
+
+		const placeHolder = data.shopItem?.placeHolder?.url;
+
+		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
+
+		return attrImage || placeHolder || firstImage || '';
+	};
+
+	return (
+		<HoldingWrapper className="flex flex-col gap-3">
+			{/* Header */}
+			<div className="flex justify-between items-center pb-2 px-1">
+				<h2 className="text-[17px] font-semibold">
+					Holdings ({holdings.length})
+				</h2>
+
+				<button
+					onClick={() => dispatch(clearHoldings())}
+					className="text-[13px] text-red-500 hover:underline"
+				>
+					Clear All
+				</button>
+			</div>
+
+			{/* Items List */}
+			<div className="Y_scroll_style flex flex-col gap-3 min-h-[200px] max-h-[40vh] overflow-y-auto pr-1">
+				{holdings.map((item, i) => (
+					<ShopItem key={i}>
+						<div className="w-[60px] h-[60px] p-[5px] rounded-[8px]">
+							<div className="imageHolder rounded-[inherit]">
+								<img src={selectPlaceholder(item)} alt="Error" />
+							</div>
+						</div>
+
+						<div className="info">
+							<span className="name">{item?.shopItem?.name}</span>
+							<span className="price">
+								{item?.shopItem?.price} {item?.shopItem?.currency}
+							</span>
+						</div>
+
+						<button
+							className="remove-btn"
+							onClick={() => removeItem(item.tempId)}
+						>
+							<i>
+								<FaTrash />
+							</i>
+						</button>
+					</ShopItem>
+				))}
+			</div>
+
+			{/* Footer Buttons */}
+			<Footer>
+				<button onClick={moveToCart} className="btn btn-move">
+					Move to Cart
+				</button>
+
+				<button onClick={anonymousCheckout} className="btn btn-anon">
+					Anonymous Checkout <FaArrowRightLong />
+				</button>
+			</Footer>
+		</HoldingWrapper>
+	);
+}
+
+export default Holding;

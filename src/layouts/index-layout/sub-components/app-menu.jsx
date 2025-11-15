@@ -22,12 +22,14 @@ import { FaArchive } from 'react-icons/fa';
 import { BiSolidInfoSquare } from 'react-icons/bi';
 import { FaCartShopping } from 'react-icons/fa6';
 import { toggleTheme } from '../../../store/slice/app-theme';
+import { toggleHoldings } from '../../../store/slice/holding';
 import { Link, useLocation } from 'react-router-dom';
 import { FaInstagram, FaXTwitter, FaFacebookF } from "react-icons/fa6";
 
 
 function LeftMenu({ closeMe, openHolding }) {
 	const { theme } = useSelector((state) => state.themes);
+	const { holdings, show } = useSelector((state) => state.holdings);
 	const dispatch = useDispatch();
 
 	return (
@@ -78,7 +80,7 @@ function LeftMenu({ closeMe, openHolding }) {
 						onClick={() => dispatch(toggleTheme())}
 						className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
 					>
-						{theme === 'light' ? <MdOutlineToggleOff /> : <MdOutlineToggleOn />}
+						{theme === 'light' ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
 					</button>
 				</div>
 
@@ -95,10 +97,10 @@ function LeftMenu({ closeMe, openHolding }) {
 					</div>
 
 					<button
-						onClick={openHolding}
+						onClick={() => dispatch(toggleHoldings())}
 						className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
 					>
-						<MdOutlineToggleOn />
+						{show ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
 					</button>
 				</div>
 			</UserSection>
