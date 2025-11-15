@@ -1,4 +1,58 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateX(-100%);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0.7;
+  }
+`;
+
+const centerOpen = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const centerClose = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+`;
 
 export const LeftDialog = styled.dialog`
 	width: 100%;
@@ -10,6 +64,11 @@ export const LeftDialog = styled.dialog`
 	left: 0;
 	background-color: rgba(0, 0, 0, 0.4);
 	overflow-y: auto;
+	animation: ${({ open }) => (open ? fadeIn : fadeOut)} 0.35s ease forwards;
+
+	&[open] {
+		display: flex;
+	}
 
 	&::-webkit-scrollbar {
 		width: 0px;
@@ -26,28 +85,22 @@ export const LeftDialog = styled.dialog`
 
 export const LeftShell = styled.div`
 	background-color: transparent;
-	padding-block: ${(props) => props.$borderPaddingY || '40px'};
 	width: ${(props) => props.width};
-	height: 100%;
-	overflow-x: hidden;
+	height: ${(props) => props.height};
+	/* overflow-x: hidden; */
 	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
 	border: 0px solid transparent;
-	margin-left: 0;
-	transform: ${(props) =>
-		props.$animation
-			? props.$isOpen
-				? 'translate3d(-600px, 0, 0)'
-				: 'translate3d(-600px, 0, 0)'
-			: 'unset'};
-	transition: all 0.6s;
-	transition-timing-function: ease;
+	margin-left: ${(props) => `calc(0px + ${props.$marginOffset || '0px'})`};
+	margin-block: auto;
+	border: 0 solid transparent;
 
-	/* @media (min-width: 1440px) {
-		margin-right: 0;
-		margin-left: 0;
-		left: 50%;
-		margin-left: calc(-1440px / 2);
-	} */
+	/* animate when $animation is enabled */
+	${({ $animation, $isOpen }) =>
+		$animation &&
+		css`
+			animation: ${$isOpen ? slideIn : slideOut} 0.5s ease forwards;
+			visibility: ${$isOpen ? 'visible' : 'hidden'};
+		`}
 `;
 
 export const CenterDialog = styled.dialog`
@@ -83,11 +136,21 @@ export const CenterShell = styled.div`
 	padding-block: ${(props) => props.$borderPaddingY || '40px'};
 	width: ${(props) => props.width};
 	max-width: ${(props) => (props.$maxWidth ? props.$maxWidth : 'unset')};
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
 	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
 	border: 0px solid transparent;
 	margin: auto;
-	/* margin-top: 15vh; */
+
+	/* Visibility when mounted/unmounted */
+	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+
+	/* Animation support (open/close) */
+	${({ $animation, $isOpen }) =>
+		$animation &&
+		css`
+			animation: ${$isOpen ? centerOpen : centerClose} 0.35s ease forwards;
+			visibility: ${$isOpen ? 'visible' : 'hidden'};
+		`}
 
 	@media (max-width: ${(props) => props.$mediaQuery || '500px'}) {
 		width: ${(props) => (props.$queryWidth ? props.$queryWidth : props.width)};

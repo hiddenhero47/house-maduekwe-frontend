@@ -8,7 +8,15 @@ import React, {
 import { LeftDialog, LeftShell } from '../index_modal.style';
 
 function ModalLeft(
-	{ children, onClose, onOpen, width, animation, maxWidth },
+	{
+		children,
+		onClose,
+		onOpen,
+		width,
+		height,
+		animation,
+		marginOffset,
+	},
 	ref
 ) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +51,7 @@ function ModalLeft(
 		}
 		closeModal();
 	}
-
+	
 	return (
 		<LeftDialog
 			open={isOpen}
@@ -52,28 +60,19 @@ function ModalLeft(
 			onClose={closeModal}
 		>
 			<LeftShell
-			    className='intro-x'
 				open={isOpen}
 				onClose={closeModal}
 				ref={ModelSellRef}
 				$isOpen={isOpen}
 				width={width}
-				$maxWidth={maxWidth}
+				height={height}
 				$animation={animation}
+				$marginOffset={marginOffset}
 			>
 				{children}
 			</LeftShell>
 		</LeftDialog>
 	);
 }
-
-// ModalLeft.propTypes = {
-// 	children: PropTypes.node,
-// 	onClose: PropTypes.func,
-// 	onOpen: PropTypes.func,
-// 	width: PropTypes.string,
-// 	maxWidth: PropTypes.string,
-// 	animation: PropTypes.bool,
-// };
 
 export default forwardRef(ModalLeft);

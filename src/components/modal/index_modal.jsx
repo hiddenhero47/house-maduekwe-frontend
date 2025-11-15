@@ -11,17 +11,21 @@ Modal.Left = ({
 	onClose,
 	onOpen,
 	width,
+	height,
 	animation,
 	children,
 	maxWidth,
+	marginOffset,
 }) => (
 	<ModalLeft
 		ref={refName}
 		onClose={onClose}
 		onOpen={onOpen}
 		width={width}
+		height={height}
 		animation={animation}
 		maxWidth={maxWidth}
+		marginOffset={marginOffset}
 	>
 		{children}
 	</ModalLeft>
@@ -34,9 +38,11 @@ Modal.Left.propTypes = {
 	onClose: PropTypes.func,
 	onOpen: PropTypes.func,
 	width: PropTypes.string,
+	height: PropTypes.string,
 	maxWidth: PropTypes.string,
 	animation: PropTypes.bool,
 	children: PropTypes.node,
+	marginOffset: PropTypes.string,
 };
 
 Modal.Bottom = ({ refName, onClose, onOpen, width, height, animation, children }) => (
@@ -74,6 +80,7 @@ Modal.Center = ({
 	mediaQuery,
 	queryWidth,
 	borderPaddingY,
+	animation,
 }) => (
 	<ModalCenter
 		ref={refName}
@@ -84,6 +91,7 @@ Modal.Center = ({
 		mediaQuery={mediaQuery}
 		queryWidth={queryWidth}
 		borderPaddingY={borderPaddingY}
+		animation={animation}
 	>
 		{children}
 	</ModalCenter>
@@ -101,6 +109,7 @@ Modal.Center.propTypes = {
 	mediaQuery: PropTypes.string,
 	queryWidth: PropTypes.string,
 	borderPaddingY: PropTypes.string,
+	animation: PropTypes.bool,
 };
 
 Modal.propTypes = {

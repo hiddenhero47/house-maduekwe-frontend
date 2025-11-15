@@ -229,9 +229,9 @@ export const ContainerSection = styled.section`
 	border-radius: 10px;
 	margin-inline: auto;
 
-	.style_container {
+	/* .style_container {
 		border: 1px solid ${({ theme }) => theme?.mainBody.line};
 		background-color: ${({ theme }) => theme?.mainBody.container};
 		border-radius: 10px;
-	}
+	} */
 `;
