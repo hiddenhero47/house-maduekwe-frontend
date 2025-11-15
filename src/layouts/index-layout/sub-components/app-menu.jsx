@@ -23,14 +23,16 @@ import { BiSolidInfoSquare } from 'react-icons/bi';
 import { FaCartShopping } from 'react-icons/fa6';
 import { toggleTheme } from '../../../store/slice/app-theme';
 import { toggleHoldings } from '../../../store/slice/holding';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaInstagram, FaXTwitter, FaFacebookF } from "react-icons/fa6";
+import { TbHomeFilled } from "react-icons/tb";
 
 
 function LeftMenu({ closeMe, openHolding }) {
 	const { theme } = useSelector((state) => state.themes);
 	const { holdings, show } = useSelector((state) => state.holdings);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	return (
 		<MenuWrapper>
@@ -49,7 +51,7 @@ function LeftMenu({ closeMe, openHolding }) {
 			</MenuHeader>
 
 			<UserSection>
-				<div id="overview">
+				<div id="overview" onClick={() => {navigate("/settings"); closeMe();}}>
 					<div id="avatar">
 						<div className="imageHolder"></div>
 					</div>
@@ -111,8 +113,8 @@ function LeftMenu({ closeMe, openHolding }) {
 				<ul className="Y_scroll_style">
 					<li>
 						<Link
-							to="/"
-							onClick={() => {}}
+							to="/products"
+							onClick={() => closeMe()}
 							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 						>
 							<div className="flex items-center gap-[8px]">
@@ -129,8 +131,8 @@ function LeftMenu({ closeMe, openHolding }) {
 
 					<li>
 						<Link
-							to="/"
-							onClick={() => {}}
+							to="/products"
+							onClick={() => closeMe()}
 							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 						>
 							<div className="flex items-center gap-[8px]">
@@ -147,8 +149,8 @@ function LeftMenu({ closeMe, openHolding }) {
 
 					<li>
 						<Link
-							to="/"
-							onClick={() => {}}
+							to="/about-us"
+							onClick={() => closeMe()}
 							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 						>
 							<div className="flex items-center gap-[8px]">
@@ -165,8 +167,8 @@ function LeftMenu({ closeMe, openHolding }) {
 
 					<li>
 						<Link
-							to="/"
-							onClick={() => {}}
+							to="/my-cart"
+							onClick={() => closeMe()}
 							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 						>
 							<div className="flex items-center gap-[8px]">
@@ -176,6 +178,24 @@ function LeftMenu({ closeMe, openHolding }) {
 
 								<span className="text-[13px] font-medium text-[var(--menu-text)]">
 									User Cart
+								</span>
+							</div>
+						</Link>
+					</li>
+
+					<li>
+						<Link
+							to="/"
+							onClick={() => closeMe()}
+							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+						>
+							<div className="flex items-center gap-[8px]">
+								<i className="text-[19px] text-[var(--menu-icon)]">
+									<TbHomeFilled />
+								</i>
+
+								<span className="text-[13px] font-medium text-[var(--menu-text)]">
+									Showcase
 								</span>
 							</div>
 						</Link>

@@ -9,6 +9,9 @@ import Home from "./pages/home";
 import AboutUs from "./pages/about-us";
 import Settings from "./pages/settings";
 import NotFound from "./pages/not-found";
+import ProductOverview from "./pages/product-overview";
+import UserCart from "./pages/user-cart";
+import ShopeItems from "./pages/shope-items";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +26,9 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/overview/:id" element={<ProductOverview />} />
+              <Route path="/my-cart" element={<UserCart />} />
+              <Route path="/products" element={<ShopeItems />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
