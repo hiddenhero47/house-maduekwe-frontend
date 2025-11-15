@@ -195,7 +195,7 @@ function ShopItem({
 			className={className}
 			$isDragging={isDragging}
 			onMouseDown={handleMouseDown}
-			onDoubleClick={() => navigate('/')}
+			onDoubleClick={() => navigate(`/overview/${product._id}`)}
 		>
 			{isLoading ? (
 				<SkeletonLoader />
