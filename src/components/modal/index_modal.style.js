@@ -32,6 +32,28 @@ const slideOut = keyframes`
   }
 `;
 
+const centerOpen = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const centerClose = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+`;
+
 export const LeftDialog = styled.dialog`
 	width: 100%;
 	height: 100%;
@@ -68,7 +90,7 @@ export const LeftShell = styled.div`
 	/* overflow-x: hidden; */
 	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
 	border: 0px solid transparent;
-	margin-left: ${(props) => `calc(0px + ${props.$marginOffset || "0px"})`};
+	margin-left: ${(props) => `calc(0px + ${props.$marginOffset || '0px'})`};
 	margin-block: auto;
 	border: 0 solid transparent;
 
@@ -114,11 +136,21 @@ export const CenterShell = styled.div`
 	padding-block: ${(props) => props.$borderPaddingY || '40px'};
 	width: ${(props) => props.width};
 	max-width: ${(props) => (props.$maxWidth ? props.$maxWidth : 'unset')};
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
 	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
 	border: 0px solid transparent;
 	margin: auto;
-	/* margin-top: 15vh; */
+
+	/* Visibility when mounted/unmounted */
+	visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
+
+	/* Animation support (open/close) */
+	${({ $animation, $isOpen }) =>
+		$animation &&
+		css`
+			animation: ${$isOpen ? centerOpen : centerClose} 0.35s ease forwards;
+			visibility: ${$isOpen ? 'visible' : 'hidden'};
+		`}
 
 	@media (max-width: ${(props) => props.$mediaQuery || '500px'}) {
 		width: ${(props) => (props.$queryWidth ? props.$queryWidth : props.width)};

@@ -17,6 +17,7 @@ function ModalCenter(
 		mediaQuery,
 		queryWidth,
 		borderPaddingY,
+		animation,
 	},
 	ref
 ) {
@@ -75,19 +76,12 @@ function ModalCenter(
 				$mediaQuery={mediaQuery}
 				$queryWidth={queryWidth}
 				$borderPaddingY={borderPaddingY}
+				$animation={animation}
 			>
 				{children}
 			</CenterShell>
 		</CenterDialog>
 	);
 }
-
-// ModalCenter.propTypes = {
-// 	children: PropTypes.node,
-// 	onClose: PropTypes.func,
-// 	onOpen: PropTypes.func,
-// 	width: PropTypes.string,
-// 	maxWidth: PropTypes.string,
-// };
 
 export default forwardRef(ModalCenter);

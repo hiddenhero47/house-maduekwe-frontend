@@ -48,7 +48,7 @@ export const Navigation = styled.nav`
 		position: relative;
 		z-index: 2;
 		font-weight: lighter;
-		
+
 		@media (max-width: 500px) {
 			font-size: 14px;
 
@@ -106,5 +106,27 @@ export const Navigation = styled.nav`
 
 	#cartWrapper:hover #line2 #growth {
 		transition-delay: 0.05s;
+	}
+`;
+
+export const ToolBar = styled.button`
+	position: fixed;
+	aspect-ratio: 1 / 1;
+	max-width: 50px;
+	z-index: 5;
+	margin: 20px;
+	right: ${({ $transitionX }) => $transitionX || '0px'};
+	top: ${({ $transitionY }) => $transitionY || '50%'};
+	transform: ${({ $transitionY }) =>
+		$transitionY ? 'translateY(0)' : 'translateY(calc(-50% + 20px))'};
+	font-size: 20px;
+	padding: 14px;
+	background-color: ${({theme}) => theme?.intro.logo};
+	color: #ffff;
+	border-radius: 9999px;
+
+	@supports not (aspect-ratio: 1 / 1) {
+		width: 5.5556vmin;
+		height: 5.5556vmin;
 	}
 `;

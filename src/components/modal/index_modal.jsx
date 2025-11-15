@@ -80,6 +80,7 @@ Modal.Center = ({
 	mediaQuery,
 	queryWidth,
 	borderPaddingY,
+	animation,
 }) => (
 	<ModalCenter
 		ref={refName}
@@ -90,6 +91,7 @@ Modal.Center = ({
 		mediaQuery={mediaQuery}
 		queryWidth={queryWidth}
 		borderPaddingY={borderPaddingY}
+		animation={animation}
 	>
 		{children}
 	</ModalCenter>
@@ -107,6 +109,7 @@ Modal.Center.propTypes = {
 	mediaQuery: PropTypes.string,
 	queryWidth: PropTypes.string,
 	borderPaddingY: PropTypes.string,
+	animation: PropTypes.bool,
 };
 
 Modal.propTypes = {
