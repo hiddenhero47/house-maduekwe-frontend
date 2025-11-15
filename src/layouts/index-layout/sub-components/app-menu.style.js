@@ -79,6 +79,7 @@ export const UserSection = styled.div`
 		background-color: ${({ theme }) => theme?.mainBody.toolkitBg};
 		border-radius: 5px;
 		border: 1px ${({ theme }) => theme?.mainBody.toolkitActive};
+		cursor: pointer;
 	}
 
 	#avatar {
