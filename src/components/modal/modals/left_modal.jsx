@@ -16,6 +16,7 @@ function ModalLeft(
 		height,
 		animation,
 		marginOffset,
+		minWidth,
 	},
 	ref
 ) {
@@ -68,6 +69,7 @@ function ModalLeft(
 				height={height}
 				$animation={animation}
 				$marginOffset={marginOffset}
+				$minWidth={minWidth}
 			>
 				{children}
 			</LeftShell>

@@ -118,6 +118,11 @@ export const HoldingWrapper = styled.div`
 		css`
 			animation: ${$isOpen ? centerIn : centerOut} 0.35s ease forwards;
 		`}
+
+	@media (max-width: 500px) {
+		width: 90vw;
+		max-width: 500px
+	}
 `;
 
 export const Footer = styled.div`

@@ -30,6 +30,62 @@ export default function ToolBar({ layoutRef, nos, openHoldings }) {
 		setDragging(true);
 	};
 
+	// 📱 Touch start (same logic as mouse down)
+	const handleTouchStart = (e) => {
+		if (!toolbarRef.current || !layoutRef.current) return;
+
+		const touch = e.touches[0];
+		if (!touch) return;
+
+		const layoutRect = layoutRef.current.getBoundingClientRect();
+		const toolbarRect = toolbarRef.current.getBoundingClientRect();
+
+		const currentPos = {
+			x: pos.x ?? toolbarRect.left - layoutRect.left,
+			y: pos.y ?? toolbarRect.top - layoutRect.top,
+		};
+
+		offset.current = {
+			x: touch.clientX - currentPos.x,
+			y: touch.clientY - currentPos.y,
+		};
+
+		setPos(currentPos);
+		setDragging(true);
+	};
+
+	// 📱 Touch move (same as mouse move)
+	const handleTouchMove = (e) => {
+		if (!dragging || !layoutRef.current || !toolbarRef.current) return;
+
+		const touch = e.touches[0];
+		if (!touch) return;
+
+		const layoutRect = layoutRef.current.getBoundingClientRect();
+		const toolbar = toolbarRef.current;
+		const navHeight = 64;
+
+		let x = touch.clientX - offset.current.x;
+		let y = touch.clientY - offset.current.y;
+
+		const minX = layoutRect.left + margin;
+		const maxX = layoutRect.right - toolbar.offsetWidth - margin;
+		const minY = layoutRect.top + navHeight + margin;
+		const maxY = layoutRect.bottom - toolbar.offsetHeight - margin;
+
+		x = Math.max(minX, Math.min(x, maxX));
+		y = Math.max(minY, Math.min(y, maxY));
+
+		setPos({ x: x - layoutRect.left, y: y - layoutRect.top });
+
+		e.preventDefault(); // avoid scroll while dragging
+	};
+
+	// 📱 Touch end
+	const handleTouchEnd = () => {
+		setDragging(false);
+	};
+
 	useEffect(() => {
 		if (!dragging || !layoutRef.current || !toolbarRef.current) return;
 
@@ -57,10 +113,18 @@ export default function ToolBar({ layoutRef, nos, openHoldings }) {
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
 
+		// 📱 touch listeners
+		window.addEventListener('touchmove', handleTouchMove, { passive: false });
+		window.addEventListener('touchend', handleTouchEnd);
+
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
+
+			window.removeEventListener('touchmove', handleTouchMove);
+			window.removeEventListener('touchend', handleTouchEnd);
 		};
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dragging, layoutRef]);
 
 	return (
@@ -70,12 +134,13 @@ export default function ToolBar({ layoutRef, nos, openHoldings }) {
 			$x={pos.x}
 			$y={pos.y}
 			onMouseDown={handleMouseDown}
+			onTouchStart={handleTouchStart}
 			aria-label="toolbar"
 			onDoubleClick={openHoldings}
 		>
 			<div className="icon">
 				<MdSell />
-                {nos > 1 ?  <span className="badge">{nos}</span> : ""}
+				{nos > 1 ? <span className="badge">{nos}</span> : ''}
 			</div>
 		</ToolBarWrapper>
 	);

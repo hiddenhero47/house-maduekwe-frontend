@@ -144,15 +144,105 @@ function ShopItem({
 		}
 	};
 
+	// 📱 Touch start (same as mouse down)
+	const handleTouchStart = (e) => {
+		if (!product) return;
+
+		const touch = e.touches[0];
+		if (!touch) return;
+
+		// Only start drag if touching the image
+		if (e.target.tagName !== 'IMG') return;
+
+		const target = e.currentTarget;
+		const holdDelay = 120;
+
+		const timeoutId = setTimeout(() => {
+			setIsDragging(true);
+			startPos.current = { x: touch.clientX, y: touch.clientY };
+
+			const rect = target.getBoundingClientRect();
+			dispatch(startDrag({ dragType: 'shop-item' }));
+
+			const ghost = target.cloneNode(true);
+			ghost.id = 'customDragGhost';
+
+			Object.assign(ghost.style, {
+				position: 'fixed',
+				pointerEvents: 'none',
+				width: `${rect.width}px`,
+				height: `${rect.height}px`,
+				top: `${touch.clientY}px`,
+				left: `${touch.clientX}px`,
+				transform: 'translate(-50%, -50%) scale(0.95)',
+				opacity: '0.95',
+				transition: 'transform 0.15s ease, opacity 0.15s ease',
+				zIndex: '9999',
+				boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+				borderRadius: '12px',
+			});
+			document.body.appendChild(ghost);
+			ghostRef.current = ghost;
+		}, holdDelay);
+
+		const cancelHold = () => clearTimeout(timeoutId);
+		window.addEventListener('touchend', cancelHold, { once: true });
+	};
+
+	// 📱 Touch move (same as mouse move)
+	const handleTouchMove = (e) => {
+		if (!isDragging || !ghostRef.current) return;
+		const touch = e.touches[0];
+		if (!touch) return;
+
+		const ghost = ghostRef.current;
+		ghost.style.top = `${touch.clientY}px`;
+		ghost.style.left = `${touch.clientX}px`;
+	};
+
+	// 📱 Touch end (same as mouse up)
+	const handleTouchEnd = (e) => {
+		if (!isDragging) return;
+		setIsDragging(false);
+
+		const ghost = ghostRef.current;
+		if (ghost) {
+			ghost.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+			ghost.style.opacity = '0';
+			ghost.style.transform = 'translate(-50%, -50%) scale(0.6)';
+			setTimeout(() => ghost.remove(), 250);
+			ghostRef.current = null;
+		}
+
+		const touch = e.changedTouches[0];
+		if (!touch) return;
+
+		const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+		const cart = document.getElementById('myCart');
+
+		if (cart && dropTarget && cart.contains(dropTarget)) {
+			cartServer();
+		} else if (startPos.current.y - touch.clientY > 150) {
+			holding();
+		}
+	};
+
 	// 🎯 Attach global listeners when dragging starts
 	useEffect(() => {
 		if (!isDragging) return;
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
 
+		// 📱 Touch events
+		window.addEventListener('touchmove', handleTouchMove, { passive: false });
+		window.addEventListener('touchend', handleTouchEnd);
+
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
 			window.removeEventListener('mouseup', handleMouseUp);
+
+			window.removeEventListener('touchmove', handleTouchMove);
+			window.removeEventListener('touchend', handleTouchEnd);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isDragging]);
@@ -200,6 +290,7 @@ function ShopItem({
 			className={className}
 			$isDragging={isDragging}
 			onMouseDown={handleMouseDown}
+			onTouchStart={handleTouchStart}
 			onDoubleClick={() => navigate(`/overview/${product._id}`)}
 		>
 			{isLoading ? (
