@@ -14,7 +14,7 @@ Modal.Left = ({
 	height,
 	animation,
 	children,
-	maxWidth,
+	minWidth,
 	marginOffset,
 }) => (
 	<ModalLeft
@@ -24,7 +24,7 @@ Modal.Left = ({
 		width={width}
 		height={height}
 		animation={animation}
-		maxWidth={maxWidth}
+		minWidth={minWidth}
 		marginOffset={marginOffset}
 	>
 		{children}

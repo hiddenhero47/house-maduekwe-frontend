@@ -42,6 +42,10 @@ export const MenuHeader = styled.div`
 			span {
 				color: ${({ theme }) => theme?.intro.logo};
 			}
+
+			@media (max-width: 500px) {
+				font-size: 8px;
+			}
 		}
 	}
 

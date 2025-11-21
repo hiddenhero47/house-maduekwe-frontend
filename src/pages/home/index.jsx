@@ -65,8 +65,8 @@ function Index() {
 				<ShopItem
 					isLoading={false}
 					product={items[0]}
-					width="30%"
-					height="50vh"
+					width="350px"
+					height="400px"
 				/>
 			</ContainerSection>
 		</Container>
