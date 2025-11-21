@@ -194,6 +194,95 @@ export const Image = styled.img`
 	transition: object-position 0.3s ease;
 `;
 
+export const AlsoLike = styled.div`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 7vh;
+	margin-bottom: 3vh;
+	padding-inline: clamp(10px, 2%, 32px);
+
+	#mightLikeTitle {
+		text-transform: uppercase;
+		font-size: 19px;
+		margin-bottom: 25px;
+	}
+
+	#alsoLike {
+		width: 100%;
+		min-height: 15vh;
+
+		display: grid;
+		grid-gap: 20px;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 280px));
+		grid-auto-flow: dense;
+		justify-content: center;
+
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		&::-webkit-scrollbar {
+			height: 0;
+		}
+		scrollbar-width: none;
+
+		@media (min-width: 920px) and (max-width: 1232px) {
+			display: flex;
+			justify-content: unset;
+		}
+
+		@media (max-width: 607px) {
+			display: flex;
+			justify-content: unset;
+		}
+
+		.cubicle {
+			aspect-ratio: 3 / 4;
+			flex-shrink: 0;
+
+			@media (min-width: 920px) and (max-width: 1232px) {
+				width: clamp(250px, 24%, 290px);
+			}
+
+			@media (min-width: 608px) and (max-width: 919px) {
+				aspect-ratio: 3 / 3.8;
+			}
+
+			@media (max-width: 607px) {
+				width: clamp(250px, 24%, 280px);
+				aspect-ratio: 3 / 3.8;
+			}
+		}
+	}
+`;
+
+export const DetailsWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	margin-inline: 15%;
+	margin-top: 30px;
+
+	@media (min-width: 948px) and (max-width: 1190px) {
+		margin-inline: 8%;
+	}
+
+	@media (min-width: 791px) and (max-width: 947px) {
+		margin-inline: 13%;
+	}
+
+	@media (min-width: 701px) and (max-width: 790px) {
+		margin-inline: 8%;
+	}
+
+	@media (min-width: 451px) and (max-width: 700px) {
+		margin-inline: 5%;
+	}
+
+	@media (max-width: 450px) {
+		margin-inline: 10px;
+	}
+`;
+
 const darken = (hex, percent = 10) => {
 	if (!/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) return hex;
 
@@ -276,42 +365,96 @@ export const ColorCircle = styled.button`
 `;
 
 export const SizeButton = styled.button`
-	padding: 12px;
+	/* padding: 5px; */
 	border-radius: 8px;
-	font-size: 14px;
+	font-size: 18px;
 	text-transform: uppercase;
-	border: 1px solid ${(p) => (p.$active ? '#2563eb' : '#d1d5db')};
-	background-color: ${(p) => (p.$active ? '#2563eb' : 'white')};
-	color: ${(p) => (p.$active ? 'white' : '#111')};
+	width: clamp(50px, 23%, 150px);
+	height: 45px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	border: 1px solid
+		${({ theme, $active }) =>
+			$active ? theme?.mainBody.text : theme?.mainBody.line};
+	background-color: ${({ theme, $active }) =>
+		$active ? theme?.mainBody.toolkitBg : theme?.mainBody.container};
+	color: ${({ theme, $active }) =>
+		$active ? theme?.mainBody.text : theme?.mainBody.sbText};
+
 	transition: 0.15s ease;
 
 	&:hover {
-		background-color: ${(p) => (p.$active ? '#1e4db7' : '#f3f4f6')};
+		background-color: ${({ theme }) => theme?.mainBody.toolkitActive};
 	}
 `;
 
 export const AddToCartBtn = styled.button`
 	width: 100%;
-	margin-top: 2rem; /* mt-8 */
+	/* margin-top: 2rem; */
 	padding: 0.75rem 0; /* py-3 */
 	border-radius: 0.375rem; /* rounded-md */
 	font-weight: 500;
-
-	background-color: #000000;
-	color: white;
+	padding-inline: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: ${({ theme }) => theme?.addToCart.background};
+	color: ${({ theme }) => theme?.addToCart.text};
 	transition: background-color 0.2s ease;
 
 	&:hover {
-		background-color: #1a1a1a;
+		background-color: ${({ theme }) => theme?.addToCart.hoverBg};
+	}
+`;
+
+export const HoldBtn = styled.button`
+	margin-bottom: 0.75rem; /* mb-3 */
+	margin-top: 2rem; /* mt-8 */
+	margin-right: auto;
+	font-size: 0.875rem; /* text-sm */
+	color: ${({ theme }) => theme.mainBody.sbText};
+	display: flex;
+	align-items: center;
+	font-family: Inter;
+
+	/* Smooth hover animation */
+	transition: all 0.25s ease;
+
+	i {
+		display: flex;
+		align-items: center;
+		transition:
+			transform 0.25s ease,
+			opacity 0.25s ease;
 	}
 
-	/* 🌙 Dark mode override */
-	[data-theme='dark'] & {
-		background-color: #383838;
-		color: #e4e4e4;
+	i:first-child {
+		font-size: 1.125rem;
+		margin-right: 0.25rem;
+	}
 
-		&:hover {
-			background-color: #4d4d4d;
+	i:last-child {
+		font-size: 1rem;
+		margin-left: 0.25rem;
+	}
+
+	/* HOVER EFFECT */
+	&:hover {
+		color: ${({ theme }) => theme.mainBody.text};
+		transform: translateX(2px);
+		opacity: 0.85;
+
+		i:last-child {
+			transform: translateX(3px); /* arrow moves right */
 		}
+	}
+
+	/* ACTIVE/CLICK EFFECT */
+	&:active {
+		transform: scale(0.97);
+		opacity: 0.75;
 	}
 `;

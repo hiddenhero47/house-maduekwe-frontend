@@ -8,6 +8,7 @@ import {
 	SliderWrapper,
 	SideImage,
 	Image,
+	AlsoLike,
 } from './elements/index.style';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -15,7 +16,8 @@ import ModalSlider from '../../components/sliders/modal-slider/index';
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
 import { LuFullscreen } from 'react-icons/lu';
 import { items } from '../../dummyData/shopItems';
-import Details from "./elements/details";
+import Details from './elements/details';
+import ShopItem from '../../components/shop-item-display-unit/index';
 
 function Index() {
 	const product = items[0];
@@ -58,8 +60,16 @@ function Index() {
 		return 'top';
 	};
 
+	const sideImages = useMemo(() => {
+		const data = product?.imageCatalog || [];
+		const shuffled = [...data].sort(() => Math.random() - 0.5);
+		return shuffled.slice(0, 2);
+	}, [product]);
+
+	const alsoLikeData = Array(4).fill({ ...product });
+
 	return (
-		<Container>
+		<Container className="Y_scroll_style">
 			<nav aria-label="Breadcrumb" className="w-100px">
 				<List role="list">
 					<li className=" flex items-center text-[14px]">
@@ -139,36 +149,60 @@ function Index() {
 					</SliderWrapper>
 
 					<SideImage>
-						<div className="aspect-square w-[49%] cubicle">
-							<div className="imageHolder rounded-[inherit]">
-								<Image
-									src={productDisplay[1]?.url}
-									alt="Error"
-									$position={getImagePosition(productDisplay[1]?.url)}
-								/>
+						{/* If fewer than 1 → hide all */}
+						{sideImages.length >= 1 && (
+							<div className="aspect-square w-[49%] cubicle">
+								<div className="imageHolder rounded-[inherit]">
+									<Image
+										src={sideImages[0]?.url}
+										alt="Error"
+										$position={getImagePosition(sideImages[0]?.url)}
+									/>
+								</div>
 							</div>
-						</div>
+						)}
 
-						<div className="aspect-square w-[49%] cubicle">
-							<div className="imageHolder rounded-[inherit]">
-								<Image
-									src={productDisplay[2]?.url}
-									alt="Error"
-									$position={getImagePosition(productDisplay[2]?.url)}
-								/>
+						{/* Only show this if 2 images exist */}
+						{sideImages.length >= 2 && (
+							<div className="aspect-square w-[49%] cubicle">
+								<div className="imageHolder rounded-[inherit]">
+									<Image
+										src={sideImages[1]?.url}
+										alt="Error"
+										$position={getImagePosition(sideImages[1]?.url)}
+									/>
+								</div>
 							</div>
-						</div>
+						)}
 					</SideImage>
 				</div>
 
-				<div id="details" className='intro-x'>
+				<div id="details" className="intro-x">
 					<Details
 						product={product}
 						attribute={attribute}
 						configAttribute={configAttribute}
+						setIndex={setIndex}
 					/>
 				</div>
 			</ItemSection>
+
+			<AlsoLike>
+				<h3 id='mightLikeTitle' className="text-[var(--mainBody-text)]">you might also like</h3>
+
+				<div id="alsoLike">
+					{alsoLikeData.map((x, i) => (
+						<div key={i} className="cubicle">
+							<ShopItem
+								isLoading={false}
+								product={x}
+								width="100%"
+								height="100%"
+							/>
+						</div>
+					))}
+				</div>
+			</AlsoLike>
 		</Container>
 	);
 }

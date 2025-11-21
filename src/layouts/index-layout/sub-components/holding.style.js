@@ -106,6 +106,7 @@ const centerOut = keyframes`
 export const HoldingWrapper = styled.div`
 	width: clamp(300px, 35vw, 500px);
 	padding: 12px;
+	padding-bottom: 30px;
 	border-radius: 14px;
 	background-color: ${({ theme }) => theme?.mainBody.container};
 	border: ${({ theme }) => theme?.mainBody.line};
@@ -141,20 +142,18 @@ export const Footer = styled.div`
 		}
 	}
 
-	.btn-move {
+	.btn_anon {
 		color: var(--mainBody-text);
 		background-color: var(--mainBody-container);
 		border: 1px solid var(--mainBody-line);
 	}
 
-	.btn-anon {
-		background-color: black;
-		color: white;
+	.btn_move {
+		background-color: ${({ theme }) => theme?.addToCart.background};
+		color: ${({ theme }) => theme?.addToCart.text};
 
-		/* dark mode */
-		[data-theme='dark'] & {
-			background-color: white;
-			color: black;
+		&:hover {
+			background-color: ${({ theme }) => theme?.addToCart.hoverBg};
 		}
 	}
 `;
@@ -220,7 +219,7 @@ export const ShopItem = styled.div`
 	}
 
 	/* Trash button */
-	.remove-btn {
+	.remove_btn {
 		margin-left: auto;
 		padding: 6px;
 		color: #d9534f;

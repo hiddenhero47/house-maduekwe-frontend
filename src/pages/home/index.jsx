@@ -1,18 +1,22 @@
 import React from 'react';
-import { Container, IntroSection, ContainerSection } from './elements/index.style';
+import {
+	Container,
+	IntroSection,
+	ContainerSection,
+} from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
 import postImage from '../../assets/images/image.avif';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
-import { items } from "../../dummyData/shopItems";
-import ShopItem from '../../components/shop-item-display-unit/index'
+import { items } from '../../dummyData/shopItems';
+import ShopItem from '../../components/shop-item-display-unit/index';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	return (
-		<Container>
+		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
 				<div className="w-full h-full">
 					<div className="imageHolder">
@@ -49,7 +53,7 @@ function Index() {
 						<span className="text-[var(--mainBody-sbText)]">
 							Explore more option
 						</span>{' '}
-						<span className='text-[var(--intro-logo)]'>in our gallery</span>
+						<span className="text-[var(--intro-logo)]">in our gallery</span>
 					</div>
 					<i className="text-[var(--mainBody-sbText)]">
 						<IoIosArrowForward />
@@ -57,8 +61,13 @@ function Index() {
 				</Link>
 			</IntroSection>
 
-			<ContainerSection className='intro-y mt-[15vh]'>
-				<ShopItem isLoading={false} product={items[0]} width="30%" height="50vh" />
+			<ContainerSection className="intro-y mt-[15vh]">
+				<ShopItem
+					isLoading={false}
+					product={items[0]}
+					width="30%"
+					height="50vh"
+				/>
 			</ContainerSection>
 		</Container>
 	);
