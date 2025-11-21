@@ -155,7 +155,7 @@ function ShopItem({
 		if (e.target.tagName !== 'IMG') return;
 
 		const target = e.currentTarget;
-		const holdDelay = 120;
+		const holdDelay = 190;
 
 		const timeoutId = setTimeout(() => {
 			setIsDragging(true);
