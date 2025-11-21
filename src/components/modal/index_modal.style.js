@@ -94,6 +94,10 @@ export const LeftShell = styled.div`
 	margin-block: auto;
 	border: 0 solid transparent;
 
+	@media (max-width: 500px) {
+		width: ${(props) => props.$minWidth || props.width};
+	}
+
 	/* animate when $animation is enabled */
 	${({ $animation, $isOpen }) =>
 		$animation &&
