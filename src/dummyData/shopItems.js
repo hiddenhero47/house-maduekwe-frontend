@@ -167,6 +167,12 @@ export const items = [
 		imageCatalog: imageCatalog,
 		discount: 0,
 		attributes: attributes,
+		futures: [
+			'Only the best materials',
+			'Ethically and locally made',
+			'Pre-washed and pre-shrunk',
+			'Machine wash cold with similar colors',
+		],
 		createdAt: '2025-10-28T19:55:40.596Z',
 		updatedAt: '2025-10-28T21:03:12.064Z',
 		__v: 0,

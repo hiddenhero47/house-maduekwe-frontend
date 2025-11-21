@@ -82,6 +82,7 @@ function ShopItem({
 		const timeoutId = setTimeout(() => {
 			setIsDragging(true);
 			startPos.current = { x: e.clientX, y: e.clientY };
+			const rect = target.getBoundingClientRect();
 
 			dispatch(startDrag({ dragType: 'shop-item' }));
 
@@ -91,6 +92,10 @@ function ShopItem({
 			Object.assign(ghost.style, {
 				position: 'fixed',
 				pointerEvents: 'none',
+				/* 🟩 EXACT px size from original element */
+				width: `${rect.width}px`,
+				height: `${rect.height}px`,
+
 				top: `${e.clientY}px`,
 				left: `${e.clientX}px`,
 				transform: 'translate(-50%, -50%) scale(0.95)',
@@ -263,6 +268,7 @@ function ShopItem({
 													currentColor: attr,
 													currentDisplay: attr?.images,
 												});
+												setIndex(0);
 											}}
 											key={i}
 											$active={

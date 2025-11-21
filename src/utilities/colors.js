@@ -39,6 +39,12 @@ export const colors = {
 			sbText: "#a5a5a5",
 			active: "#0f0f0f",
 		},
+
+		addToCart: {
+			background: "#000000",
+			text: "#ffffff",
+			hoverBg: "#383838",
+		},
 	},
 
 	// Dark mode colors
@@ -83,6 +89,12 @@ export const colors = {
 			text: "#b7b9bf",
 			sbText: "#585e60",
 			active: "#87898b",
+		},
+
+		addToCart: {
+			background: "#383838",
+			text: "#e4e4e4",
+			hoverBg: "#4d4d4d",
 		},
 	},
 };
