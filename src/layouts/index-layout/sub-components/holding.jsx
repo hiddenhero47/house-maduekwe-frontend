@@ -77,7 +77,7 @@ function Holding({ close }) {
 						</div>
 
 						<button
-							className="remove-btn"
+							className="remove_btn"
 							onClick={() => removeItem(item.tempId)}
 						>
 							<i>
@@ -90,12 +90,15 @@ function Holding({ close }) {
 
 			{/* Footer Buttons */}
 			<Footer>
-				<button onClick={moveToCart} className="btn btn-move">
+				<button onClick={anonymousCheckout} className="btn btn_move">
 					Move to Cart
 				</button>
 
-				<button onClick={anonymousCheckout} className="btn btn-anon">
-					Anonymous Checkout <FaArrowRightLong />
+				<button onClick={moveToCart} className="btn btn_anon">
+					Anonymous Checkout{' '}
+					<i>
+						<FaArrowRightLong />
+					</i>
 				</button>
 			</Footer>
 		</HoldingWrapper>

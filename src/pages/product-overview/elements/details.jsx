@@ -1,11 +1,23 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { ColorCircle, SizeButton, AddToCartBtn } from './index.style';
+import {
+	ColorCircle,
+	SizeButton,
+	AddToCartBtn,
+	DetailsWrapper,
+	HoldBtn,
+} from './index.style';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { attributeType } from '../../../utilities/app-const';
+import { FaShoppingBasket } from 'react-icons/fa';
+import { IoIosArrowForward } from 'react-icons/io';
+import { FaCartShopping } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
+import { addToHoldings } from '../../../store/slice/holding';
 
-function Details({ product, attribute, configAttribute }) {
-	// Extract colors + sizes based on your real DB structure
+function Details({ product, attribute, configAttribute, setIndex }) {
+	const dispatch = useDispatch();
+
 	const { colors, sizes } = useMemo(() => {
 		if (!product?.attributes) return { colors: [], sizes: [] };
 
@@ -20,12 +32,14 @@ function Details({ product, attribute, configAttribute }) {
 	}, [product]);
 
 	// COLOR SELECTOR
-	const setColor = (attr) =>
+	const setColor = (attr) => {
 		configAttribute((prev) => ({
 			...prev,
 			currentColor: attr,
 			currentDisplay: attr?.images ?? null,
 		}));
+		setIndex(0);
+	};
 
 	// SIZE SELECTOR
 	const setSize = (attr) =>
@@ -36,8 +50,22 @@ function Details({ product, attribute, configAttribute }) {
 
 	const rating = product?.rating || 4;
 
+	const holding = () => {
+		const selectedItem = {
+			shopItem: product,
+			quantity: 1,
+			selectedAttributes: [
+				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(attribute.currentSize ? [attribute.currentSize] : []),
+			],
+		};
+
+		console.log('📦 Add to holding', selectedItem);
+		dispatch(addToHoldings(selectedItem));
+	};
+
 	return (
-		<div className="flex flex-col px-[15%]">
+		<DetailsWrapper>
 			<div className="flex justify-between w-full items-center mb-6 text-[var(--mainBody-text)]">
 				<h1 className="text-[19.3px] font-bold font-[Inter]">
 					{product?.name || 'Product Name'}
@@ -49,7 +77,7 @@ function Details({ product, attribute, configAttribute }) {
 			</div>
 
 			<div className="flex items-center mb-8">
-                <span className='text-sm mr-1 text-[var(--mainBody-sbText)]'>3.9</span>
+				<span className="text-sm mr-1 text-[var(--mainBody-sbText)]">3.9</span>
 
 				<div className="flex gap-1">
 					{[1, 2, 3, 4, 5].map((i) =>
@@ -67,7 +95,9 @@ function Details({ product, attribute, configAttribute }) {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-[var(--mainBody-sbText)]">Color</h3>
+				<h3 className="text-sm font-medium mb-2 text-[var(--mainBody-sbText)]">
+					Color
+				</h3>
 
 				<div className="flex gap-3">
 					{colors.map((attr, i) => {
@@ -87,16 +117,17 @@ function Details({ product, attribute, configAttribute }) {
 				</div>
 			</div>
 
-			{/* 📐 SIZES */}
 			<div className="mt-8">
 				<div className="flex items-center justify-between mb-2">
-					<h3 className="text-sm font-medium text-[var(--mainBody-sbText)]">Size</h3>
+					<h3 className="text-sm font-medium text-[var(--mainBody-sbText)]">
+						Size
+					</h3>
 					<span className="text-sm text-[var(--intro-logo)] cursor-pointer">
 						Size guide
 					</span>
 				</div>
 
-				<div className="grid grid-cols-4 gap-3">
+				<div className="flex flex-wrap w-full gap-[10px]">
 					{sizes.map((attr, i) => {
 						const sizeValue = attr?.Attribute?.display;
 						const isActive =
@@ -115,38 +146,47 @@ function Details({ product, attribute, configAttribute }) {
 				</div>
 			</div>
 
-			{/* ADD TO CART */}
-			<AddToCartBtn>Add to cart</AddToCartBtn>
+			<HoldBtn onClick={() => holding()}>
+				<i>
+					<FaShoppingBasket />
+				</i>
+				Hold Item
+				<i>
+					<IoIosArrowForward />
+				</i>
+			</HoldBtn>
 
-			{/* DESCRIPTION */}
-			{/* <div className="mt-10">
-				<h3 className="text-sm font-medium mb-3">Description</h3>
-				<p className="text-sm text-gray-700 leading-6">
+			<AddToCartBtn>
+				Add To Cart
+				<i className="ml-1">
+					<FaCartShopping />
+				</i>
+			</AddToCartBtn>
+
+			<div className="mt-8 pb-[35px] border-b-[var(--mainBody-line)] border-b-[1.2px]">
+				<h3 className="text-sm font-semibold mb-3 text-[var(--mainBody-text)]">
+					Description
+				</h3>
+				<p className="text-sm text-[var(--mainBody-sbText)] leading-6">
 					{product?.description || 'This product has no description available.'}
 				</p>
-			</div> */}
+			</div>
 
-			{/* HIGHLIGHTS */}
-			{/* <div className="mt-8">
-				<h3 className="text-sm font-medium">Highlights</h3>
-				<ul className="list-disc pl-5 mt-3 text-sm space-y-2">
-					{product?.highlights?.map((h, i) => (
-						<li key={i} className="text-gray-700">
-							{h}
-						</li>
-					))}
-				</ul>
-			</div> */}
-
-			{/* DETAILS */}
-			{/* <div className="mt-8">
-				<h3 className="text-sm font-medium">Details</h3>
-				<p className="text-sm text-gray-600 mt-3 leading-6">
-					{product?.details ||
-						'Detailed information about this product will appear here.'}
-				</p>
-			</div> */}
-		</div>
+			{product?.futures && (
+				<div className="mt-8">
+					<h3 className="text-sm font-semibold text-[var(--mainBody-text)]">
+						Highlights
+					</h3>
+					<ul className="list-disc pl-5 mt-3 text-sm space-y-2">
+						{product?.futures?.map((h, i) => (
+							<li key={i} className="text-[var(--mainBody-sbText)]">
+								{h}
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+		</DetailsWrapper>
 	);
 }
 
