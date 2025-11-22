@@ -155,7 +155,7 @@ function ShopItem({
 		if (e.target.tagName !== 'IMG') return;
 
 		const target = e.currentTarget;
-		const holdDelay = 190;
+		const holdDelay = 380;
 
 		const timeoutId = setTimeout(() => {
 			setIsDragging(true);
@@ -227,6 +227,16 @@ function ShopItem({
 		}
 	};
 
+	// 📱 Touch cancel (interruptions like scroll, notification bar pull, gesture nav)
+	const handleTouchCancel = () => {
+		if (ghostRef.current) {
+			ghostRef.current.remove();
+			ghostRef.current = null;
+		}
+		setIsDragging(false);
+		dispatch(resetDrag());
+	};
+
 	// 🎯 Attach global listeners when dragging starts
 	useEffect(() => {
 		if (!isDragging) return;
@@ -236,6 +246,7 @@ function ShopItem({
 		// 📱 Touch events
 		window.addEventListener('touchmove', handleTouchMove, { passive: false });
 		window.addEventListener('touchend', handleTouchEnd);
+		window.addEventListener('touchcancel', handleTouchCancel);
 
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove);
@@ -243,6 +254,7 @@ function ShopItem({
 
 			window.removeEventListener('touchmove', handleTouchMove);
 			window.removeEventListener('touchend', handleTouchEnd);
+			window.removeEventListener('touchcancel', handleTouchCancel);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isDragging]);
@@ -313,7 +325,13 @@ function ShopItem({
 							<ModalSlider currentIndex={index}>
 								{productDisplay.map((image, i) => (
 									<div key={i} className="imageHolder slider_body">
-										<img src={image?.url} alt="error" draggable="false" />
+										<img
+											src={image?.url}
+											alt="error"
+											draggable="false"
+											onContextMenu={(e) => e.preventDefault()}
+											style={{ touchAction: 'none' }}
+										/>
 									</div>
 								))}
 							</ModalSlider>
