@@ -330,7 +330,7 @@ function ShopItem({
 											alt="error"
 											draggable="false"
 											onContextMenu={(e) => e.preventDefault()}
-											style={{ touchAction: 'none' }}
+											// style={{ touchAction: 'none' }}
 										/>
 									</div>
 								))}

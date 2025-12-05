@@ -3,6 +3,7 @@ export const colors = {
 		mainBody: {
 			background: '#f9f9f9',
 			container: '#ffffff',
+			card: "#fcfcfc",
 			toolkitBg: '#ededed',
 			toolkitBgGlass: 'rgb(232, 232, 232, 0.7)',
 			toolkitActive: '#E5E5E5',
@@ -12,6 +13,8 @@ export const colors = {
 			sbKitText: '#c5c5c5',
 			kitTextDark: '#8a8a8c',
 			line: '#ebebeb',
+			cardLine: '#ebebeb',
+			cardSbLine: '#e6e6e6',
 		},
 
 		intro: {
@@ -45,6 +48,13 @@ export const colors = {
 			text: "#ffffff",
 			hoverBg: "#383838",
 		},
+
+		basicBtn: {
+			background: "#f2f2f2",
+			bgActive: "#0f0f0f",
+			text: "#0f0f0f",
+			textActive: "#ffffff",
+		},
 	},
 
 	// Dark mode colors
@@ -53,6 +63,7 @@ export const colors = {
 		mainBody: {
 			background: '#121212',
 			container: '#1f1f1f',
+			card: "#1a1a1a",
 			toolkitBg: '#2e2e2e',
 			toolkitBgGlass: 'rgb(46, 46, 46, 0.7)',
 			toolkitActive: '#363636',
@@ -62,6 +73,8 @@ export const colors = {
 			sbKitText: '#a8a8a8',
 			kitTextDark: '#6f6f6f',
 			line: '#333333',
+			cardLine: '#262626',
+			cardSbLine: '#333333',
 		},
 
 		intro: {
@@ -95,6 +108,13 @@ export const colors = {
 			background: "#383838",
 			text: "#e4e4e4",
 			hoverBg: "#4d4d4d",
+		},
+
+		basicBtn: {
+			background: "#343332",
+			bgActive: "#f1f1f1",
+			text: "#f1f1f1",
+			textActive: "#0f0f0f",
 		},
 	},
 };
