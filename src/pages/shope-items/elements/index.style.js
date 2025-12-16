@@ -6,4 +6,9 @@ export const Container = styled.div`
 	height: 100%;
 	overflow-y: auto;
 	padding-bottom: 20px;
+	color: ${({ theme }) => theme?.mainBody.text};
+
+	& > * {
+		flex-shrink: 0;
+	}
 `;

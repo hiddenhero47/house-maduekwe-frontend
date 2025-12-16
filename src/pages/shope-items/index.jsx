@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { Container } from './elements/index.style';
 
 function Index() {
-  return (
-    <div className='text-mainBody-yellow'>Shope Items</div>
-  )
+
+	return (
+		<Container className="Y_scroll_style">
+			
+		</Container>
+	);
 }
 
-export default Index
+export default Index;

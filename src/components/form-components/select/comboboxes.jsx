@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
 	CustomSelectContainer,
 	CustomSelectValue,
@@ -9,7 +9,7 @@ import {
 } from './custom-select.style';
 import { IoIosArrowDown } from 'react-icons/io';
 
-const CustomSelect = ({
+const Comboboxes = ({
 	options,
 	value,
 	placeholder,
@@ -20,16 +20,23 @@ const CustomSelect = ({
 	name,
 	id,
 	className,
+	searchId,
 	errormessage,
-	useBackground = false,
+	useBackground,
 	scrollToTop = false,
 	disabled = false,
+	setSearchAPI,
 	paddingX,
 	paddingY,
+	searchValue,
+	setSearchValue,
+	onSearch,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const menuRef = useRef(null);
-    const bodyRef = useRef(null);
+	const bodyRef = useRef(null);
+	const inputRef = useRef(null);
+	const lastActionRef = useRef(null);
 
 	const selectedOption = options.find((option) => option.value === value);
 
@@ -43,12 +50,72 @@ const CustomSelect = ({
 		if (menuRef.current && scrollToTop) {
 			menuRef.current.scrollTop = 0;
 		}
+		if (setSearchValue) {
+			setSearchValue(option.label);
+		}
+		if (onSearch) {
+			onSearch(searchId)(option.label);
+		}
+		lastActionRef.current = 'select';
 		setIsOpen(false);
 	};
 
-	const handleSelectClick = () => {
+	const handleSelectClick = (e) => {
 		if (disabled) return;
-		setIsOpen(true);
+
+		if (inputRef.current?.contains(e.target) && isOpen) {
+			return;
+		}
+		setIsOpen((prev) => !prev);
+	};
+
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const handleClick = (e) => {
+			const clickedInsideBody = bodyRef.current?.contains(e.target);
+			const clickedInsideMenu = menuRef.current?.contains(e.target);
+
+			if (!clickedInsideBody && !clickedInsideMenu) {
+				setIsOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClick);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+		};
+	}, [isOpen]);
+
+	const filter = (options) => {
+		if (searchValue) {
+			return options.filter((option) =>
+				option.label?.toLowerCase().includes(searchValue.toLowerCase())
+			);
+		}
+		return options;
+	};
+
+	const search = (e) => {
+		if (setSearchValue) {
+			setSearchValue(e.target.value);
+		}
+		if (onSearch) {
+			onSearch(searchId)(e.target.value);
+		}
+		lastActionRef.current = 'typing';
+	};
+
+	const searchBlur = (e) => {
+		setTimeout(() => {
+			if (lastActionRef.current === 'typing') {
+				if (selectedOption && selectedOption.label !== searchValue) {
+					setSearchValue(selectedOption.label || '');
+				}
+			}
+			lastActionRef.current = null; // reset
+		}, 100);
 	};
 
 	return (
@@ -60,33 +127,26 @@ const CustomSelect = ({
 				className="select_wrapper"
 			>
 				<CustomSelectValue
-					className={`${className || ""} custom_select`}
+					className={`${className || ''} custom_select`}
 					onClick={handleSelectClick}
 					$isError={isError || false}
 					$isOpen={isOpen}
 					$useBackground={useBackground}
-                    ref={bodyRef}
+					ref={bodyRef}
 					$disabled={disabled}
 					$paddingX={paddingX}
 					$paddingY={paddingY}
 				>
-					{selectedOption ? (
-						<>
-							{selectedOption.image && (
-								<div className="imageContainer">
-									<ImageHolder>
-										<img
-											src={selectedOption.image}
-											alt={selectedOption.label}
-										/>
-									</ImageHolder>
-								</div>
-							)}
-							<span className="label form_word">{selectedOption.label}</span>
-						</>
-					) : (
-						<span className="placeholder form_word">{placeholder}</span>
-					)}
+					<input
+						ref={inputRef}
+						id={searchId}
+						className="form_word"
+						type="text"
+						value={searchValue || ''}
+						onChange={search}
+						placeholder={placeholder}
+						onBlur={(e) => searchBlur(e)}
+					/>
 
 					<button
 						className="arrow"
@@ -103,8 +163,6 @@ const CustomSelect = ({
 					className="select_dropdown"
 					$open={isOpen}
 					open={isOpen}
-					closedby="any"
-					onClose={() => setIsOpen(false)}
 				>
 					<div className="wrapper">
 						<Option
@@ -118,7 +176,7 @@ const CustomSelect = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{options.map((option) => (
+						{filter(options).map((option) => (
 							<Option
 								className="select_option"
 								key={option.value}
@@ -144,4 +202,4 @@ const CustomSelect = ({
 	);
 };
 
-export default CustomSelect;
+export default Comboboxes;
