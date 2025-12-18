@@ -86,6 +86,14 @@ export const colors = {
 			hoverBg: '#379595',
 			disabledBg: '#c9c9c9',
 		},
+
+		filterBtn: {
+			background: '#cccccc',
+			bgActive: '#e6e6e6',
+			text: '#404040',
+			hoverBg: '#d9d9d9',
+			disabledBg: '#c9c9c9',
+		},
 	},
 
 	// Dark mode colors
@@ -157,7 +165,7 @@ export const colors = {
 		},
 
 		addToCart: {
-			background: '#383838',
+			background: '#333333',
 			text: '#e4e4e4',
 			hoverBg: '#4d4d4d',
 			disabledBg: '',
@@ -176,6 +184,14 @@ export const colors = {
 			bgActive: '#6f6f6f',
 			text: '#d9d9d9',
 			hoverBg: '#4d4d4d',
+			disabledBg: '#c9c9c9',
+		},
+
+		filterBtn: {
+			background: '#333333',
+			bgActive: '#4d4d4d',
+			text: '#d9d9d9',
+			hoverBg: '#404040',
 			disabledBg: '#c9c9c9',
 		},
 	},
