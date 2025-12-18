@@ -131,7 +131,7 @@ function LeftMenu({ closeMe, openHolding }) {
 
 					<li>
 						<Link
-							to="/products"
+							to="/products/new-arrivals"
 							onClick={() => closeMe()}
 							className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 						>

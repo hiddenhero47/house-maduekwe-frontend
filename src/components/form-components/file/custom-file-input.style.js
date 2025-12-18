@@ -4,23 +4,33 @@ export const FileInputWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 100%;
-	max-height: ${(props) => props.height};
+	width: fit-content;
+	margin-inline: auto;
 `;
 
 export const FileInput = styled.div`
-	width: 100%;
-	min-height: 185px;
-	height: 467px;
+	width: ${({width}) => width};
+	aspect-ratio: 4/2;
+	min-height: 165px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	border-radius: 5px;
-	border: 2px dashed ${(props) => (props.$isError ? 'red' : '#D2D2D2')};
+	border-radius: ${({ $useBackground }) => ($useBackground ? '5px' : '')};
+	border: ${({ theme, $isError, $useBackground, $disabled }) => {
+		if ($disabled) return `2px dashed ${theme?.form?.disabled}`;
+		if ($isError) return `2px dashed ${theme?.form.error}`;
+		if ($useBackground) return `2px dashed ${theme.form?.line}`;
+		return '';
+	}};
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		border: 2px dashed ${({ theme }) => theme?.form.sbLine};
+	}
 
 	&.isDragging {
-		border: 2px solid #008080;
+		border: 2px solid ${({ theme }) => theme?.form.blue};
 	}
 
 	& input[type='file'] {
@@ -28,231 +38,146 @@ export const FileInput = styled.div`
 		width: auto;
 	}
 
-	.FileLabel {
-		cursor: pointer;
-
-		#FillBtn {
-			border-radius: 5px;
-			pointer-events: none;
-			padding-block: 5.5px;
-			padding-inline: 30px;
-			margin-top: 26px;
-
-			@media (max-width: 500px) {
-				padding-block: 5.5px;
-				padding-inline: 30px;
-			}
-		}
-
-		#FillBtnLg {
-			pointer-events: none;
-			padding-block: 15px;
-			padding-inline: 40px;
-			padding-bottom: 18px;
-			margin-top: 21px;
-
-			@media (max-width: 500px) {
-				padding-block: 15px;
-				padding-inline: 40px;
-				padding-bottom: 18px;
-			}
-		}
-	}
-
 	.container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+
+		div {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			gap: 3px;
+			margin-block: 5px;
+			margin-inline: 15px;
+		}
 	}
 
 	.icon {
-		color: #008080;
-	}
-
-	.iconLg {
-		color: #343434;
-	}
-
-	.FileText {
-		font-family: Hanken Grotesk;
-		font-size: 18px;
-		font-weight: 600;
-		line-height: 23.45px;
-	}
-
-	.FileTextLg {
-		font-family: Hanken Grotesk;
-		font-size: 28px;
-		font-weight: 600;
-		line-height: 36.48px;
-	}
-
-	.FileSubText {
-		font-family: Hanken Grotesk;
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 15.64px;
+		color: ${({ theme }) => theme?.form.sbText};
+		width: clamp(35px, 50%, 45px);
+		aspect-ratio: 1/1;
 		display: flex;
-		align-items: center;
-		gap: 8px;
 
-		i {
-			width: 28px;
-			height: 1px;
-			background-color: #000000;
+		svg {
+			width: 100%;
+			height: 100%;
 		}
 	}
 
-	.FileSubTextLg {
-		font-family: Hanken Grotesk;
-		font-size: 20px;
-		font-weight: 700;
-		line-height: 26.06px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-
-		i {
-			width: 26px;
-			height: 1px;
-			background-color: #000000;
-		}
+	.form_file_word {
+		font-family: Inter;
+		font-size: 13px;
+		font-weight: 600;
+		color: ${({ theme }) => theme?.form.sbText};
 	}
 `;
 
 export const FileInputSelected = styled.div`
-	width: 100%;
+	width: ${({width}) => width};
+	aspect-ratio: 4/2;
+	min-height: 165px;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding-inline: 10px;
-	padding-left: 12px;
-	padding-block: 10px;
-	border: 1px solid #8e8e8e;
-	border-radius: 10px;
+	padding: 8px;
+	border-radius: ${({ $useBackground }) => ($useBackground ? '5px' : '')};
+	border: ${({ theme, $isError, $useBackground, $disabled }) => {
+		if ($disabled) return `2px dashed ${theme?.form?.disabled}`;
+		if ($isError) return `2px dashed ${theme?.form.error}`;
+		if ($useBackground) return `2px dashed ${theme.form?.line}`;
+		return '';
+	}};
 
 	&:hover {
-		border: 1px solid #008080;
+		border: 2px dashed ${({ theme }) => theme?.form.sbLine};
 	}
 
-	.file_Icon {
-		/* color: #bbbbbb; */
-		color: #308242;
+	.icon {
+		color: ${({ theme }) => (theme.mode === 'dark' ? '#4d4d4d' : '#a6a6a6')};
+		font-size: 36px;
+		margin-left: 10px;
 	}
 
-	.shape {
-		max-width: 80%;
+	.selected_file_wrapper {
+		width: 80%;
+		max-width: calc(100% - 50px);
+		display: flex;
+		align-items: center;
+		gap: 4%;
+		margin-right: auto;
 	}
 
-	.Details {
+	.file_details {
+		/* max-width: 75%; */
+		max-width: calc(100% - 50px);
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 5px;
-		font-family: Hanken Grotesk;
-		font-size: 16px;
-		font-weight: 600;
-		line-height: 20.85px;
+
+		h3,
+		span {
+			max-width: 100%;
+			font-family: Outfit;
+			font-size: 13px;
+			font-weight: 600;
+			color: ${({ theme }) => theme?.form.text};
+			overflow-x: auto;
+		}
 
 		span {
-			color: #616161;
+			font-size: 12px;
+			font-weight: 400;
+			color: ${({ theme }) => theme?.form.sbText};
 		}
 	}
 
-	.clear {
+	.file_clear_btn {
 		cursor: pointer;
 		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 5px;
-		font-family: Outfit;
-		font-size: 10px;
-		font-weight: 400;
-		line-height: 12.6px;
-		color: #d93e39;
+		align-items: center;
+		gap: 2px;
+		color: ${({ theme }) => (theme.mode === 'dark' ? '#b30059' : '#cc0000')};
+		font-size: 12px;
 
 		i {
-			color: #343434;
-		}
-	}
-`;
-
-export const Error = styled.p`
-	display: flex;
-	align-items: center;
-	gap: 5px;
-	margin: 0%;
-	margin-top: 3px;
-	margin-left: 10px;
-	font-family: Hanken Grotesk;
-	font-size: 12px;
-	font-weight: 400;
-	line-height: 10px;
-	letter-spacing: -0.01em;
-	color: #d93e39;
-`;
-
-export const FileControl = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: ${(props) => props.width};
-	/* height: ${(props) => props.height}; */
-	height: auto;
-	margin-inline: ${(props) => (props.$marginX ? props.$marginX : '0')};
-	margin-block: ${(props) => (props.$marginY ? props.$marginY : '0')};
-
-	label:first-child {
-		color: #4a4a4a;
-		transition: all 0.1s ease-out;
-		font-family: Hanken Grotesk;
-		font-size: 18px;
-		font-weight: 600;
-		line-height: 23px;
-		letter-spacing: 0em;
-		margin-bottom: 7px;
-	}
-
-	&:focus-within {
-		label {
-			color: #008080;
-		}
-	}
-
-	@media (max-width: 500px) {
-		label:first-child {
-			font-size: 14px;
+			font-size: 20px;
 			font-weight: 600;
-			line-height: 18px;
-			letter-spacing: 0em;
-			margin-bottom: 2.7px;
 		}
 	}
 `;
 
-export const ButtonSell = styled.button`
-	padding-block: 9.02px;
-	padding-inline: 15.5px;
+export const ButtonShell = styled.label`
+	padding-block: 5px;
+	padding-inline: 8px;
+	margin-top: 5px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 10px;
-	background-color: ${(props) =>
-		!props.$isLoading && props.disabled ? 'rgb(0, 128, 128, 0.6)' : '#008080'};
+	border-radius: 3px;
+	background-color: ${({ $isLoading, $disabled, theme }) =>
+		!$isLoading && $disabled
+			? theme?.formBtn?.disabledBg
+			: theme?.formBtn?.background};
 	position: relative;
-	cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+	cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		background-color: ${({ theme, $disabled }) =>
+			!$disabled ? theme?.formBtn?.hoverBg : ''};
+	}
 
 	.content {
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		visibility: ${(props) => (props.$isLoading ? 'hidden' : 'visible')};
-		font-family: Hanken Grotesk;
-		font-size: 14px;
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+		font-size: 11.8px;
 		font-weight: 600;
-		line-height: 18px;
-		letter-spacing: 0em;
-		color: #ffffff;
+		color: ${({ theme }) => theme?.formBtn?.text};
 	}
 
 	.loader {
@@ -263,14 +188,18 @@ export const ButtonSell = styled.button`
 	}
 
 	@media (max-width: 500px) {
-		padding-inline: 15.5px;
-
+		padding-inline: 7px;
 		.content {
 			gap: 4px;
-			font-size: 14px;
-			font-weight: 600;
-			line-height: 18px;
-			letter-spacing: 0em;
+			font-size: 10.8px;
 		}
 	}
+`;
+
+export const Error = styled.p`
+	margin-left: 4px;
+	font-size: 13.3px;
+	font-weight: 800;
+	font-family: Inter;
+	color: ${({ theme }) => theme?.form.error};
 `;

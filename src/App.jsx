@@ -28,7 +28,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/overview/:id" element={<ProductOverview />} />
               <Route path="/my-cart" element={<UserCart />} />
-              <Route path="/products" element={<ShopeItems />} />
+              <Route path="/products/*" element={<ShopeItems />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
