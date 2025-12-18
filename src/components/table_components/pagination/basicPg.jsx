@@ -4,8 +4,6 @@ import { useTheme } from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 
-
-
 function BasicPg({ currentPage, changePage, totalPages }) {
     const theme = useTheme();
     const [active, setActive] = useState("");

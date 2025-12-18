@@ -8,6 +8,7 @@ import {
 	Controller,
 	Color,
 	Size,
+	Image,
 } from './index.style';
 import { MdOutlineError } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -294,6 +295,15 @@ function ShopItem({
 		if (newIndex >= 0 && newIndex < productDisplay.length) setIndex(newIndex);
 	};
 
+	const getImagePosition = (image) => {
+		if (!image?.width || !image?.height) return 'center';
+		const ratio = image.width / image.height;
+		// Square-ish (0.8 to 1.25)
+		if (ratio > 0.8 && ratio < 1.25) return 'center';
+		// Tall or wide rectangle → top gives better visual
+		return 'top';
+	};
+
 	return (
 		<ShopItemWrapper
 			$useBackground={useBackground}
@@ -325,12 +335,13 @@ function ShopItem({
 							<ModalSlider currentIndex={index}>
 								{productDisplay.map((image, i) => (
 									<div key={i} className="imageHolder slider_body">
-										<img
+										<Image
 											src={image?.url}
 											alt="error"
 											draggable="false"
 											onContextMenu={(e) => e.preventDefault()}
 											// style={{ touchAction: 'none' }}
+											$position={getImagePosition(image?.url)}
 										/>
 									</div>
 								))}

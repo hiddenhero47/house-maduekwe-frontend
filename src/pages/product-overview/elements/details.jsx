@@ -6,6 +6,7 @@ import {
 	AddToCartBtn,
 	DetailsWrapper,
 	HoldBtn,
+	Increment,
 } from './index.style';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { attributeType } from '../../../utilities/app-const';
@@ -14,6 +15,8 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { FaCartShopping } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { addToHoldings } from '../../../store/slice/holding';
+import { IoIosAdd } from 'react-icons/io';
+import { RiSubtractLine } from 'react-icons/ri';
 
 function Details({ product, attribute, configAttribute, setIndex }) {
 	const dispatch = useDispatch();
@@ -76,7 +79,7 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 				</p>
 			</div>
 
-			<div className="flex items-center mb-8">
+			{/* <div className="flex items-center mb-8">
 				<span className="text-sm mr-1 text-[var(--mainBody-sbText)]">3.9</span>
 
 				<div className="flex gap-1">
@@ -92,7 +95,7 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 				<a className="text-sm ml-3 text-[var(--intro-logo)] cursor-pointer">
 					50 reviews
 				</a>
-			</div>
+			</div> */}
 
 			<div>
 				<h3 className="text-sm font-medium mb-2 text-[var(--mainBody-sbText)]">
@@ -146,16 +149,29 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 				</div>
 			</div>
 
-			<HoldBtn onClick={() => holding()}>
-				<i>
-					<FaShoppingBasket />
-				</i>
-				Hold Item
-				<i>
-					<IoIosArrowForward />
-				</i>
-			</HoldBtn>
+			<div className="mt-5 flex justify-between items-center">
+				<HoldBtn onClick={() => holding()}>
+					<i>
+						<FaShoppingBasket />
+					</i>
+					Hold Item
+					<i>
+						<IoIosArrowForward />
+					</i>
+				</HoldBtn>
 
+				<Increment>
+					<button className="qty-btn">
+						<RiSubtractLine />
+					</button>
+
+					<span className="qty-value">1</span>
+
+					<button className="qty-btn">
+						<IoIosAdd />
+					</button>
+				</Increment>
+			</div>
 			<AddToCartBtn>
 				Add To Cart
 				<i className="ml-1">

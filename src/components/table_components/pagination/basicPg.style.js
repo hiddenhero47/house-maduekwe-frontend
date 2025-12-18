@@ -7,7 +7,7 @@ export const BasicPgWrapper = styled.div`
     width: fit-content;
 
     i {
-        color: ${({ theme }) => (theme).table?.arrow};
+        color: ${({ theme }) => (theme).mainBody?.kitTextDark};
     }
 `;
 
@@ -19,13 +19,13 @@ export const PageNosDisplay = styled.div`
     font-size: 14px;
     font-weight: 600;
     line-height: 17.64px;
-    color: ${({ theme }) => (theme).table?.pageNos};
+    color: ${({ theme }) => (theme).mainBody?.sbText};
 `;
 
 export const PagNos = styled.span`
     color: ${props =>
         props.$active
-            ? ({ theme }) => (theme).table?.pageNosActive
-            : ({ theme }) => (theme).table?.pageNos};
+            ? ({ theme }) => (theme).mainBody?.text
+            : ({ theme }) => (theme).mainBody?.sbText};
     cursor: pointer;
 `;
