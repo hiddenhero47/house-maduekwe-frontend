@@ -86,7 +86,7 @@ function Index() {
 				</div>
 			</section>
 
-			<h3 className="mx-[auto] my-[20px] text-[clamp(18px,4vw,24px)] font-thin intro-y">
+			<h3 className="mx-[auto] my-[20px] text-[clamp(18px,4vw,24px)] font-thin">
 				{isNewArrivals ? 'NEW ARRIVALS' : 'BEST SELLERS'}
 			</h3>
 

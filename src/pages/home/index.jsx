@@ -43,7 +43,7 @@ function Index() {
 							Where Fashion Dreams Unfold.
 						</p>
 					</div>
-					<Link to="/" id="authBtn">
+					<Link to="/authentication" id="authBtn">
 						Step In
 					</Link>
 				</div>
