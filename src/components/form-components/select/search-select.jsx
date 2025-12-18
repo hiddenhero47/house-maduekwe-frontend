@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
 	CustomSelectContainer,
 	CustomSelectValue,
@@ -6,10 +6,12 @@ import {
 	Option,
 	ImageHolder,
 	Error,
+	SearchBox,
 } from './custom-select.style';
 import { IoIosArrowDown } from 'react-icons/io';
+import { BiSearch } from 'react-icons/bi';
 
-const CustomSelect = ({
+const SearchSelect = ({
 	options,
 	value,
 	placeholder,
@@ -22,14 +24,18 @@ const CustomSelect = ({
 	className,
 	errormessage,
 	useBackground = false,
-	scrollToTop = false,
+	setSearchString,
+	handleSearch,
+	useFilter = true,
+	scrollToTop = true,
 	disabled = false,
 	paddingX,
 	paddingY,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [searchValue, setSearchValue] = useState('');
 	const menuRef = useRef(null);
-    const bodyRef = useRef(null);
+	const bodyRef = useRef(null);
 
 	const selectedOption = options.find((option) => option.value === value);
 
@@ -51,21 +57,49 @@ const CustomSelect = ({
 		setIsOpen(true);
 	};
 
+	const handleBlur = (e) => {
+		if (onBlur) {
+			onBlur(e);
+		}
+	};
+
+	const search = (string) => {
+		setSearchValue(string);
+		if (setSearchString) {
+			setSearchString(string);
+		}
+	};
+
+	const handelSearchCall = () => {
+		if (handleSearch) {
+			handleSearch(searchValue);
+		}
+	};
+
+	const filter = (options) => {
+		if (useFilter && searchValue) {
+			return options.filter((option) =>
+				option.label?.toLowerCase().includes(searchValue.toLowerCase())
+			);
+		}
+		return options;
+	};
+
 	return (
 		<>
 			<CustomSelectContainer
 				tabIndex={0}
-				onBlur={onBlur}
+				onBlur={handleBlur}
 				id={id}
 				className="select_wrapper"
 			>
 				<CustomSelectValue
-					className={`${className || ""} custom_select`}
+					className={`${className || ''} custom_select`}
 					onClick={handleSelectClick}
 					$isError={isError || false}
 					$isOpen={isOpen}
 					$useBackground={useBackground}
-                    ref={bodyRef}
+					ref={bodyRef}
 					$disabled={disabled}
 					$paddingX={paddingX}
 					$paddingY={paddingY}
@@ -87,12 +121,9 @@ const CustomSelect = ({
 					) : (
 						<span className="placeholder form_word">{placeholder}</span>
 					)}
-
 					<button
 						className="arrow"
-						style={{
-							transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
-						}}
+						style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)' }}
 					>
 						<IoIosArrowDown width={14} height={10} />
 					</button>
@@ -106,24 +137,36 @@ const CustomSelect = ({
 					closedby="any"
 					onClose={() => setIsOpen(false)}
 				>
+					<SearchBox>
+						<button type="button" onClick={handelSearchCall}>
+							<BiSearch width={15} height={15} />
+						</button>
+						<input
+							className="myInput border-transparent focus:border-transparent focus:ring-0"
+							type="text"
+							autoComplete="on"
+							name={`${name}_search`}
+							id={`${id}_search`}
+							onKeyDown={handelSearchCall}
+							value={searchValue || ''}
+							placeholder=" Search anything..."
+							onChange={(e) => search(e.target.value)}
+						/>
+					</SearchBox>
 					<div className="wrapper">
 						<Option
 							selected={value === ''}
-							onClick={() =>
-								handleOptionClick({
-									value: '',
-									label: '',
-								})
-							}
+							className="select_option"
+							onClick={() => handleOptionClick({ value: '', label: '' })}
 						>
 							<span> _ _</span>
 						</Option>
-						{options.map((option) => (
+						{filter(options).map((option) => (
 							<Option
-								className="select_option"
 								key={option.value}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
+								className="option"
 							>
 								{option.image && (
 									<div className="imageContainer">
@@ -139,9 +182,9 @@ const CustomSelect = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error>{errormessage} !</Error>}
+			{isError && <Error>{errormessage}!</Error>}
 		</>
 	);
 };
 
-export default CustomSelect;
+export default SearchSelect;

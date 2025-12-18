@@ -48,7 +48,7 @@ function Index() {
 					</Link>
 				</div>
 
-				<Link to="/" id="galleryBtn">
+				<Link to="/products" id="galleryBtn">
 					<div>
 						<span className="text-[var(--mainBody-sbText)]">
 							Explore more option
