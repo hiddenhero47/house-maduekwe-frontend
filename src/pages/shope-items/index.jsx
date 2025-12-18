@@ -6,24 +6,46 @@ import {
 } from '../../components/icon-components/backgrounds';
 import { useTheme } from 'styled-components';
 import { FaArrowRightLong } from 'react-icons/fa6';
-import { useParams, useMatch, useNavigate } from 'react-router-dom';
+import {
+	useParams,
+	useMatch,
+	useNavigate,
+	useLocation,
+} from 'react-router-dom';
+import MasonryLayout from './elements/masonry-layout';
+import BasicPg from '../../components/table_components/pagination/basicPg';
 
 function Index() {
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const location = useLocation();
 
-	const { category, minPrice, maxPrice, attributes, page, keyWord } =
-		useParams();
+	const { category, minPrice, maxPrice, attributes, keyWord } = useParams();
+	const page = Number(new URLSearchParams(location.search).get('page')) || 1;
 	const isProducts = useMatch('/products');
 	const isNewArrivals = useMatch('/products/new-arrivals');
 
-	const limit = 10;
+	const limit = 12;
 
-	const resetFilter = () => {};
+	const resetFilter = () => {
+		navigate({
+			pathname: location.pathname,
+			search: '',
+		});
+	};
 
+	const flipPage = (p) => {
+		const params = new URLSearchParams(location.search);
+		params.set('page', p);
+
+		navigate({
+			pathname: location.pathname,
+			search: params.toString(),
+		});
+	};
 	return (
 		<Container className="Y_scroll_style">
-			<section className="w-full h-[50vh] mt-[30px] rounded-[8px] relative">
+			<section id='headerBox' className="w-full mt-[30px] rounded-[8px] relative">
 				{theme.mode === 'dark' ? (
 					<ProductHeaderBgD width="100%" height="100%" />
 				) : (
@@ -45,8 +67,12 @@ function Index() {
 					<NewArrivalsBtn
 						className="intro-y"
 						onClick={() => {
-							navigate(isNewArrivals ? '/products' : '/products/new-arrivals');
-							resetFilter();
+							navigate({
+								pathname: isNewArrivals
+									? '/products'
+									: '/products/new-arrivals',
+								search: '',
+							});
 						}}
 					>
 						<div className="content">
@@ -60,20 +86,30 @@ function Index() {
 				</div>
 			</section>
 
-			<h3 className="mx-[auto] my-[20px] text-[24px] font-thin intro-y">
+			<h3 className="mx-[auto] my-[20px] text-[clamp(18px,4vw,24px)] font-thin">
 				{isNewArrivals ? 'NEW ARRIVALS' : 'BEST SELLERS'}
 			</h3>
 
 			<section className="w-full flex flex-col">
 				<div className="flex w-full justify-end p-[10px] bottom_line items-center">
-					<p className="text-[15px] mr-[15px]">Price: Low - High</p>
+					<p className="text-[clamp(12px,3vw,15px)] mr-[15px]">Price: Low - High</p>
 					<FilterBtn>
 						<div className="content">Filter</div>
 						<div className="loader"></div>
 					</FilterBtn>
 				</div>
 
-				<div></div>
+				<div className="flex justify-start mx-[auto] mt-[20px] w-[90%]">
+					<BasicPg
+						currentPage={page || 1}
+						totalPages={5}
+						changePage={flipPage}
+					/>
+				</div>
+
+				<div className="w-full flex justify-center mt-[2vh]">
+					<MasonryLayout data={Array(limit).fill(limit)} />
+				</div>
 			</section>
 		</Container>
 	);

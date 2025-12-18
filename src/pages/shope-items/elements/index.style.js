@@ -5,7 +5,7 @@ export const Container = styled.div`
 	flex-direction: column;
 	height: 100%;
 	overflow-x: hidden;
-	padding-bottom: 20px;
+	padding-bottom: 40px;
 	padding-inline: clamp(10px, 2%, 32px);
 	color: ${({ theme }) => theme.mainBody.text};
 
@@ -27,6 +27,19 @@ export const Container = styled.div`
 		letter-spacing: 12px;
 		font-family: ZeroG;
 		border-bottom: 1.5px solid ${({ theme }) => theme.mainBody.line};
+
+		@media (min-width: 601px) and (max-width: 1000px) {
+			font-size: 20px;
+			letter-spacing: 10px;
+		}
+
+		@media (max-width: 600px) {
+			font-size: 14px;
+			letter-spacing: 8px;
+			padding-bottom: 5px;
+			margin-bottom: 5px;
+			margin-top: 9vh;
+		}
 	}
 
 	#subHeader {
@@ -35,6 +48,26 @@ export const Container = styled.div`
 		line-height: 8px;
 		letter-spacing: 8px;
 		font-family: Inter;
+
+		@media (min-width: 601px) and (max-width: 1000px) {
+			font-size: 11px;
+			letter-spacing: 6px;
+			line-height: 7px;
+		}
+
+		@media (max-width: 600px) {
+			font-size: 8px;
+			letter-spacing: 3.5px;
+			line-height: 5px;
+			margin-bottom: 5vh;
+		}
+	}
+
+	#headerBox {
+		height: 50vh;
+		@media (max-width: 600px) {
+			height: 35vh;
+		}
 	}
 `;
 
@@ -141,15 +174,94 @@ export const NewArrivalsBtn = styled.button`
 		z-index: 2;
 	}
 
-	@media (max-width: 500px) {
-		padding-inline: 7px;
+	@media (min-width: 601px) and (max-width: 1000px) {
+		padding-block: 9px;
+		padding-inline: 14px;
 		.content {
 			gap: 4px;
 			font-size: 10px;
 
 			i {
-				font-size: 12px;
+				font-size: 11px;
 			}
 		}
+	}
+
+	@media (max-width: 600px) {
+		padding-block: 8px;
+		padding-inline: 11px;
+		.content {
+			gap: 4px;
+			font-size: 8px;
+
+			i {
+				font-size: 8px;
+			}
+		}
+	}
+`;
+
+export const MasonryGrid = styled.div`
+	width: 90%;
+	margin-inline: auto;
+	display: grid;
+
+	grid-template-columns: repeat(auto-fit, minmax(22%, 1fr));
+	grid-auto-rows: minmax(120px, auto);
+	gap: 16px;
+	align-items: start;
+
+	@media (min-width: 1191px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	@media (min-width: 1051px) and (max-width: 1190px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	@media (min-width: 651px) and (max-width: 1050px) {
+		grid-template-columns: repeat(2, 45%);
+		justify-content: center;
+		grid-auto-rows: auto;
+		gap: clamp(10px, 5%, 16px);
+		row-gap: 16px;
+	}
+
+	@media (min-width: 361px) and (max-width: 650px) {
+		width: 99%;
+		justify-content: center;
+		grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+		grid-auto-rows: auto;
+		gap: clamp(5px, 2%, 10px);
+		row-gap: 16px;
+	}
+
+	@media (max-width: 360px) {
+		width: 100%;
+		justify-content: center;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+`;
+
+export const MasonryItem = styled.div`
+	width: 100%;
+	height: 100%;
+	display: block;
+	/* background-color: ${({ theme }) => theme?.mainBody.container}; */
+
+	/* Let some items span 2 rows for a masonry effect */
+	&:nth-child(odd) {
+		grid-row: span 3;
+	}
+
+	&:nth-child(even) {
+		grid-row: span 3;
+	}
+
+	@media (max-width: 1051px) {
+		height: auto;
+		aspect-ratio: 3/3.8;
 	}
 `;

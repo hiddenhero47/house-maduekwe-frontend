@@ -358,3 +358,8 @@ export const Size = styled.button`
 		font-size: 0.5rem;
 	}
 `;
+
+export const Image = styled.img`
+	object-position: ${({ $position }) => $position || 'center'};
+	transition: object-position 0.3s ease;
+`;

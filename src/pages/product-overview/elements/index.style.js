@@ -412,7 +412,6 @@ export const AddToCartBtn = styled.button`
 
 export const HoldBtn = styled.button`
 	margin-bottom: 0.75rem; /* mb-3 */
-	margin-top: 2rem; /* mt-8 */
 	margin-right: auto;
 	font-size: 0.875rem; /* text-sm */
 	color: ${({ theme }) => theme.mainBody.sbText};
@@ -456,5 +455,58 @@ export const HoldBtn = styled.button`
 	&:active {
 		transform: scale(0.97);
 		opacity: 0.75;
+	}
+`;
+
+export const Increment = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 6px;
+	border-radius: 9999px;
+	background-color: ${({ theme }) => theme.mainBody.container};
+	border: 1px solid ${({ theme }) => theme.mainBody.line};
+	margin-bottom: 10px;
+
+	.qty-value {
+		min-width: 28px;
+		text-align: center;
+		font-size: 13px;
+		font-weight: 600;
+		color: ${({ theme }) => theme.mainBody.text};
+		user-select: none;
+	}
+
+	.qty-btn {
+		width: 20px;
+		height: 20px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		background-color: ${({ theme }) => theme.mainBody.toolkitBg};
+		color: ${({ theme }) => theme.mainBody.sbText};
+		border: 1px solid ${({ theme }) => theme.mainBody.line};
+
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
+
+		svg {
+			font-size: 15px;
+		}
+
+		&:hover {
+			background-color: ${({ theme }) => theme.mainBody.toolkitActive};
+			color: ${({ theme }) => theme.mainBody.text};
+		}
+
+		&:active {
+			transform: scale(0.92);
+			box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
+		}
 	}
 `;
