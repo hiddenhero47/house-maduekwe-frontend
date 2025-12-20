@@ -10,7 +10,7 @@ import {
   Navigation,
   Bullet,
   Narration,
-} from "./ImageSlider.style";
+} from "./index.style";
 
 const ImageSlider = ({ content, useArrow = false }) => {
   const sliderRef = useRef(null);

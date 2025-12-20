@@ -81,6 +81,73 @@ export const LoginWrapper = styled.div`
 			}
 		}
 	}
+
+	background-image: ${({ theme }) =>
+	theme.mode === 'dark'
+		? `
+		/* ultra-soft light noise on dark */
+		radial-gradient(circle at 33% 41%,
+			rgba(255, 255, 255, 0.015) 0%,
+			rgba(255, 255, 255, 0.015) 50%,
+			rgba(0, 0, 0, 0.01) 50%,
+			rgba(0, 0, 0, 0.01) 100%
+		),
+		radial-gradient(circle at 76% 49%,
+			rgba(255, 255, 255, 0.012) 0%,
+			rgba(255, 255, 255, 0.012) 50%,
+			rgba(0, 0, 0, 0.01) 50%,
+			rgba(0, 0, 0, 0.01) 100%
+		),
+		radial-gradient(circle at 41% 99%,
+			rgba(255, 255, 255, 0.01) 0%,
+			rgba(255, 255, 255, 0.01) 50%,
+			rgba(0, 0, 0, 0.008) 50%,
+			rgba(0, 0, 0, 0.008) 100%
+		),
+		radial-gradient(circle at 66% 27%,
+			rgba(255, 255, 255, 0.015) 0%,
+			rgba(255, 255, 255, 0.015) 50%,
+			rgba(0, 0, 0, 0.01) 50%,
+			rgba(0, 0, 0, 0.01) 100%
+		),
+		linear-gradient(
+			180deg,
+			${theme.mainBody.container},
+			${theme.mainBody.background}
+		)
+	`
+		: `
+		/* ultra-soft dark noise on light */
+		radial-gradient(circle at 33% 41%,
+			rgba(0, 0, 0, 0.015) 0%,
+			rgba(0, 0, 0, 0.015) 50%,
+			rgba(255, 255, 255, 0.01) 50%,
+			rgba(255, 255, 255, 0.01) 100%
+		),
+		radial-gradient(circle at 76% 49%,
+			rgba(0, 0, 0, 0.012) 0%,
+			rgba(0, 0, 0, 0.012) 50%,
+			rgba(255, 255, 255, 0.01) 50%,
+			rgba(255, 255, 255, 0.01) 100%
+		),
+		radial-gradient(circle at 41% 99%,
+			rgba(0, 0, 0, 0.01) 0%,
+			rgba(0, 0, 0, 0.01) 50%,
+			rgba(255, 255, 255, 0.008) 50%,
+			rgba(255, 255, 255, 0.008) 100%
+		),
+		radial-gradient(circle at 66% 27%,
+			rgba(0, 0, 0, 0.015) 0%,
+			rgba(0, 0, 0, 0.015) 50%,
+			rgba(255, 255, 255, 0.01) 50%,
+			rgba(255, 255, 255, 0.01) 100%
+		),
+		linear-gradient(
+			180deg,
+			${theme.mainBody.container},
+			${theme.mainBody.background}
+		)
+	`};
 `;
 
 export const LeftBox = styled.div`
@@ -121,7 +188,7 @@ export const RightBox = styled.div`
 	width: 56.36%;
 	height: 100%;
 	border-radius: 10px;
-	background-color: #333;
+	background-color: ${({theme}) => theme?.mainBody?.card};
 
 	@media (max-width: 1000px) {
 		display: none;

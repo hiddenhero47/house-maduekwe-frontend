@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
+import image1 from '../../assets/images/suits1.jpg';
 
 function Index() {
 	const isLoading = false;
@@ -29,13 +30,15 @@ function Index() {
 
 					<div className="w-full flex items-center">
 						<MyForm onSubmit={() => {}}>
-							<div>1234</div>
+							<div></div>
 						</MyForm>
 					</div>
 				</LeftBox>
 
 				<RightBox>
-					{/* <ImageSlider content={content || []} isLoading={false} /> */}
+					<div className='rounded-[inherit] imageHolder'>
+						<img src={image1} alt="error" />
+					</div>
 				</RightBox>
 			</div>
 
