@@ -36,6 +36,7 @@ export const colors = {
 			line: '#ebebeb',
 			cardLine: '#ebebeb',
 			cardSbLine: '#e6e6e6',
+			overlayLight: 'rgba(255, 255, 255, 0.04)'
 		},
 
 		intro: {
@@ -135,6 +136,7 @@ export const colors = {
 			line: '#333333',
 			cardLine: '#262626',
 			cardSbLine: '#333333',
+			overlayDark: 'rgba(0, 0, 0, 0.04)'
 		},
 
 		intro: {

@@ -1,9 +1,80 @@
-import React from 'react'
+import React from 'react';
+import {
+	LoginWrapper,
+	LeftBox,
+	MyForm,
+	RightBox,
+} from './elements/index.style';
+import { Link } from 'react-router-dom';
+import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
+import { VectorIcon } from '../../components/icon-components/index.style';
+import AppLogo from '../../assets/images/app-logo.svg?react';
 
 function Index() {
-  return (
-    <div className='text-mainBody-yellow'>auth page login sig up etc</div>
-  )
+	const isLoading = false;
+	return (
+		<LoginWrapper>
+			<div id="body">
+				<LeftBox>
+					<div className="mb-[15px] mx-[auto]">
+						<div id="title">
+							<i>
+								<VectorIcon width="50px" height="50px" vector={AppLogo} />
+							</i>
+							<div>
+								House <span>Maduekwe</span>
+							</div>
+						</div>
+					</div>
+
+					<div className="w-full flex items-center">
+						<MyForm onSubmit={() => {}}>
+							<div>1234</div>
+						</MyForm>
+					</div>
+				</LeftBox>
+
+				<RightBox>
+					{/* <ImageSlider content={content || []} isLoading={false} /> */}
+				</RightBox>
+			</div>
+
+			<div id="footer">
+				<div>
+					<span className="text-[12px] mx-[auto]">© 2025 House Maduekwe</span>
+				</div>
+
+				<div>
+					<span className="flex justify-center items-center gap-[20px] text-[18px] mx-[auto]">
+						<a
+							href="https://instagram.com"
+							target="_blank"
+							rel="noreferrer"
+							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
+						>
+							<FaInstagram />
+						</a>
+						<a
+							href="https://twitter.com"
+							target="_blank"
+							rel="noreferrer"
+							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
+						>
+							<FaXTwitter />
+						</a>
+						<a
+							href="https://facebook.com"
+							target="_blank"
+							rel="noreferrer"
+							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
+						>
+							<FaFacebookF />
+						</a>
+					</span>
+				</div>
+			</div>
+		</LoginWrapper>
+	);
 }
 
-export default Index
+export default Index;
