@@ -5,6 +5,8 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import GlobalStyleInjector from './global.style';
 import IndexLayout from './layouts/index-layout/index';
 import DashboardLayout from './layouts/admin-layout/index';
+import WrapperLayout from './layouts/wrapper-layout/index';
+//pages
 import AppToast from './layouts/toast';
 import Home from './pages/home';
 import AboutUs from './pages/about-us';
@@ -13,7 +15,7 @@ import NotFound from './pages/not-found';
 import ProductOverview from './pages/product-overview';
 import UserCart from './pages/user-cart';
 import ShopeItems from './pages/shope-items';
-import Authentication from './pages/auth'
+import Authentication from './pages/auth';
 // Dashboard pages
 import Admin from './pages-dashboard/home';
 import Product from './pages-dashboard/home';
@@ -41,9 +43,10 @@ function App() {
 							<Route path="products" element={<Product />} />
 						</Route>
 
-            <Route path="/authentication/*" element={<Authentication />} />
-
-						<Route path="*" element={<NotFound />} />
+						<Route element={<WrapperLayout />}>
+							<Route path="/authentication/*" element={<Authentication />} />
+							<Route path="*" element={<NotFound />} />
+						</Route>
 					</Routes>
 				</div>
 			</Router>
