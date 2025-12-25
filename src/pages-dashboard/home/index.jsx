@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { Container } from './elements/index.style';
 
 function Index() {
-  return (
-    <div className='text-mainBody-yellow'>Index home</div>
-  )
+	return (
+		<Container className="text-mainBody-yellow">
+			<p>Index home</p>
+		</Container>
+	);
 }
 
-export default Index
+export default Index;

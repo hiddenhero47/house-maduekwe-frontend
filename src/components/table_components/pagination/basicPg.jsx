@@ -102,7 +102,7 @@ function BasicPg({ currentPage, changePage, totalPages }) {
                                 : "",
                     }}
                 >
-                    <IoIosArrowBack size={12} />
+                    <IoIosArrowBack size={11} />
                 </i>
             </button>
             <PageNosDisplay>
@@ -125,7 +125,7 @@ function BasicPg({ currentPage, changePage, totalPages }) {
                                 : "",
                     }}
                 >
-                    <IoIosArrowForward size={12} />
+                    <IoIosArrowForward size={11} />
                 </i>
             </button>
         </BasicPgWrapper>
