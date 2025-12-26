@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,7 +15,6 @@ import {
 import Modal from '../../components/modal/index_modal';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { RiMenuUnfoldLine } from 'react-icons/ri';
-import { MdPerson2 } from 'react-icons/md';
 import { MdOutlineToggleOff } from 'react-icons/md';
 import { MdOutlineToggleOn } from 'react-icons/md';
 import { BsFillCloudSunFill } from 'react-icons/bs';
@@ -24,10 +23,13 @@ import { toggleTheme } from '../../store/slice/app-theme';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import profile from '../../assets/images/profile1.svg?react';
 import SideMenu from './sub-components/dashboard-menu';
+import { RiHome2Fill } from 'react-icons/ri';
+import { RiHome2Line } from 'react-icons/ri';
 
 function DashboardLayout() {
 	const { theme } = useSelector((state) => state.themes);
 	const [menuIsActive, setMenuIsActive] = useState(true);
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	if (typeof document !== 'undefined') {
@@ -89,7 +91,13 @@ function DashboardLayout() {
 									{menuIsActive ? <RiMenuUnfold2Line /> : <RiMenuUnfoldLine />}
 								</button>
 								<div className="flex items-center h-full">
-									<div className='theme_logo'>
+									<button id="back_to_home" onClick={() => navigate('/')}>
+										<i>
+											<RiHome2Fill />
+										</i>
+									</button>
+
+									{/* <div className="theme_logo">
 										<button
 											id="toggleBtn"
 											onClick={() => dispatch(toggleTheme())}
@@ -101,14 +109,19 @@ function DashboardLayout() {
 												<MdOutlineToggleOff />
 											)}
 										</button>
-									</div>
-									<i className="text-[20px] text-[var(--menu-icon)] theme_line_up">
-										{theme === 'light' ? (
-											<BsFillCloudSunFill />
-										) : (
-											<FaCloudMoon />
-										)}
-									</i>
+									</div> */}
+									<button
+										className="theme_logo"
+										onClick={() => dispatch(toggleTheme())}
+									>
+										<i className="text-[19px] text-[var(--menu-icon)] theme_line_up">
+											{theme === 'light' ? (
+												<FaCloudMoon />
+											) : (
+												<BsFillCloudSunFill />
+											)}
+										</i>
+									</button>
 									<div id="passport">
 										{/* <MdPerson2 size="85%" /> */}
 										<VectorIcon width="100%" height="100%" vector={profile} />

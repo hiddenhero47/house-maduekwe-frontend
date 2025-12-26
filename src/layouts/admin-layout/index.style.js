@@ -130,10 +130,18 @@ export const DashboardNavBar = styled.div`
 		&:hover {
 			color: ${({ theme }) => theme.intro.logo};
 		}
+	}
 
-		/* &:active {
-			transform: scale(0.95);
-		} */
+	#back_to_home {
+		border-radius: 9999px;
+		background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
+		padding: 5px;
+		margin-right: 15px;
+		font-size: 18px;
+
+		&:hover {
+			color: ${({ theme }) => theme.intro.logo};
+		}
 	}
 
 	#toggleBtn {
@@ -153,14 +161,14 @@ export const DashboardNavBar = styled.div`
 		background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
 		padding: 5px;
 		margin-right: 15px;
+
+		&:hover, i:hover {
+			color: ${({ theme }) => theme.intro.logo};
+		}
 	}
 
 	.theme_line_up {
 		opacity: 0.85;
-		border-radius: 9999px;
-		background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
-		padding: 5px;
-		margin-right: 15px;
 
 		svg {
 			transform: translateY(-2.5px);
