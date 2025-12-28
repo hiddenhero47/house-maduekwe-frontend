@@ -49,14 +49,20 @@ export const MyInput = styled.div`
 
 	&:focus-within {
 		outline: none;
-		border: 1px solid ${({ theme }) => theme?.form.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 		background-color: ${({ theme, $useBackground }) =>
 			$useBackground ? theme.form?.sbBackground : ''};
 		color: ${({ theme }) => theme?.form.text};
 	}
 
 	&:hover {
-		border: 1px solid ${({ theme }) => theme.form?.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 	}
 
 	input[type='date']::-webkit-inner-spin-button,

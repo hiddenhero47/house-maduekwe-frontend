@@ -69,6 +69,8 @@ function Index() {
 					height="400px"
 				/>
 			</ContainerSection>
+
+			<footer></footer>
 		</Container>
 	);
 }

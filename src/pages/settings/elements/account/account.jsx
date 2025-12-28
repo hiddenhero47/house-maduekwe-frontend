@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SecurityWrapper, AccountNav, OptionBtn } from './account.style';
+import UserDetails from './user-details/user-details';
 
 function AccountSettings() {
 	const profile = {
@@ -43,7 +44,7 @@ function AccountSettings() {
 				</div>
 			</AccountNav>
 			<div id="accountBody">
-				<div></div>
+				{option === profile.DETAILS && <UserDetails />}
 			</div>
 		</SecurityWrapper>
 	);
