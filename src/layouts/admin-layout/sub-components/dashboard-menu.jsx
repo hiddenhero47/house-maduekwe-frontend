@@ -49,7 +49,7 @@ function SideMenu({ close }) {
 					<ul>
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/products"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -67,7 +67,7 @@ function SideMenu({ close }) {
 
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/products/design"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -85,7 +85,7 @@ function SideMenu({ close }) {
 
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/products/group"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -103,7 +103,7 @@ function SideMenu({ close }) {
 
                         <li>
 							<Link
-								to="/admin"
+								to="/admin/products/classification"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -127,7 +127,7 @@ function SideMenu({ close }) {
 					<ul>
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/orders"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -145,7 +145,7 @@ function SideMenu({ close }) {
 
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/payment-logs"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -163,7 +163,7 @@ function SideMenu({ close }) {
 
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/flagged-orders"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -188,7 +188,7 @@ function SideMenu({ close }) {
 					<ul>
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/administrate"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>
@@ -206,7 +206,7 @@ function SideMenu({ close }) {
 
 						<li>
 							<Link
-								to="/admin"
+								to="/admin/app-settings"
 								onClick={() => close()}
 								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
 							>

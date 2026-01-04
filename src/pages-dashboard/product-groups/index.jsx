@@ -3,7 +3,7 @@ import { Container } from "./elements/index.style";
 
 function Index() {
   return (
-    <Container>Index product</Container>
+    <Container>Index group</Container>
   )
 }
 
