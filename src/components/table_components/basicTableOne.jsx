@@ -13,6 +13,7 @@ function CustomTable({
 	isLoading,
 	dataSource,
 	fields,
+	onDoubleCallRow,
 	onCallRow,
 	currentPage = 1,
 	changePage,
@@ -33,6 +34,12 @@ function CustomTable({
 	const callRow = (data) => {
 		if (onCallRow) {
 			onCallRow(data);
+		}
+	};
+
+	const doubleCallRow = (data) => {
+		if (onDoubleCallRow) {
+			onDoubleCallRow(data);
 		}
 	};
 
@@ -68,8 +75,9 @@ function CustomTable({
 									<tr
 										key={dataIndex}
 										onClick={() => callRow(dataItem)}
+										onDoubleClick={() => doubleCallRow(dataItem)}
 										style={{
-											cursor: onCallRow ? 'pointer' : 'default',
+											cursor: onCallRow || onDoubleCallRow ? 'pointer' : 'default',
 										}}
 									>
 										{fields.map((field, fieldIndex) => (

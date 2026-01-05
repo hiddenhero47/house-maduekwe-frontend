@@ -90,7 +90,7 @@ function DashboardLayout() {
 								<button onClick={toggleSidebar}>
 									{menuIsActive ? <RiMenuUnfold2Line /> : <RiMenuUnfoldLine />}
 								</button>
-								<div className="flex items-center h-full">
+								<div className="flex items-center h-full intro-x">
 									<button id="back_to_home" onClick={() => navigate('/')}>
 										<i>
 											<RiHome2Fill />

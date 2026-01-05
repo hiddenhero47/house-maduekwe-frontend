@@ -2,6 +2,9 @@ import { toast } from "react-toastify";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import moment from "moment";
 
+export const getRandomInt = (min, max) =>
+	Math.floor(Math.random() * (max - min + 1)) + min;
+
 export function numberToWords(number) {
   const units = [
     "Zero",
