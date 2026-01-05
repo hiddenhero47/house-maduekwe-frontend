@@ -58,16 +58,21 @@ export const MenuModal = styled.aside`
 `;
 
 export const Wrapper = styled.div`
-	flex-grow: 1;
-	flex-basis: 0;
+	flex: 1;
 	height: 100vh;
 	padding-top: 15px;
 	padding-right: 25px;
 	display: flex;
 	flex-direction: column;
+	/* display: grid;
+	grid-template-rows: minmax(min-content, max-content) 1fr; */
 	gap: 20px;
 	transition: all 0.4s;
 	transition-timing-function: ease-in-out;
+
+	& > * {
+		flex-shrink: 0;
+	}
 
 	@media (max-width: ${({ $mobileQuery }) => $mobileQuery}) {
 		padding-inline: clamp(10px, 2vw, 15px);
@@ -91,6 +96,7 @@ export const Page = styled.div`
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
 	padding-top: 15px;
 	padding-inline: clamp(15px, 3%, 30px);
+	overflow: hidden;
 `;
 
 export const DashboardNavBar = styled.div`
