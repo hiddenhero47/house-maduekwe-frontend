@@ -31,7 +31,10 @@ export const CustomSelectValue = styled.div`
 	}};
 
 	&:hover {
-		border: 1px solid ${({ theme }) => theme?.form.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 	}
 
 	.form_word {

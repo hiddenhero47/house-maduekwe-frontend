@@ -1,6 +1,7 @@
 export const colors = {
 	light: {
 		form: {
+			alternateBg: '#d9d9d9',
 			background: '#f2f2f2',
 			sbBackground: '#fcfcfc',
 			line: '#e6e6e6',
@@ -101,6 +102,7 @@ export const colors = {
 
 	dark: {
 		form: {
+			alternateBg: '#262626',
 			background: '#1d1d1d',
 			sbBackground: '#181818',
 			line: '#313131',

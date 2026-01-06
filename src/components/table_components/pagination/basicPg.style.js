@@ -16,7 +16,7 @@ export const PageNosDisplay = styled.div`
     width: fit-content;
     gap: 20px;
     font-family: Outfit;
-    font-size: 14px;
+    font-size: clamp(10px, 1vw, 13px);
     font-weight: 600;
     line-height: 17.64px;
     color: ${({ theme }) => (theme).mainBody?.sbText};

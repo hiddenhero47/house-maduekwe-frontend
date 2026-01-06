@@ -1,114 +1,143 @@
-import React, { useState, useMemo, useEffect } from "react";
-import CountryCodeSelect from "./country-code";
-import { NumberInputWrapper, MyInput } from "./phone-number.style";
-import CountryCode from "./iso-country";
+import React, { useState, useMemo, useEffect } from 'react';
+import CountryCodeSelect from './country-code';
+import { MyInput, Error } from './phone-number.style';
+import PhoneCodeData from './iso-country';
 
-const MyPhoneNumberInput = ({
-  placeholder,
-  onChange,
-  handleChange,
-  isError,
-  onBlur,
-  name,
-  id,
-  errorMessage,
-  phoneNumber,
-  disabled = false,
-  containerId = "keyPhone",
-  customChange,
+const PhoneInput = ({
+	placeholder,
+	onChange,
+	handleChange,
+	isError,
+	onBlur,
+	name,
+	id,
+	className,
+	errormessage,
+	phoneNumber,
+	disabled = false,
+	containerId = 'keyPhone',
+	customChange,
+	useBackground = false,
+	paddingX,
+	paddingY,
+	country,
 }) => {
-  const [code, setCode] = useState("+234");
-  const [number, setNumber] = useState("");
-  const isNumber = /^[0-9]+$/;
+	const [codes, setCodes] = useState({
+		phone: '+234',
+		country: 'NG',
+	});
+	const [number, setNumber] = useState('');
+	const isNumber = /^[0-9]+$/;
 
-  const extractCountryCode = (phoneNumber, countryCodes) => {
-    if (phoneNumber && countryCodes) {
-      for (const country of countryCodes) {
-        if (
-          phoneNumber.startsWith(country.phoneCode) &&
-          country.phoneCode.trim() !== ""
-        ) {
-          return country;
-        }
-      }
-    }
-    return null;
-  };
+	const extractCountryCode = (phoneNumber, phoneCodes, countryCode) => {
+		if (!phoneCodes) return null;
 
-  useMemo(() => {
-    const country = extractCountryCode(phoneNumber, CountryCode);
+		if (countryCode) {
+			return phoneCodes.find((p) => p.code === countryCode);
+		}
 
-    if (country && phoneNumber) {
-      setCode(country.phoneCode);
-      setNumber(phoneNumber.replace(country.phoneCode, ""));
-    } else if (phoneNumber && phoneNumber.trim() !== "") {
-      setNumber(phoneNumber);
-    }
-  }, [phoneNumber]);
+		if (phoneNumber) {
+			return phoneCodes.find(
+				(p) => phoneNumber.startsWith(p.phoneCode) && p.phoneCode.trim() !== ''
+			);
+		}
+		return null;
+	};
 
-  const handleNumberInput = (date) => {
-    const recentInput = date.replace(code + " ", "");
-    if (isNumber.test(recentInput) || recentInput === "") {
-      setNumber(recentInput);
-    }
-  };
+	useEffect(() => {
+		const countryObj = extractCountryCode(phoneNumber, PhoneCodeData, country);
 
-  useEffect(() => {
-    const phoneNumber = code + number;
+		if (countryObj) {
+			setCodes({
+				phone: countryObj.phoneCode,
+				country: countryObj.code,
+			});
 
-    if (code && number) {
-      if (onChange) {
-        onChange(phoneNumber);
-      }
-      if (handleChange) {
-        handleChange(name || id)(phoneNumber);
-      }
-      if (customChange) {
-        const codeObject = CountryCode.find(
-          (option) => option.phoneCode === code
-        );
-        customChange({ code, number, codeObject });
-      }
-    } else {
-      if (onChange) {
-        onChange("");
-      }
-      if (handleChange) {
-        handleChange("");
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, number]);
+			if (phoneNumber) {
+				setNumber(phoneNumber.replace(countryObj.phoneCode, ''));
+			}
+		} else if (phoneNumber && phoneNumber.trim() !== '') {
+			setNumber(phoneNumber);
+		}
+	}, [phoneNumber, country]);
 
-  return (
-    <NumberInputWrapper>
-      <MyInput $isError={isError} id={containerId}>
-        <CountryCodeSelect
-          id="countryCode"
-          name="countryCode"
-          onChange={(code) => setCode(code)}
-          value={code || ""}
-          placeholder="__"
-          options={CountryCode}
-          disabled={disabled}
-        />
+	const handleNumberInput = (date) => {
+		const recentInput = date.replace(codes.phone + ' ', '');
+		if (isNumber.test(recentInput) || recentInput === '') {
+			setNumber(recentInput);
+		}
+	};
 
-        <input
-          className="myInput border-transparent focus:border-transparent focus:ring-0"
-          id={id}
-          onBlur={onBlur}
-          type="tel"
-          autoComplete="tel"
-          value={code ? code + " " + number : number || ""}
-          onChange={(e) => handleNumberInput(e.target.value)}
-          placeholder={placeholder}
-          disabled={disabled}
-        />
-      </MyInput>
+	useEffect(() => {
+		const fullPhoneNumber = codes.phone + number;
 
-      {isError && errorMessage ? <p className="error">{errorMessage}</p> : ""}
-    </NumberInputWrapper>
-  );
+		if (codes.phone && number) {
+			if (onChange) {
+				onChange(fullPhoneNumber);
+			}
+			if (handleChange) {
+				handleChange(name || id)(fullPhoneNumber);
+			}
+			if (customChange) {
+				const codeObject = PhoneCodeData.find(
+					(option) => option.code === codes.country
+				);
+				customChange({
+					code: codes.phone,
+					number,
+					country: codes.country,
+					codeObject,
+				});
+			}
+		} else {
+			if (onChange) {
+				onChange('');
+			}
+			if (handleChange) {
+				handleChange('');
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [codes, number]);
+
+	return (
+		<>
+			<MyInput
+				$isError={isError}
+				id={containerId}
+				className={`${className} form_word`}
+				$useBackground={useBackground}
+				$paddingX={paddingX}
+				$paddingY={paddingY}
+				$disabled={disabled}
+			>
+				<CountryCodeSelect
+					id="countryCode"
+					name="countryCode"
+					onChange={(data) => setCodes(data)}
+					value={codes || {}}
+					placeholder="__"
+					options={PhoneCodeData}
+					disabled={disabled}
+				/>
+
+				<input
+					className="form_word"
+					id={id}
+					name={name}
+					onBlur={onBlur}
+					type="tel"
+					autoComplete="tel"
+					value={codes.phone ? `${codes.phone} ${number}` : number || ''}
+					onChange={(e) => handleNumberInput(e.target.value)}
+					placeholder={placeholder}
+					disabled={disabled}
+				/>
+			</MyInput>
+
+			{isError && <Error>{errormessage}!</Error>}
+		</>
+	);
 };
 
-export default MyPhoneNumberInput;
+export default PhoneInput;

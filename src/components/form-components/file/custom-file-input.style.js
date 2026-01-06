@@ -6,10 +6,14 @@ export const FileInputWrapper = styled.div`
 	align-items: center;
 	width: fit-content;
 	margin-inline: auto;
+
+	@media (max-width: 400px) {
+		width: 100%;
+	}
 `;
 
 export const FileInput = styled.div`
-	width: ${({width}) => width};
+	width: ${({ width }) => width};
 	aspect-ratio: 4/2;
 	min-height: 165px;
 	display: flex;
@@ -24,6 +28,10 @@ export const FileInput = styled.div`
 		return '';
 	}};
 	transition: all 0.2s ease-in-out;
+
+	@media (max-width: 400px) {
+		aspect-ratio: unset;
+	}
 
 	&:hover {
 		border: 2px dashed ${({ theme }) => theme?.form.sbLine};
@@ -76,7 +84,7 @@ export const FileInput = styled.div`
 `;
 
 export const FileInputSelected = styled.div`
-	width: ${({width}) => width};
+	width: ${({ width }) => width};
 	aspect-ratio: 4/2;
 	min-height: 165px;
 	display: flex;
@@ -89,6 +97,10 @@ export const FileInputSelected = styled.div`
 		if ($useBackground) return `2px dashed ${theme.form?.line}`;
 		return '';
 	}};
+
+	@media (max-width: 400px) {
+		aspect-ratio: unset;
+	}
 
 	&:hover {
 		border: 2px dashed ${({ theme }) => theme?.form.sbLine};

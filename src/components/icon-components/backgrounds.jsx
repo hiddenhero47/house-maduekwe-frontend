@@ -35,7 +35,7 @@ export const ProductHeaderBgD = ({ width, height }) => (
 );
 
 export const ProductHeaderBgL = ({ width, height }) => (
-	<svg
+	<CustomSVG
 		width={width}
 		height={height}
 		preserveAspectRatio="none"
@@ -63,5 +63,189 @@ export const ProductHeaderBgL = ({ width, height }) => (
 				<rect width="1440" height="560" fill="#ffffff"></rect>
 			</mask>
 		</defs>
-	</svg>
+	</CustomSVG>
+);
+
+export const FooterBgL = ({ width, height }) => (
+	<CustomSVG
+		width={width}
+		height={height}
+		preserveAspectRatio="none"
+		viewBox="0 0 1440 250"
+	>
+		<g mask='url("#SvgjsMask1012")' fill="none">
+			<rect
+				width="1440"
+				height="250"
+				x="0"
+				y="0"
+				fill="rgba(237, 237, 237, 1)"
+			></rect>
+			<path
+				d="M48 250L298 0L382 0L132 250z"
+				fill='url("#SvgjsLinearGradient1013")'
+			></path>
+			<path
+				d="M238.60000000000002 250L488.6 0L638.6 0L388.6 250z"
+				fill='url("#SvgjsLinearGradient1013")'
+			></path>
+			<path
+				d="M518.2 250L768.2 0L865.7 0L615.7 250z"
+				fill='url("#SvgjsLinearGradient1013")'
+			></path>
+			<path
+				d="M751.8000000000001 250L1001.8000000000001 0L1250.8000000000002 0L1000.8000000000001 250z"
+				fill='url("#SvgjsLinearGradient1013")'
+			></path>
+			<path
+				d="M1431 250L1181 0L1008.5 0L1258.5 250z"
+				fill='url("#SvgjsLinearGradient1014")'
+			></path>
+			<path
+				d="M1187.4 250L937.4000000000001 0L737.9000000000001 0L987.9000000000001 250z"
+				fill='url("#SvgjsLinearGradient1014")'
+			></path>
+			<path
+				d="M930.8 250L680.8 0L542.8 0L792.8 250z"
+				fill='url("#SvgjsLinearGradient1014")'
+			></path>
+			<path
+				d="M725.1999999999999 250L475.19999999999993 0L358.19999999999993 0L608.1999999999999 250z"
+				fill='url("#SvgjsLinearGradient1014")'
+			></path>
+			<path
+				d="M1313.042938072197 250L1440 123.0429380721971L1440 250z"
+				fill='url("#SvgjsLinearGradient1013")'
+			></path>
+			<path
+				d="M0 250L126.9570619278029 250L 0 123.0429380721971z"
+				fill='url("#SvgjsLinearGradient1014")'
+			></path>
+		</g>
+		<defs>
+			<mask id="SvgjsMask1012">
+				<rect width="1440" height="250" fill="#ffffff"></rect>
+			</mask>
+			<linearGradient
+				x1="0%"
+				y1="100%"
+				x2="100%"
+				y2="0%"
+				id="SvgjsLinearGradient1013"
+			>
+				<stop stop-color="rgba(255, 255, 255, 0.42)" offset="0"></stop>
+				<stop
+					stop-opacity="0"
+					stop-color="rgba(255, 255, 255, 0.42)"
+					offset="0.66"
+				></stop>
+			</linearGradient>
+			<linearGradient
+				x1="100%"
+				y1="100%"
+				x2="0%"
+				y2="0%"
+				id="SvgjsLinearGradient1014"
+			>
+				<stop stop-color="rgba(255, 255, 255, 0.42)" offset="0"></stop>
+				<stop
+					stop-opacity="0"
+					stop-color="rgba(255, 255, 255, 0.42)"
+					offset="0.66"
+				></stop>
+			</linearGradient>
+		</defs>
+	</CustomSVG>
+);
+
+export const FooterBgD = ({ width, height }) => (
+	<CustomSVG
+		width={width}
+		height={height}
+		preserveAspectRatio="none"
+		viewBox="0 0 1440 250"
+	>
+		<g mask='url("#SvgjsMask1027")' fill="none">
+			<rect
+				width="1440"
+				height="250"
+				x="0"
+				y="0"
+				fill="rgba(46, 46, 46, 1)"
+			></rect>
+			<path
+				d="M48 250L298 0L382 0L132 250z"
+				fill='url("#SvgjsLinearGradient1028")'
+			></path>
+			<path
+				d="M238.60000000000002 250L488.6 0L638.6 0L388.6 250z"
+				fill='url("#SvgjsLinearGradient1028")'
+			></path>
+			<path
+				d="M518.2 250L768.2 0L865.7 0L615.7 250z"
+				fill='url("#SvgjsLinearGradient1028")'
+			></path>
+			<path
+				d="M751.8000000000001 250L1001.8000000000001 0L1250.8000000000002 0L1000.8000000000001 250z"
+				fill='url("#SvgjsLinearGradient1028")'
+			></path>
+			<path
+				d="M1431 250L1181 0L1008.5 0L1258.5 250z"
+				fill='url("#SvgjsLinearGradient1029")'
+			></path>
+			<path
+				d="M1187.4 250L937.4000000000001 0L737.9000000000001 0L987.9000000000001 250z"
+				fill='url("#SvgjsLinearGradient1029")'
+			></path>
+			<path
+				d="M930.8 250L680.8 0L542.8 0L792.8 250z"
+				fill='url("#SvgjsLinearGradient1029")'
+			></path>
+			<path
+				d="M725.1999999999999 250L475.19999999999993 0L358.19999999999993 0L608.1999999999999 250z"
+				fill='url("#SvgjsLinearGradient1029")'
+			></path>
+			<path
+				d="M1313.042938072197 250L1440 123.0429380721971L1440 250z"
+				fill='url("#SvgjsLinearGradient1028")'
+			></path>
+			<path
+				d="M0 250L126.9570619278029 250L 0 123.0429380721971z"
+				fill='url("#SvgjsLinearGradient1029")'
+			></path>
+		</g>
+		<defs>
+			<mask id="SvgjsMask1027">
+				<rect width="1440" height="250" fill="#ffffff"></rect>
+			</mask>
+			<linearGradient
+				x1="0%"
+				y1="100%"
+				x2="100%"
+				y2="0%"
+				id="SvgjsLinearGradient1028"
+			>
+				<stop stop-color="rgba(31, 31, 31, 0.42)" offset="0"></stop>
+				<stop
+					stop-opacity="0"
+					stop-color="rgba(31, 31, 31, 0.42)"
+					offset="0.66"
+				></stop>
+			</linearGradient>
+			<linearGradient
+				x1="100%"
+				y1="100%"
+				x2="0%"
+				y2="0%"
+				id="SvgjsLinearGradient1029"
+			>
+				<stop stop-color="rgba(31, 31, 31, 0.42)" offset="0"></stop>
+				<stop
+					stop-opacity="0"
+					stop-color="rgba(31, 31, 31, 0.42)"
+					offset="0.66"
+				></stop>
+			</linearGradient>
+		</defs>
+	</CustomSVG>
 );

@@ -6,8 +6,8 @@ import GlobalStyleInjector from './global.style';
 import IndexLayout from './layouts/index-layout/index';
 import DashboardLayout from './layouts/admin-layout/index';
 import WrapperLayout from './layouts/wrapper-layout/index';
-//pages
 import AppToast from './layouts/toast';
+//pages
 import Home from './pages/home';
 import AboutUs from './pages/about-us';
 import Settings from './pages/settings';
@@ -17,8 +17,16 @@ import UserCart from './pages/user-cart';
 import ShopeItems from './pages/shope-items';
 import Authentication from './pages/auth';
 // Dashboard pages
-import Admin from './pages-dashboard/home';
-import Product from './pages-dashboard/home';
+import Overview from './pages-dashboard/home';
+import Product from './pages-dashboard/products';
+import ProductDesign from './pages-dashboard/product-design';
+import ProductGroups from './pages-dashboard/product-groups';
+import ProductClassing from './pages-dashboard/product-classing';
+import Orders from './pages-dashboard/orders';
+import Payment from './pages-dashboard/payment';
+import Flagged from './pages-dashboard/flagged';
+import Administrator from './pages-dashboard/administrator';
+import AppSettings from './pages-dashboard/settings';
 
 const queryClient = new QueryClient();
 
@@ -39,8 +47,16 @@ function App() {
 						</Route>
 
 						<Route path="/admin" element={<DashboardLayout />}>
-							<Route index element={<Admin />} />
+							<Route index element={<Overview />} />
 							<Route path="products" element={<Product />} />
+							<Route path="products/design/*" element={<ProductDesign />} />
+							<Route path="products/group" element={<ProductGroups />} />
+							<Route path="products/classification" element={<ProductClassing />} />
+							<Route path="orders" element={<Orders />} />
+							<Route path="payment-logs" element={<Payment />} />
+							<Route path="flagged-orders" element={<Flagged />} />
+							<Route path="administrate" element={<Administrator />} />
+							<Route path="app-settings" element={<AppSettings />} />
 						</Route>
 
 						<Route element={<WrapperLayout />}>
