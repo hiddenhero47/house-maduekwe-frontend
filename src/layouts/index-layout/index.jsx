@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import Holding from "./sub-components/holding";
 function IndexLayout() {
 	const { theme } = useSelector((state) => state.themes);
 	const { holdings, show } = useSelector((state) => state.holdings);
+	const navigate = useNavigate();
 
 	if (typeof document !== 'undefined') {
 		document.body?.setAttribute('data-theme', theme);
@@ -117,6 +118,7 @@ function IndexLayout() {
 							<button
 								id="myCart"
 								className="flex items-center text-[17px] gap-[5px]"
+								onClick={() => navigate('/my-cart')}
 							>
 								<span>Cart</span>
 								<i className="text-[20px]">

@@ -1,4 +1,4 @@
-const CountryCode = [
+const PhoneCodeData = [
     { code: "AD", name: "Andorra", flag: "🇦🇩", phoneCode: "+376" },
     { code: "AE", name: "United Arab Emirates", flag: "🇦🇪", phoneCode: "+971" },
     { code: "AF", name: "Afghanistan", flag: "🇦🇫", phoneCode: "+93" },
@@ -382,4 +382,4 @@ const CountryCode = [
     { code: "ZW", name: "Zimbabwe", flag: "🇿🇼", phoneCode: "+263" },
 ];
 
-export default CountryCode;
+export default PhoneCodeData;

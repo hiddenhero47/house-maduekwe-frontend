@@ -51,12 +51,18 @@ export const MyInput = styled.input`
 	}
 
 	&:hover {
-		border: 1px solid ${({ theme }) => theme.form?.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 	}
 
 	&:focus {
 		outline: none;
-		border: 1px solid ${({ theme }) => theme?.form.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 		background-color: ${({ theme, $useBackground }) =>
 			$useBackground ? theme.form?.sbBackground : ''};
 		color: ${({ theme }) => theme?.form.text};
@@ -107,12 +113,18 @@ export const MyTextarea = styled.textarea`
 	}
 
 	&:hover {
-		border: 1px solid ${({ theme }) => theme.form?.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 	}
 
 	&:focus {
 		outline: none;
-		border: 1px solid ${({ theme }) => theme?.form.sbLine};
+		border: ${({ theme, $useBackground }) => {
+			if ($useBackground) return `1px solid ${theme?.form.sbLine}`;
+			return '';
+		}};
 		background-color: ${({ theme, $useBackground }) =>
 			$useBackground ? theme.form?.sbBackground : ''};
 		color: ${({ theme }) => theme?.form.text};

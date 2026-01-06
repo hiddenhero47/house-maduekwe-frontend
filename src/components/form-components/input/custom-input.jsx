@@ -16,6 +16,7 @@ function CustomInput({
 	useBackground = false,
 	paddingX,
 	paddingY,
+	autoComplete = 'off',
 }) {
 	return (
 		<>
@@ -33,6 +34,7 @@ function CustomInput({
 				$useBackground={useBackground}
 				$paddingX={paddingX}
 				$paddingY={paddingY}
+				autoComplete={autoComplete}
 			/>
 			{isError && errormessage ? <Error>{errormessage} !</Error> : ''}
 		</>

@@ -13,16 +13,10 @@ export const CandleWrapper = styled.div`
         gap: 5%;
     }
 
-    /* #loader-6 {
-    top: 40px;
-    left: -2.5px;
-  } */
-
     #loader-6 span {
-        /* display: inline-block; */
         width: 10%;
         height: 30%;
-        background-color: ${props => (props.$color ? props.$color : "#3498db")};
+        background-color: ${({$color}) => ($color ? $color : "#3498db")};
     }
 
     #loader-6 span:nth-child(1) {
