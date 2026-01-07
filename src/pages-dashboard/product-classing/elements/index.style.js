@@ -17,16 +17,33 @@ export const Container = styled.div`
 	}
 `;
 
-
 export const TabNav = styled.nav`
 	width: 100%;
 	display: flex;
+	justify-content: space-between;
+	padding: 16px 20px;
+	border-radius: 12px;
+	background: ${({ theme }) => theme.mainBody.card};
+	border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
 
-	#accountNavWrapper {
+	#NavWrapper {
+		/* width: 100%; */
 		display: flex;
 		align-items: center;
 		gap: 24px;
-		border-bottom: 1px solid ${({ theme }) => theme?.mainBody.cardSbLine};
+		/* border-bottom: 1px solid ${({ theme }) => theme?.mainBody.cardSbLine}; */
+	}
+
+	.tabs {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+		gap: 10px;
 	}
 `;
 
@@ -55,9 +72,12 @@ export const OptionBtn = styled.button`
 		width: ${({ $active }) => ($active ? '100%' : '0%')};
 		position: absolute;
 		bottom: -1px;
-		left: 0;
-		background-color: ${({ theme }) => theme?.mainBody.text};
-		border-radius: 999px;
+		/* left: 0; */
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: ${({ theme, $active }) =>
+			$active ? theme?.mainBody.text : theme?.mainBody.kitTextDark};
+		border-radius: 9999px;
 		transition: width 0.25s ease;
 	}
 
@@ -68,4 +88,27 @@ export const OptionBtn = styled.button`
 	&:hover::after {
 		width: 100%;
 	}
+`;
+
+export const CreateBtn = styled.button`
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+	color: ${({ theme }) => theme?.mainBody.text};
+	background-color: ${({ theme }) => theme?.mainBody.toolkitBg};
+	border: 1px solid ${({ theme }) => theme?.mainBody.cardSbLine};
+	transition: all 0.2s ease;
+
+	&:hover {
+		color: ${({ theme }) => theme?.intro.logo};
+		transform: translateY(-1px);
+	}
+`;
+
+export const TableWrapper = styled.div`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin-top: 5vh;
 `;
