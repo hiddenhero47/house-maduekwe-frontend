@@ -10,6 +10,7 @@ import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import image1 from '../../assets/images/suits1.jpg';
+import SignIn from "./elements/sign-in/sign-in";
 
 function Index() {
 	const isLoading = false;
@@ -30,7 +31,7 @@ function Index() {
 
 					<div className="w-full flex items-center">
 						<MyForm onSubmit={() => {}}>
-							<div></div>
+							<SignIn />
 						</MyForm>
 					</div>
 				</LeftBox>
