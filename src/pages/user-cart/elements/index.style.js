@@ -154,6 +154,21 @@ export const SummaryContainer = styled.div`
 	}
 `;
 
+export const ToggleBtn = styled.button`
+	font-size: 25px;
+	color: ${({ theme, $isExcluded }) =>
+		$isExcluded ? theme?.mainBody?.kitTextDark : theme?.intro?.logo};
+	transition: transform 0.2s ease;
+
+	&:hover {
+		transform: scale(1.1);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+`;
+
 export const Footer = styled.div`
 	margin-top: 10px;
 	display: flex;

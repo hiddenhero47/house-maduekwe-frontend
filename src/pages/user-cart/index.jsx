@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Container,
 	Item,
 	ColorCircle,
 	SummaryContainer,
 	Footer,
+	ToggleBtn,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
+import { MdOutlineToggleOff } from 'react-icons/md';
+import { MdOutlineToggleOn } from 'react-icons/md';
 
 function Index() {
+	const [excludedItems, setExcludedItems] = useState([]);
+
+	const toggleExclude = (index) => {
+		setExcludedItems(
+			(prev) =>
+				prev.includes(index)
+					? prev.filter((i) => i !== index) // remove
+					: [...prev, index] // add
+		);
+	};
 	return (
 		<Container>
 			<h1 className="text-[30px] font-normal font-[Audiowide] pt-[20px] mb-[50px]">
@@ -29,7 +42,7 @@ function Index() {
 									</div>
 								</button>
 
-								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between">
+								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between py-[8px] pr-[8px]">
 									<div className="flex justify-between w-full">
 										<div>
 											<h3>Basic Tee</h3>
@@ -48,7 +61,19 @@ function Index() {
 									</div>
 
 									<div className="flex justify-between w-full items-center">
-										<p>Qty 1</p>
+										<p className="flex items-center gap-[10px]">
+											Qty 1{' '}
+											<ToggleBtn
+												onClick={() => toggleExclude(0)}
+												$isExcluded={excludedItems.includes(0)}
+											>
+												{excludedItems.includes(0) ? (
+													<MdOutlineToggleOff />
+												) : (
+													<MdOutlineToggleOn />
+												)}
+											</ToggleBtn>
+										</p>
 
 										<button className="text-[15px] text-[var(--intro-logo)]">
 											Remove
@@ -69,7 +94,7 @@ function Index() {
 									</div>
 								</button>
 
-								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between">
+								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between py-[8px] pr-[8px]">
 									<div className="flex justify-between w-full">
 										<div>
 											<h3>Basic Tee</h3>
@@ -88,7 +113,19 @@ function Index() {
 									</div>
 
 									<div className="flex justify-between w-full items-center">
-										<p>Qty 1</p>
+										<p className="flex items-center gap-[10px]">
+											Qty 1{' '}
+											<ToggleBtn
+												onClick={() => toggleExclude(1)}
+												$isExcluded={excludedItems.includes(1)}
+											>
+												{excludedItems.includes(1) ? (
+													<MdOutlineToggleOff />
+												) : (
+													<MdOutlineToggleOn />
+												)}
+											</ToggleBtn>
+										</p>
 
 										<button className="text-[15px] text-[var(--intro-logo)]">
 											Remove
@@ -109,7 +146,7 @@ function Index() {
 									</div>
 								</button>
 
-								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between">
+								<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between py-[8px] pr-[8px]">
 									<div className="flex justify-between w-full">
 										<div>
 											<h3>Basic Tee</h3>
@@ -128,7 +165,19 @@ function Index() {
 									</div>
 
 									<div className="flex justify-between w-full items-center">
-										<p>Qty 1</p>
+										<p className="flex items-center gap-[10px]">
+											Qty 1{' '}
+											<ToggleBtn
+												onClick={() => toggleExclude(2)}
+												$isExcluded={excludedItems.includes(2)}
+											>
+												{excludedItems.includes(2) ? (
+													<MdOutlineToggleOff />
+												) : (
+													<MdOutlineToggleOn />
+												)}
+											</ToggleBtn>
+										</p>
 
 										<button className="text-[15px] text-[var(--intro-logo)]">
 											Remove
