@@ -9,3 +9,9 @@ export const ItemStatusType = {
   SOLD_OUT: "sold-out",
   AVAILABLE: "available",
 };
+
+export const roleType = {
+  SUPER_ADMIN: "superAdmin",
+  ADMIN: "admin",
+  BASIC: "basic",
+};
