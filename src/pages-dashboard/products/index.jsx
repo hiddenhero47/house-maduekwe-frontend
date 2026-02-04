@@ -20,7 +20,7 @@ import {
 import BasicPg from '../../components/table_components/pagination/basicPg';
 import { FaSquareOdnoklassniki } from 'react-icons/fa6';
 import { items } from '../../dummyData/shopItems';
-import { getRandomInt } from '../../utilities/basicFunctions';
+import { getRandomInt } from '../../utilities/basic-functions';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
 

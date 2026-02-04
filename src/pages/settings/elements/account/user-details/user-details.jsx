@@ -11,13 +11,15 @@ import { useFormik } from 'formik';
 import PhoneInput from '../../../../../components/form-components/phone-number/phone-number';
 import CustomInput from '../../../../../components/form-components/input/custom-input';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 function UserDetails() {
 	const navigate = useNavigate();
+	const { user } = useSelector((state) => state.auth);
 
 	const initialValues = {
-		name: 'charles47',
-		phoneNumber: '+2348163447827',
+		name: user?.name || '',
+		phoneNumber: user?.phoneNumber?.number || '',
 	};
 
 	const onSubmit = async (values) => {
@@ -49,7 +51,7 @@ function UserDetails() {
 				<DetailsList>
 					<DetailsItem>
 						<span className="list_content">User ID</span>
-						<span className="list_content">MiPNwmzXFtNO8ZetNO8Z@viUiJav</span>
+						<span className="list_content">{user?._id || "Nill"}</span>
 					</DetailsItem>
 
 					<DetailsItem>
@@ -87,13 +89,14 @@ function UserDetails() {
 								useBackground
 								paddingX="7px"
 								paddingY="3px"
+								country={user?.phoneNumber?.country || 'US'}
 							/>
 						</span>
 					</DetailsItem>
 
 					<DetailsItem>
 						<span className="list_content">Email</span>
-						<span className="list_content">charles47@gmail.com</span>
+						<span className="list_content">{user?.email || "Nill"}</span>
 					</DetailsItem>
 				</DetailsList>
 			</form>

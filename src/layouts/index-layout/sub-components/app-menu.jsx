@@ -24,16 +24,28 @@ import { FaCartShopping } from 'react-icons/fa6';
 import { toggleTheme } from '../../../store/slice/app-theme';
 import { toggleHoldings } from '../../../store/slice/holding';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaInstagram, FaXTwitter, FaFacebookF } from "react-icons/fa6";
-import { TbHomeFilled } from "react-icons/tb";
-
+import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
+import { TbHomeFilled } from 'react-icons/tb';
+import { ensureUser } from '../../../store/slice/auth';
+import { roleType } from "../../../utilities/app-const";
+import { truncate } from "../../../utilities/basic-functions";
 
 function LeftMenu({ closeMe, openHolding }) {
 	const { theme } = useSelector((state) => state.themes);
+	const { user } = useSelector((state) => state.auth);
 	const { holdings, show } = useSelector((state) => state.holdings);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const showHeader = (u) => {
+    const { role, email } = u;
+    const roleDisplays = {
+        [roleType.ADMIN]: role,
+        [roleType.SUPER_ADMIN]: role,
+        [roleType.BASIC]: truncate({ str: email, len: 20 })
+    };
+    return roleDisplays[role] ?? "experience more with us";
+};
 	return (
 		<MenuWrapper>
 			<MenuHeader>
@@ -51,14 +63,24 @@ function LeftMenu({ closeMe, openHolding }) {
 			</MenuHeader>
 
 			<UserSection>
-				<div id="overview" onClick={() => {navigate("/settings"); closeMe();}}>
+				<div
+					id="overview"
+					onClick={() => {
+						closeMe();
+						dispatch(
+							ensureUser(navigate('/settings'), () =>
+								navigate('/authentication')
+							)
+						);
+					}}
+				>
 					<div id="avatar">
 						<div className="imageHolder"></div>
 					</div>
 
 					<div id="client">
-						<span>admin</span>
-						<span>charles</span>
+						<span>{showHeader(user)}</span>
+						<span>{user?.name || "Signin"}</span>
 					</div>
 
 					<span className="ml-auto text-[18px] text-[var(--mainBody-sbText)] my-auto">

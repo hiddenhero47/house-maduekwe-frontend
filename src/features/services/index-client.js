@@ -8,10 +8,13 @@ const userDetails = () => {
 	return authState || {};
 };
 
-const BASE_URL = import.meta.env.REACT_APP_BASE_URL || 'http://localhost:6000/';
-const CRUD_TYPE = import.meta.env.REACT_APP_AXIOS_CRUD_TYPE?.trim()?.split(
+const BASE_URL = import.meta.env.VITE_BASE_URL?.trim();
+const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(
 	' '
 ) || ['GET', 'POST', 'PUT', 'DELETE'];
+
+console.log(BASE_URL);
+
 
 const successResponseHandler = (res) => {
 	return res;
@@ -54,7 +57,6 @@ axiosInstance.interceptors.request.use(
 		if (!req.url.startsWith('http')) {
 			req.url = BASE_URL + req.url.replace(/^\/+/, '');
 		}
-
 		return req;
 	},
 	function (error) {

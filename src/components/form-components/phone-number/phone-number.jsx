@@ -135,7 +135,7 @@ const PhoneInput = ({
 				/>
 			</MyInput>
 
-			{isError && <Error>{errormessage}!</Error>}
+			{isError && <Error className='Form_error'>{errormessage}!</Error>}
 		</>
 	);
 };

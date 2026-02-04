@@ -1,4 +1,4 @@
-import { getFromLocalStorage } from "../../utilities/basicFunctions";
+import { getFromLocalStorage } from "../../utilities/basic-functions";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

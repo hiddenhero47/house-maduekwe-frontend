@@ -39,7 +39,7 @@ function CustomTextarea({
 				autoComplete={autoComplete}
 			/>
 			{isError && errormessage ? (
-				<Error style={{ marginTop: '-6px' }}>{errormessage} !</Error>
+				<Error className='Form_error' style={{ marginTop: '-6px' }}>{errormessage} !</Error>
 			) : (
 				''
 			)}

@@ -62,7 +62,7 @@ function CustomPassword({
 					</i>
 				</Eyes>
 			</MyInput>
-			{isError && errormessage ? <Error>{errormessage} !</Error> : ''}
+			{isError && errormessage ? <Error className='Form_error'>{errormessage} !</Error> : ''}
 		</>
 	);
 }

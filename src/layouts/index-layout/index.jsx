@@ -147,9 +147,9 @@ function IndexLayout() {
 
 			<Modal.Left
 				height="97vh"
-				width="clamp(260px, 31vw, 280px)"
+				width="clamp(270px, 31vw, 280px)"
 				minWidth="clamp(270px, 35%, 280px)"
-				marginOffset="15px"
+				marginOffset="clamp(3px, 2%, 15px)"
 				onClose={() => {}}
 				onOpen={() => {}}
 				refName={leftMenuRef}

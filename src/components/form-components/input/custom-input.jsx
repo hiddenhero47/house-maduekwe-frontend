@@ -36,7 +36,7 @@ function CustomInput({
 				$paddingY={paddingY}
 				autoComplete={autoComplete}
 			/>
-			{isError && errormessage ? <Error>{errormessage} !</Error> : ''}
+			{isError && errormessage ? <Error className='Form_error'>{errormessage} !</Error> : ''}
 		</>
 	);
 }
