@@ -6,8 +6,8 @@ export const Wrapper = styled.div`
 	flex-direction: column;
 	max-width: 400px;
 	margin: auto;
-	padding-bottom: 20px;
-	padding-top: 10px;
+	padding-bottom: 15px;
+	padding-top: 5px;
 
 	.Form_error {
 		font-size: 10px;
@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
 
 	.header {
 		text-align: center;
-		margin-bottom: 20px;
+		margin-bottom: 15px;
 
 		h3 {
 			font-size: 1.3rem;
@@ -46,7 +46,7 @@ export const Wrapper = styled.div`
 			font-size: 12px;
 			font-weight: 600;
 			margin-left: 6px;
-			margin-bottom: 6px;
+			margin-bottom: 4px;
 		}
 
 		&:focus-within {
@@ -65,7 +65,7 @@ export const Wrapper = styled.div`
 	.divider {
 		display: flex;
 		align-items: center;
-		margin-block: 16px;
+		margin-block: 13px;
 
 		div {
 			flex: 1;
@@ -107,7 +107,7 @@ export const Wrapper = styled.div`
 	.footer_text {
 		display: block;
 		text-align: center;
-		margin-top: 20px;
+		margin-top: 15px;
 		font-size: 12.5px;
 		color: ${({ theme }) => theme?.mainBody?.sbText};
 

@@ -133,10 +133,10 @@ export const FooterBgL = ({ width, height }) => (
 				y2="0%"
 				id="SvgjsLinearGradient1013"
 			>
-				<stop stop-color="rgba(255, 255, 255, 0.42)" offset="0"></stop>
+				<stop stopColor="rgba(255, 255, 255, 0.42)" offset="0"></stop>
 				<stop
-					stop-opacity="0"
-					stop-color="rgba(255, 255, 255, 0.42)"
+					stopOpacity="0"
+					stopColor="rgba(255, 255, 255, 0.42)"
 					offset="0.66"
 				></stop>
 			</linearGradient>
@@ -147,10 +147,10 @@ export const FooterBgL = ({ width, height }) => (
 				y2="0%"
 				id="SvgjsLinearGradient1014"
 			>
-				<stop stop-color="rgba(255, 255, 255, 0.42)" offset="0"></stop>
+				<stop stopColor="rgba(255, 255, 255, 0.42)" offset="0"></stop>
 				<stop
-					stop-opacity="0"
-					stop-color="rgba(255, 255, 255, 0.42)"
+					stopOpacity="0"
+					stopColor="rgba(255, 255, 255, 0.42)"
 					offset="0.66"
 				></stop>
 			</linearGradient>
@@ -225,10 +225,10 @@ export const FooterBgD = ({ width, height }) => (
 				y2="0%"
 				id="SvgjsLinearGradient1028"
 			>
-				<stop stop-color="rgba(31, 31, 31, 0.42)" offset="0"></stop>
+				<stop stopColor="rgba(31, 31, 31, 0.42)" offset="0"></stop>
 				<stop
-					stop-opacity="0"
-					stop-color="rgba(31, 31, 31, 0.42)"
+					stopOpacity="0"
+					stopColor="rgba(31, 31, 31, 0.42)"
 					offset="0.66"
 				></stop>
 			</linearGradient>
@@ -239,10 +239,10 @@ export const FooterBgD = ({ width, height }) => (
 				y2="0%"
 				id="SvgjsLinearGradient1029"
 			>
-				<stop stop-color="rgba(31, 31, 31, 0.42)" offset="0"></stop>
+				<stop stopColor="rgba(31, 31, 31, 0.42)" offset="0"></stop>
 				<stop
-					stop-opacity="0"
-					stop-color="rgba(31, 31, 31, 0.42)"
+					stopOpacity="0"
+					stopColor="rgba(31, 31, 31, 0.42)"
 					offset="0.66"
 				></stop>
 			</linearGradient>

@@ -18,8 +18,12 @@ export const LoginWrapper = styled.div`
 	#body {
 		width: 100%;
 		height: 100%;
-		padding-top: 43px;
+		padding-top: 40px;
 		display: flex;
+
+		@media (max-width: 1000px) {
+			padding-top: 25px;
+		}
 	}
 
 	#title {
@@ -50,6 +54,7 @@ export const LoginWrapper = styled.div`
 
 		@media (max-width: 1000px) {
 			flex-direction: column;
+			margin-top: 15px;
 		}
 
 		div:nth-child(1) {
@@ -83,8 +88,8 @@ export const LoginWrapper = styled.div`
 	}
 
 	background-image: ${({ theme }) =>
-	theme.mode === 'dark'
-		? `
+		theme.mode === 'dark'
+			? `
 		/* ultra-soft light noise on dark */
 		radial-gradient(circle at 33% 41%,
 			rgba(255, 255, 255, 0.015) 0%,
@@ -116,7 +121,7 @@ export const LoginWrapper = styled.div`
 			${theme.mainBody.background}
 		)
 	`
-		: `
+			: `
 		/* ultra-soft dark noise on light */
 		radial-gradient(circle at 33% 41%,
 			rgba(0, 0, 0, 0.015) 0%,
@@ -160,7 +165,7 @@ export const LeftBox = styled.div`
 	}
 `;
 
-export const MyForm = styled.form`
+export const MyForm = styled.div`
 	width: clamp(320px, 95%, 500px);
 	min-height: 50vh;
 	margin-inline: auto;
@@ -188,7 +193,7 @@ export const RightBox = styled.div`
 	width: 56.36%;
 	height: 100%;
 	border-radius: 10px;
-	background-color: ${({theme}) => theme?.mainBody?.card};
+	background-color: ${({ theme }) => theme?.mainBody?.card};
 
 	@media (max-width: 1000px) {
 		display: none;

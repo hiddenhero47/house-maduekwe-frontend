@@ -1,0 +1,109 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { axiosCall } from '../index-client';
+import { toast } from 'react-toastify';
+
+const useGetMyOrdersQuery = (params = {}) => {
+	return useQuery(
+		['orders', 'me', params],
+		() =>
+			axiosCall({
+				url: '/api/orders/me',
+				method: 'GET',
+				params,
+			}),
+		{
+			refetchOnWindowFocus: false,
+		}
+	);
+};
+
+const useGetOrdersQuery = (params = {}) => {
+	return useQuery(
+		['orders', params],
+		() =>
+			axiosCall({
+				url: '/api/orders',
+				method: 'GET',
+				params,
+			}),
+		{
+			refetchOnWindowFocus: false,
+		}
+	);
+};
+
+const useUpdateOrderStatusMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		({ id, status }) =>
+			axiosCall({
+				url: `/api/orders/${id}/status`,
+				method: 'PATCH',
+				data: { status },
+			}),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries(['orders']);
+				queryClient.invalidateQueries(['orders', 'me']);
+				toast.success('Order status updated');
+			},
+		}
+	);
+};
+
+const useConfirmCheckoutMutation = () => {
+	return useMutation(
+		(data) =>
+			axiosCall({
+				url: '/api/orders/confirm-checkout',
+				method: 'POST',
+				data,
+			}),
+		{
+			onError: () => {
+				toast.error('Failed to confirm checkout');
+			},
+		}
+	);
+};
+
+const useCheckoutMutation = () => {
+	return useMutation(
+		(data) =>
+			axiosCall({
+				url: '/api/orders/checkout',
+				method: 'POST',
+				data,
+			}),
+		{
+			onSuccess: () => {
+				toast.success('Order placed successfully');
+			},
+			onError: () => {
+				toast.error('Checkout failed');
+			},
+		}
+	);
+};
+
+export {
+	useGetMyOrdersQuery,
+	useGetOrdersQuery,
+	useUpdateOrderStatusMutation,
+	useConfirmCheckoutMutation,
+	useCheckoutMutation,
+};
+
+const OrderServices = {
+	getMy: useGetMyOrdersQuery,
+	getAll: useGetOrdersQuery,
+	updateStatus: useUpdateOrderStatusMutation,
+};
+
+const CheckoutServices = {
+	confirm: useConfirmCheckoutMutation,
+	checkout: useCheckoutMutation,
+};
+
+export { OrderServices, CheckoutServices };

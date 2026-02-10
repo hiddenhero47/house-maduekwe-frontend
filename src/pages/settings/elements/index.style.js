@@ -5,7 +5,7 @@ export const Container = styled.div`
 	flex-direction: column;
 	height: 100%;
 	overflow-y: auto;
-	padding-bottom: 20px;
+	/* padding-bottom: 20px; */
 `;
 
 export const SettingsWrapper = styled.div`
@@ -23,6 +23,11 @@ export const SettingsWrapper = styled.div`
 	border: 1px solid ${({ theme }) => theme?.mainBody?.cardLine};
 	background-color: ${({ theme }) => theme?.mainBody?.card};
 	color: ${({ theme }) => theme?.mainBody?.text};
+	flex-shrink: 0;
+
+	& > * {
+		flex-shrink: 0;
+	}
 
 	@media (min-width: 621px) and (max-width: 1000px) {
 		width: clamp(600px, 95%, 1400px);
@@ -34,8 +39,14 @@ export const SettingsWrapper = styled.div`
 	@media (max-width: 620px) {
 		width: 95%;
 		margin-inline: auto;
+		margin-top: 30px;
 		padding-inline: 29px;
 		padding-block: 24px;
+	}
+
+	@media (max-width: 439px) {
+		max-height: unset;
+		height: fit-content;
 	}
 `;
 

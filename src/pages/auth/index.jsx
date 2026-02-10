@@ -10,7 +10,14 @@ import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import image1 from '../../assets/images/suits1.jpg';
-import SignIn from "./elements/sign-in/sign-in";
+import SignIn from './elements/sign-in/sign-in';
+import SignUp from './elements/sign-up/sign-up';
+import {
+	useParams,
+	useMatch,
+	useNavigate,
+	useLocation,
+} from 'react-router-dom';
 
 function Index() {
 	const isLoading = false;
@@ -30,14 +37,22 @@ function Index() {
 					</div>
 
 					<div className="w-full flex items-center">
-						<MyForm onSubmit={() => {}}>
-							<SignIn />
-						</MyForm>
+						{useMatch("authentication") && (
+							<MyForm>
+								<SignIn />
+							</MyForm>
+						)}
+
+						{useMatch("authentication/sign-up") && (
+							<MyForm>
+								<SignUp />
+							</MyForm>
+						)}
 					</div>
 				</LeftBox>
 
 				<RightBox>
-					<div className='rounded-[inherit] imageHolder'>
+					<div className="rounded-[inherit] imageHolder">
 						<img src={image1} alt="error" />
 					</div>
 				</RightBox>

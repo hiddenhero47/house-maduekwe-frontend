@@ -30,6 +30,7 @@ function CustomTable({
 	emptyText,
 	emptySbText,
 	refetch,
+	addData,
 }) {
 	const callRow = (data) => {
 		if (onCallRow) {
@@ -115,8 +116,14 @@ function CustomTable({
 							<span>{emptySbText}</span>
 
 							{refetch && (
-								<RetryBtn>
+								<RetryBtn onClick={() => refetch()}>
 									<div className="content">Retry</div>
+								</RetryBtn>
+							)}
+
+							{addData && (
+								<RetryBtn onClick={() => addData()}>
+									<div className="content">+ Add</div>
 								</RetryBtn>
 							)}
 						</div>

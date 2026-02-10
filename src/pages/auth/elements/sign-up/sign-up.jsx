@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wrapper, SubmitBtn } from './sign-in.style';
+import { Wrapper, SubmitBtn } from './sign-up.style';
 import CustomInput from '../../../../components/form-components/input/custom-input';
 import CustomPassword from '../../../../components/form-components/input/custom-password';
 import { useFormik } from 'formik';
@@ -8,44 +8,64 @@ import { HiOutlineLogin } from 'react-icons/hi';
 import { IoLogoApple } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGoogle } from 'react-icons/fa';
-import { userLoginValidationSchema } from '../../../../features/validations/user-validation';
+import { userCreateValidationSchema } from '../../../../features/validations/user-validation';
 import UserServices from '../../../../features/services/custom-hooks/user';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 
-function SignIn() {
+function SignUp() {
+	const navigate = useNavigate();
 	const {
-		mutate: loginUser,
+		mutate: registerUser,
 		isLoading,
 		isSuccess,
 		isError,
 		error,
 		data,
-	} = UserServices.login();
+	} = UserServices.register();
 
 	const initialValues = {
 		email: '',
 		password: '',
+		name: '',
 	};
 
 	const onSubmit = async (values) => {
-		loginUser(values);
+		await registerUser(values);
 	};
 
 	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
 		useFormik({
 			initialValues,
-			validationSchema: userLoginValidationSchema,
+			validationSchema: userCreateValidationSchema,
 			onSubmit,
 		});
 
-	const { email, password } = values;
+	const { email, password, name } = values;
 	return (
 		<Wrapper>
 			<div className="header">
-				<h3>Welcome Back</h3>
-				<p>Login to your account</p>
+				<h3>Create your account</h3>
+				<p>Sign up to access exclusive features</p>
 			</div>
 			<form onSubmit={handleSubmit}>
+				<div className="form_control">
+					<label>User Name</label>
+					<CustomInput
+						autoComplete="on"
+						type="text"
+						name="name"
+						value={name}
+						onChange={handleChange}
+						onBlur={handleBlur}
+						isError={touched.name && errors.name}
+						errormessage={errors.name}
+						placeholder="Enter a User Name"
+						paddingX="14px"
+						paddingY="10px"
+						useBackground
+					/>
+				</div>
+
 				<div className="form_control">
 					<label>Email Address</label>
 					<CustomInput
@@ -80,14 +100,10 @@ function SignIn() {
 					/>
 				</div>
 
-				<Link to="/auth/forgot-password" id="forgot_password">
-					Forgot Password?
-				</Link>
-
-				<SubmitBtn $isLoading={isLoading} type="submit">
+				<SubmitBtn $isLoading={isLoading} type="submit" className="mt-[5px]">
 					<div className="content">
 						<HiOutlineLogin />
-						Log In
+						Sign up
 					</div>
 					<div className="loader">
 						<BubbleSlide color="var(--addToCart-text)" height="20px" />
@@ -114,10 +130,10 @@ function SignIn() {
 			</div>
 
 			<span className="footer_text">
-				Don’t have an account? <Link to="/authentication/sign-up">Sign up</Link>
+				Already have an account? <Link to="/authentication">Log in</Link>
 			</span>
 		</Wrapper>
 	);
 }
 
-export default SignIn;
+export default SignUp;

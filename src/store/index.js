@@ -14,12 +14,14 @@ import {
 } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
+import auth from './slice/auth';
 import themes from './slice/app-theme';
 import holdings from "./slice/holding";
 import dragBoard from "./slice/drag-board";
 
 // Combine all reducers
 const appReducer = combineReducers({
+	auth,
 	themes,
 	holdings,
 	dragBoard,

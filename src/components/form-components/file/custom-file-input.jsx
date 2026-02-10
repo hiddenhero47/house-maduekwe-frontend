@@ -234,7 +234,7 @@ function CustomFileInput({
 			)}
 
 			{isError && errorMessage && touched ? (
-				<Error className="error">{errorMessage} !</Error>
+				<Error className="error Form_error">{errorMessage} !</Error>
 			) : (
 				''
 			)}

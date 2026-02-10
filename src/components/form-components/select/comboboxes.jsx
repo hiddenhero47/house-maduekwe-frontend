@@ -197,7 +197,7 @@ const Comboboxes = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error>{errormessage} !</Error>}
+			{isError && <Error className='Form_error'>{errormessage} !</Error>}
 		</>
 	);
 };
