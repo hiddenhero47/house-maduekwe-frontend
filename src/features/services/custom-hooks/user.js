@@ -1,11 +1,15 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';
+import { store } from '../../../store/index';
 
 const useGetUserQuery = () => {
+	const dispatch = useDispatch();
+	const token = store.getState().auth.token;
+
 	return useQuery({
 		queryKey: ['users/getMe'],
 		queryFn: () =>
@@ -13,6 +17,10 @@ const useGetUserQuery = () => {
 				url: '/api/users/getMe',
 				method: 'GET',
 			}),
+		onSuccess: (data) => {
+			dispatch(setUser({...data, token}));
+			toast.success('You have been registered');
+		},
 		refetchOnWindowFocus: false,
 	});
 };
@@ -31,7 +39,7 @@ const useRegisterUserMutation = () => {
 		onSuccess: (data) => {
 			dispatch(setToken(data?.token));
 			dispatch(setUser(data));
-			navigate("/");
+			navigate('/');
 			toast.success('You have been registered');
 		},
 	});
@@ -51,7 +59,7 @@ const useLoginUserMutation = () => {
 		onSuccess: (data) => {
 			dispatch(setToken(data?.token));
 			dispatch(setUser(data));
-			navigate("/");
+			navigate('/');
 			toast.success('Log in successful');
 		},
 	});
@@ -115,6 +123,7 @@ const useAppleLoginMutation = () => {
 };
 
 const useUpdateProfileMutation = () => {
+	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: (data) =>
 			axiosCall({
@@ -122,6 +131,10 @@ const useUpdateProfileMutation = () => {
 				method: 'PUT',
 				data,
 			}),
+			onSuccess: () => {
+				queryClient.invalidateQueries(['users/getMe']);
+				toast.success('Profile updated successfully');
+			},
 	});
 };
 

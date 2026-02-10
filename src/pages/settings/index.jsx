@@ -10,6 +10,9 @@ import { FaUserGear } from 'react-icons/fa6';
 import { IoLocationSharp } from 'react-icons/io5';
 import { TbTruckDelivery } from 'react-icons/tb';
 import AccountSettings from './elements/account/account';
+import Address from './elements/address/address';
+import Order from './elements/order/order';
+import OrderPreview from './elements/preview-order/preview-order';
 
 function Index() {
 	const settings = {
@@ -24,6 +27,7 @@ function Index() {
 
 	// Read from URL or fallback to PROFILE
 	const currentFromUrl = query.get('currentSettings') || settings.PROFILE;
+	const orderId = query.get('orderId');
 
 	const [currentSettings, setCurrentSettings] = useState(currentFromUrl);
 
@@ -31,7 +35,7 @@ function Index() {
 	const navigateTo = (value) => {
 		setCurrentSettings(value);
 
-		const params = new URLSearchParams(location.search);
+		const params = new URLSearchParams();
 		params.set('currentSettings', value);
 
 		navigate(`${location.pathname}?${params.toString()}`, { replace: true });
@@ -97,6 +101,18 @@ function Index() {
 				</Header>
 
 				{isActive(settings.PROFILE) && <AccountSettings />}
+
+				{isActive(settings.ADDRESS) && <Address />}
+
+				{isActive(settings.ORDERS) && !orderId && (
+					<Order
+						onSelectOrder={(id) => navigateTo(settings.ORDERS, { orderId: id })}
+					/>
+				)}
+
+				{isActive(settings.ORDERS) && orderId && (
+					<OrderPreview orderId={orderId} />
+				)}
 			</SettingsWrapper>
 		</Container>
 	);

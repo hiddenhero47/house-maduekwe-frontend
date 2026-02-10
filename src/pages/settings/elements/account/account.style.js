@@ -22,6 +22,10 @@ export const SecurityWrapper = styled.div`
 		padding-inline: 20px;
 		padding-top: 21px;
 		padding-bottom: 10px;
+
+		@media (max-width: 430px) {
+			padding-block: 8px;
+		}
 	}
 
 	.slow {

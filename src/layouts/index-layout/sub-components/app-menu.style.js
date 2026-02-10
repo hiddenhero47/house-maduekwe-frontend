@@ -94,7 +94,10 @@ export const UserSection = styled.div`
 		height: 35px;
 		width: 35px;
 		border-radius: 3px;
-		background-color: black;
+		background-color: ${({theme}) => theme?.basicBtn.bgActive};
+		svg path {
+			fill: ${({theme}) => theme?.basicBtn.textActive};
+		}
 	}
 
 	#client {

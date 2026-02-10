@@ -4,6 +4,8 @@ import {
 	DetailsList,
 	DetailsItem,
 	SaveBtn,
+	Logout,
+	ChangeBtn,
 } from './user-details.style';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RxDashboard } from 'react-icons/rx';
@@ -12,46 +14,124 @@ import PhoneInput from '../../../../../components/form-components/phone-number/p
 import CustomInput from '../../../../../components/form-components/input/custom-input';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { TbLogout } from 'react-icons/tb';
+import { roleType } from '../../../../../utilities/app-const';
+import { logout } from '../../../../../store/slice/auth';
+import { userUpdateValidationSchema } from '../../../../../features/validations/user-validation';
+import { VectorIcon } from '../../../../../components/icon-components/index.style';
+import profile from '../../../../../assets/images/profile3.svg?react';
+import UserServices from '../../../../../features/services/custom-hooks/user';
+import BubbleSlide from '../../../../../components/loaders/bubbles/BubbleSlide';
+import { convertFileToBase64 } from '../../../../../utilities/basic-functions';
 
 function UserDetails() {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
 
 	const initialValues = {
 		name: user?.name || '',
-		phoneNumber: user?.phoneNumber?.number || '',
+		phoneNumber: {
+			number: user?.phoneNumber?.number || '',
+			country: user?.phoneNumber?.country || 'US',
+		},
+		image: null,
 	};
+
+	const { mutate: update, isLoading } = UserServices.updateProfile();
 
 	const onSubmit = async (values) => {
-		console.log(values);
-	};
-	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
-		useFormik({
-			initialValues,
-			// validationSchema: validationSchema,
-			onSubmit,
-		});
+		try {
+			const { image, ...others } = values;
 
-	const { name, phoneNumber } = values;
+			let base64Image;
+
+			if (image) {
+				base64Image = await convertFileToBase64(image);
+			}
+
+			update({
+				...others,
+				base64: base64Image,
+			});
+		} catch (error) {
+			console.error('Failed to convert image to base64', error);
+		}
+	};
+	const {
+		values,
+		errors,
+		handleBlur,
+		touched,
+		handleChange,
+		setFieldValue,
+		handleSubmit,
+	} = useFormik({
+		initialValues,
+		validationSchema: userUpdateValidationSchema,
+		onSubmit,
+	});
+
+	const { name, phoneNumber, image } = values;
+
+	const logoutUser = async () => {
+		await navigate('/');
+		dispatch(logout());
+		localStorage.clear();
+	};
+
+	const onChangeFile = (e) => {
+		const file = e.currentTarget.files[0];
+		if (!file) return;
+
+		setFieldValue('image', file);
+	};
+
+	const getImageURL = (img) => {
+		if (img) return URL.createObjectURL(img);
+		if (user?.avatar?.url) return user.avatar?.url;
+		return null;
+	};
+
 	return (
-		<UserDetailsWrapper>
-			<div className="w-full flex justify-end gap-[10px]">
+		<UserDetailsWrapper
+			$isAdmin={
+				user?.role === roleType.ADMIN || user?.role === roleType.SUPER_ADMIN
+			}
+		>
+			<div className="w-full flex items-center flex-wrap gap-[8px] justify-between">
 				<button id="btn_dashboard" onClick={() => navigate('/admin')}>
 					<RxDashboard />
 					<span>Dashboard</span>
 					<IoIosArrowForward />
 				</button>
 
-				<SaveBtn>
-					<div className="content">save</div>
-				</SaveBtn>
+				<div id="actionWrapper">
+					<SaveBtn
+						$isLoading={isLoading}
+						type="button"
+						onClick={() => handleSubmit()}
+					>
+						<div className="content">SAVE</div>
+						<div className="loader">
+							<BubbleSlide color="var(--addToCart-text)" height="20px" />
+						</div>
+					</SaveBtn>
+
+					<Logout onClick={logoutUser}>
+						<i className="icon_wrapper">
+							<TbLogout />
+						</i>
+						logout
+					</Logout>
+				</div>
 			</div>
 
 			<form>
 				<DetailsList>
 					<DetailsItem>
 						<span className="list_content">User ID</span>
-						<span className="list_content">{user?._id || "Nill"}</span>
+						<span className="list_content">{user?._id || 'Nill'}</span>
 					</DetailsItem>
 
 					<DetailsItem>
@@ -81,22 +161,67 @@ function UserDetails() {
 								name="phoneNumber"
 								id="phoneNumber"
 								onBlur={handleBlur}
-								phoneNumber={phoneNumber || ''}
+								phoneNumber={phoneNumber.number || ''}
 								placeholder="Phone Number"
-								onChange={handleChange}
+								// onChange={handleChange}
+								customChange={(value) =>
+									setFieldValue('phoneNumber', {
+										number: value?.fullPhoneNumber?.toString(),
+										country: value?.country,
+									})
+								}
 								isError={touched.phoneNumber && errors.phoneNumber}
 								errormessage={errors.phoneNumber}
 								useBackground
 								paddingX="7px"
 								paddingY="3px"
-								country={user?.phoneNumber?.country || 'US'}
+								country={phoneNumber.country}
 							/>
 						</span>
 					</DetailsItem>
 
 					<DetailsItem>
 						<span className="list_content">Email</span>
-						<span className="list_content">{user?.email || "Nill"}</span>
+						<span className="list_content">{user?.email || 'Nill'}</span>
+					</DetailsItem>
+
+					<DetailsItem>
+						<span className="list_content flex items-center gap-[5px]">
+							<div id="avatar">
+								<div className="imageHolder rounded-[inherit]">
+									{getImageURL(image) ? (
+										<img
+											className="rounded-[inherit]"
+											src={getImageURL(image)}
+											alt=""
+										/>
+									) : (
+										<VectorIcon width="100%" height="100%" vector={profile} />
+									)}
+								</div>
+							</div>
+							profile image
+						</span>
+						<span className="list_content flex flex-col">
+							<ChangeBtn htmlFor="uploader-button">
+								<span className="content">Change</span>
+							</ChangeBtn>
+
+							<input
+								type="file"
+								name="image"
+								id="uploader-button"
+								multiple={false}
+								accept="image/png, image/jpeg"
+								onChange={onChangeFile}
+							/>
+
+							{touched.image && errors.image && (
+								<p className="ml-[3px] text-[var(--form-error)] Form_error">
+									{errors.image}
+								</p>
+							)}
+						</span>
 					</DetailsItem>
 				</DetailsList>
 			</form>
