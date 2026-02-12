@@ -161,9 +161,9 @@ const SearchSelect = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{filter(options).map((option) => (
+						{filter(options).map((option, index) => (
 							<Option
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 								className="option"

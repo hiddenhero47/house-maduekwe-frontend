@@ -118,10 +118,10 @@ const CustomSelect = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{options.map((option) => (
+						{options.map((option, index) => (
 							<Option
 								className="select_option"
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 							>

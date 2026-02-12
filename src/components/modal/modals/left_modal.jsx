@@ -52,13 +52,15 @@ function ModalLeft(
 		}
 		closeModal();
 	}
-	
+
 	return (
 		<LeftDialog
 			open={isOpen}
 			onClick={handelClose}
 			ref={modalRef}
-			onClose={closeModal}
+			onClose={(e) => {
+				if (e.target === modalRef.current) closeModal;
+			}}
 		>
 			<LeftShell
 				open={isOpen}

@@ -176,10 +176,10 @@ const Comboboxes = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{filter(options).map((option) => (
+						{filter(options).map((option, index) => (
 							<Option
 								className="select_option"
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 							>
