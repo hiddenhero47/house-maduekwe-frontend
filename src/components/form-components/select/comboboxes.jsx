@@ -118,11 +118,17 @@ const Comboboxes = ({
 		}, 100);
 	};
 
+	const handleBlur = () => {
+		if (onBlur) {
+			onBlur(name ?? id);
+		}
+	};
+
 	return (
 		<>
 			<CustomSelectContainer
 				tabIndex={0}
-				onBlur={onBlur}
+				onBlur={handleBlur}
 				id={id}
 				className="select_wrapper"
 			>
@@ -197,7 +203,7 @@ const Comboboxes = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error className='Form_error'>{errormessage} !</Error>}
+			{isError && <Error className="Form_error">{errormessage} !</Error>}
 		</>
 	);
 };

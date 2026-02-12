@@ -57,9 +57,9 @@ const SearchSelect = ({
 		setIsOpen(true);
 	};
 
-	const handleBlur = (e) => {
+	const handleBlur = () => {
 		if (onBlur) {
-			onBlur(e);
+			onBlur(name ?? id);
 		}
 	};
 
@@ -182,7 +182,7 @@ const SearchSelect = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error className='Form_error'>{errormessage}!</Error>}
+			{isError && <Error className="Form_error">{errormessage}!</Error>}
 		</>
 	);
 };
