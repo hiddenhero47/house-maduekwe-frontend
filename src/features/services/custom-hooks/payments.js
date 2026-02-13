@@ -3,52 +3,48 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 const useGetMyPaymentsQuery = (params = {}) => {
-	return useQuery(
-		['payments', 'me', params],
-		() =>
+	return useQuery({
+		queryKey: ['payments', 'me', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/payments/me',
 				method: 'GET',
 				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useGetPaymentsQuery = (params = {}) => {
-	return useQuery(
-		['payments', params],
-		() =>
+	return useQuery({
+		queryKey: ['payments', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/payments',
 				method: 'GET',
 				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useCreateStripeIntentMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/payments/stripe-intent',
 				method: 'POST',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				toast.success('Stripe payment intent created successfully');
-				queryClient.invalidateQueries(['payments', 'me']);
-			},
-		}
-	);
+		onSuccess: () => {
+			toast.success('Stripe payment intent created successfully');
+			queryClient.invalidateQueries({
+				queryKey: ['payments', 'me'],
+			});
+		},
+	});
 };
 
 export {

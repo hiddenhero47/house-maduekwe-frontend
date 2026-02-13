@@ -3,88 +3,82 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 const useGetMyOrdersQuery = (params = {}) => {
-	return useQuery(
-		['orders', 'me', params],
-		() =>
+	return useQuery({
+		queryKey: ['orders', 'me', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/orders/me',
 				method: 'GET',
 				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useGetOrdersQuery = (params = {}) => {
-	return useQuery(
-		['orders', params],
-		() =>
+	return useQuery({
+		queryKey: ['orders', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/orders',
 				method: 'GET',
 				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useUpdateOrderStatusMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		({ id, status }) =>
+	return useMutation({
+		mutationFn: ({ id, status }) =>
 			axiosCall({
 				url: `/api/orders/${id}/status`,
 				method: 'PATCH',
 				data: { status },
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['orders']);
-				queryClient.invalidateQueries(['orders', 'me']);
-				toast.success('Order status updated');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['orders'],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['orders', 'me'],
+			});
+			toast.success('Order status updated');
+		},
+	});
 };
 
 const useConfirmCheckoutMutation = () => {
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/orders/confirm-checkout',
 				method: 'POST',
 				data,
 			}),
-		{
-			onError: () => {
-				toast.error('Failed to confirm checkout');
-			},
-		}
-	);
+		onError: () => {
+			toast.error('Failed to confirm checkout');
+		},
+	});
 };
 
 const useCheckoutMutation = () => {
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/orders/checkout',
 				method: 'POST',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				toast.success('Order placed successfully');
-			},
-			onError: () => {
-				toast.error('Checkout failed');
-			},
-		}
-	);
+		onSuccess: () => {
+			toast.success('Order placed successfully');
+		},
+		onError: () => {
+			toast.error('Checkout failed');
+		},
+	});
 };
 
 export {

@@ -4,12 +4,9 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';
-import { store } from '../../../store/index';
 
 const useGetUserQuery = () => {
 	const dispatch = useDispatch();
-	const token = store.getState().auth.token;
-
 	return useQuery({
 		queryKey: ['users/getMe'],
 		queryFn: () =>
@@ -18,7 +15,7 @@ const useGetUserQuery = () => {
 				method: 'GET',
 			}),
 		onSuccess: (data) => {
-			dispatch(setUser({...data, token}));
+			dispatch(setUser(data));
 			toast.success('You have been registered');
 		},
 		refetchOnWindowFocus: false,
@@ -37,8 +34,9 @@ const useRegisterUserMutation = () => {
 				data,
 			}),
 		onSuccess: (data) => {
-			dispatch(setToken(data?.token));
-			dispatch(setUser(data));
+			const { token, ...others } = data;
+			dispatch(setToken(token));
+			dispatch(setUser({ ...others }));
 			navigate('/');
 			toast.success('You have been registered');
 		},
@@ -57,8 +55,9 @@ const useLoginUserMutation = () => {
 				data,
 			}),
 		onSuccess: (data) => {
-			dispatch(setToken(data?.token));
-			dispatch(setUser(data));
+			const { token, ...others } = data;
+			dispatch(setToken(token));
+			dispatch(setUser({ ...others }));
 			navigate('/');
 			toast.success('Log in successful');
 		},
@@ -86,8 +85,40 @@ const useVerify2faMutation = () => {
 	});
 };
 
+const useToggle2faMutation = () => {
+	const dispatch = useDispatch();
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (enable) =>
+			axiosCall({
+				url: '/api/users/2fa/toggle',
+				method: 'PUT',
+				data: { enable },
+			}),
+
+		onSuccess: (data) => {
+			// Update only the 2FA part of the user in Redux
+			dispatch(
+				setUser((prev) => ({
+					...prev,
+					user2fa: {
+						...prev?.user2fa,
+						enable: data?.user2fa?.enable,
+					},
+				}))
+			);
+			// Optional but recommended for sync
+			queryClient.invalidateQueries(['users/getMe']);
+			toast.success(data?.message || '2FA updated successfully');
+		},
+	});
+};
+
+
 const useGoogleLoginMutation = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	return useMutation({
 		mutationFn: ({ idToken, token }) =>
@@ -97,8 +128,10 @@ const useGoogleLoginMutation = () => {
 				data: { idToken, token },
 			}),
 		onSuccess: (data) => {
-			dispatch(setToken(data?.token));
-			dispatch(setUser(data));
+			const { token, ...others } = data;
+			dispatch(setToken(token));
+			dispatch(setUser({ ...others }));
+			navigate('/');
 			toast.success('Login successful');
 		},
 	});
@@ -106,6 +139,7 @@ const useGoogleLoginMutation = () => {
 
 const useAppleLoginMutation = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	return useMutation({
 		mutationFn: ({ identityToken, token }) =>
@@ -115,8 +149,10 @@ const useAppleLoginMutation = () => {
 				data: { identityToken, token },
 			}),
 		onSuccess: (data) => {
-			dispatch(setToken(data?.token));
-			dispatch(setUser(data));
+			const { token, ...others } = data;
+			dispatch(setToken(token));
+			dispatch(setUser({ ...others }));
+			navigate('/');
 			toast.success('Login successful');
 		},
 	});
@@ -124,6 +160,8 @@ const useAppleLoginMutation = () => {
 
 const useUpdateProfileMutation = () => {
 	const queryClient = useQueryClient();
+	const dispatch = useDispatch();
+
 	return useMutation({
 		mutationFn: (data) =>
 			axiosCall({
@@ -131,10 +169,11 @@ const useUpdateProfileMutation = () => {
 				method: 'PUT',
 				data,
 			}),
-			onSuccess: () => {
-				queryClient.invalidateQueries(['users/getMe']);
-				toast.success('Profile updated successfully');
-			},
+		onSuccess: (data) => {
+			dispatch(setUser(data));
+			queryClient.invalidateQueries(['users/getMe']);
+			toast.success('Profile updated successfully');
+		},
 	});
 };
 
@@ -144,6 +183,7 @@ const UserServices = {
 	register: useRegisterUserMutation,
 	login: useLoginUserMutation,
 	getMe: useGetUserQuery,
+	toggle2fa: useToggle2faMutation,
 	setup2fa: useSetup2faMutation,
 	verify2fa: useVerify2faMutation,
 	googleLogin: useGoogleLoginMutation,
