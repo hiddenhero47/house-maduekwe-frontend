@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setUser, setToken } from '../../../store/slice/auth';
+import { setUser, setToken, updateUser } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';
 
 const useGetUserQuery = () => {
@@ -170,7 +170,7 @@ const useUpdateProfileMutation = () => {
 				data,
 			}),
 		onSuccess: (data) => {
-			dispatch(setUser(data));
+			dispatch(updateUser(data.user));
 			queryClient.invalidateQueries(['users/getMe']);
 			toast.success('Profile updated successfully');
 		},

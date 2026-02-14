@@ -9,8 +9,11 @@ import CustomTable from '../../../../components/table_components/basicTableOne';
 import { AddressIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
 import CreateModal from './create-address';
+import AddressServices from "../../../../features/services/custom-hooks/addresses";
 
 function Address() {
+	const {data, isPending, isError, refetch} = AddressServices.getAll();
+
 	const modalRef = useRef(null);
 	// Open the side menu
 	const openModal = () => {
@@ -72,7 +75,7 @@ function Address() {
 							),
 						},
 					]}
-					dataSource={[]}
+					dataSource={data || []}
 					emptyIcon={
 						<AddressIcon
 							width="80px"
@@ -83,7 +86,7 @@ function Address() {
 					emptyText="NO ADDRESSES YET"
 					emptySbText="Add an address to see one here."
 					addData={() => openModal()}
-					isLoading={false}
+					isLoading={isPending}
 					useStrip
 				/>
 			</TableWrapper>

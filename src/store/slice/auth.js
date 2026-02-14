@@ -53,6 +53,18 @@ export const authSlice = createSlice({
 			state.token = action.payload;
 		},
 
+		updateUser: (state, action) => {
+			const updates = action.payload || {};
+
+			Object.keys(updates).forEach((key) => {
+				const value = updates[key];
+				// only update if value is not null or undefined
+				if (value !== null && value !== undefined) {
+					state.user[key] = value;
+				}
+			});
+		},
+
 		logout: () => {
 			// intentionally left blank. It works to trigger the root reducer state purge.
 			return initialState;
@@ -62,6 +74,6 @@ export const authSlice = createSlice({
 
 export const selectUser = (state) => state.auth;
 
-export const { logout, setUser, setToken } = authSlice.actions;
+export const { logout, setUser, setToken, updateUser } = authSlice.actions;
 
 export default authSlice.reducer;

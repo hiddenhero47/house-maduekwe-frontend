@@ -15,7 +15,7 @@ import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 function SignIn() {
 	const {
 		mutate: loginUser,
-		isLoading,
+		isPending,
 		isSuccess,
 		isError,
 		error,
@@ -84,7 +84,7 @@ function SignIn() {
 					Forgot Password?
 				</Link>
 
-				<SubmitBtn $isLoading={isLoading} type="submit">
+				<SubmitBtn $isLoading={isPending} disabled={isPending} type="submit">
 					<div className="content">
 						<HiOutlineLogin />
 						Log In

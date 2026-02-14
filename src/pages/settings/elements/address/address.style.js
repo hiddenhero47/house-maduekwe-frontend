@@ -86,6 +86,10 @@ export const MyForm = styled.form`
 	padding-bottom: 20px;
 	margin-top: 18px;
 
+	.Form_error {
+		font-size: 10px;
+	}
+
 	.section {
 		margin-top: 15px;
 

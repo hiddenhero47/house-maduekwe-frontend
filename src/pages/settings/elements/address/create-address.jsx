@@ -10,7 +10,7 @@ import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useFormik } from 'formik';
 import CustomTextarea from '../../../../components/form-components/input/custom-textarea';
 import SearchSelect from '../../../../components/form-components/select/search-select';
-import { userCreateValidationSchema } from '../../../../features/validations/user-validation';
+import { addressValidationSchema } from '../../../../features/validations/address-validation';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { HiViewGridAdd } from 'react-icons/hi';
 import {
@@ -18,6 +18,7 @@ import {
 	getStatesOptions,
 	getCitiesOptions,
 } from '../../../../utilities/city-state-country';
+import AddressServices from '../../../../features/services/custom-hooks/addresses';
 
 function CreateModal({ ref, openModal, closeModal }) {
 	const initialValues = {
@@ -29,8 +30,10 @@ function CreateModal({ ref, openModal, closeModal }) {
 		isDefault: false,
 	};
 
+	const { mutate: createAddress, isPending } = AddressServices.create();
+
 	const onSubmit = async (values) => {
-		console.log(values);
+		createAddress(values);
 	};
 
 	const {
@@ -43,7 +46,7 @@ function CreateModal({ ref, openModal, closeModal }) {
 		setFieldValue,
 	} = useFormik({
 		initialValues,
-		// validationSchema: userCreateValidationSchema,
+		validationSchema: addressValidationSchema,
 		onSubmit,
 	});
 
@@ -196,7 +199,12 @@ function CreateModal({ ref, openModal, closeModal }) {
 						</label>
 					</DefaultToggle>
 
-					<SubmitBtn type="submit" $isLoading={false} className="mt-[20px]">
+					<SubmitBtn
+						type="submit"
+						$isLoading={isPending}
+						disabled={isPending}
+						className="mt-[20px]"
+					>
 						<div className="content">
 							<HiViewGridAdd />
 							Save Address

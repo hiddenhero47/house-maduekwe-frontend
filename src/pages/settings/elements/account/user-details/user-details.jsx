@@ -28,7 +28,7 @@ function UserDetails() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
-
+	
 	const initialValues = {
 		name: user?.name || '',
 		phoneNumber: {
@@ -38,7 +38,7 @@ function UserDetails() {
 		image: null,
 	};
 
-	const { mutate: update, isLoading } = UserServices.updateProfile();
+	const { mutate: update, isPending } = UserServices.updateProfile();
 
 	const onSubmit = async (values) => {
 		try {
@@ -92,7 +92,7 @@ function UserDetails() {
 		if (user?.avatar?.url) return user.avatar?.url;
 		return null;
 	};
-
+	
 	return (
 		<UserDetailsWrapper
 			$isAdmin={
@@ -108,13 +108,14 @@ function UserDetails() {
 
 				<div id="actionWrapper">
 					<SaveBtn
-						$isLoading={isLoading}
+						$isLoading={isPending}
+						disabled={isPending}
 						type="button"
 						onClick={() => handleSubmit()}
 					>
 						<div className="content">SAVE</div>
 						<div className="loader">
-							<BubbleSlide color="var(--addToCart-text)" height="20px" />
+							<BubbleSlide color="var(--mainBody-text)" height="20px" />
 						</div>
 					</SaveBtn>
 
