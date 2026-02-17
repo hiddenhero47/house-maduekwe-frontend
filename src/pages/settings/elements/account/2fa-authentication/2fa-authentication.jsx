@@ -17,31 +17,45 @@ import {
 import { FiCopy } from 'react-icons/fi';
 import { MdOutlineToggleOff, MdOutlineToggleOn } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
+import UserServices from '../../../../../features/services/custom-hooks/user';
+import BubbleSlide from '../../../../../components/loaders/bubbles/BubbleSlide';
+import Spinner from '../../../../../components/loaders/spinners/Spinner';
 
 function TwoFAauthentication() {
 	const { user } = useSelector((state) => state.auth);
 
-	const [qrGenerated, setQrGenerated] = useState(false);
+	const [qrData, setQrData] = useState(null);
 	const [otp, setOtp] = useState('');
-	const [enabled, setEnabled] = useState(user?.user2fa?.enabled || false);
 
-	const data = { code: 'DF6VEQJUH4HFJFJH34F' };
+	const enabled = user?.user2fa?.enabled;
+
+	const { mutate: setup2fa, isPending: settingUp } = UserServices.setup2fa();
+
+	const { mutate: verify2fa, isPending: verifying } = UserServices.verify2fa();
+
+	const { mutate: toggle2fa, isPending: toggling } = UserServices.toggle2fa();
 
 	const handleGenerate = () => {
-		setQrGenerated(true);
+		setup2fa(undefined, {
+			onSuccess: (data) => {
+				setQrData(data); // contains tempSecret + qrCodeDataURL
+			},
+		});
 	};
 
 	const handleEnable = () => {
-		if (otp.length < 5) return;
-		setEnabled(true);
-		setQrGenerated(false);
+		if (otp.length < 6) return;
+
+		verify2fa(otp, {
+			onSuccess: () => {
+				setQrData(null);
+				setOtp('');
+			},
+		});
 	};
 
 	const handleToggle = () => {
-		if (enabled) {
-			setEnabled(false);
-			setQrGenerated(false);
-		}
+		toggle2fa(!enabled);
 	};
 
 	return (
@@ -55,18 +69,36 @@ function TwoFAauthentication() {
 						</StatusBadge>
 					</div>
 
-					<ToggleButton onClick={handleToggle}>
-						{enabled ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
+					<ToggleButton
+						onClick={handleToggle}
+						$isLoading={toggling}
+						disabled={toggling}
+					>
+						<div className="content">
+							{enabled ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
+						</div>
+
+						<div className="loader">
+							<Spinner thin='25px' />
+						</div>
 					</ToggleButton>
 				</HeaderRow>
 
-				{!enabled && !qrGenerated && (
-					<GenerateButton onClick={handleGenerate}>
-						Generate QR Code
+				{!enabled && !qrData && (
+					<GenerateButton
+						onClick={handleGenerate}
+						$isLoading={settingUp}
+						disabled={settingUp}
+					>
+						<div className="content">Generate QR Code</div>
+
+						<div className="loader">
+							<BubbleSlide height="18px" color="var(--addToCart-text)" />
+						</div>
 					</GenerateButton>
 				)}
 
-				{qrGenerated && (
+				{qrData?.otpauth && (
 					<SetupPanel>
 						<div className="left">
 							<StepText>
@@ -89,22 +121,22 @@ function TwoFAauthentication() {
 										maxWidth: '100%',
 										width: '100%',
 									}}
-									value={data.code}
+									value={qrData?.otpauth}
 									bgColor="transparent"
 									fgColor="var(--mainBody-text)"
 								/>
 							</div>
 
 							<CodeBox>
-								<span>{data.code}</span>
-								<button onClick={() => copyTextToClipboard(data.code)}>
+								<span>{qrData?.tempSecret}</span>
+								<button onClick={() => copyTextToClipboard(qrData?.otpauth)}>
 									<FiCopy size={14} />
 								</button>
 							</CodeBox>
 
 							<OTPInput
 								onChange={(value) => setOtp(value)}
-								field={5}
+								field={6}
 								id="AuthOTP"
 								size="45px"
 								fontSize="22px"
@@ -113,8 +145,16 @@ function TwoFAauthentication() {
 								useBackground
 							/>
 
-							<EnableButton disabled={otp.length < 5} onClick={handleEnable}>
-								Enable 2FA
+							<EnableButton
+								$isLoading={verifying}
+								disabled={otp.length < 6 || verifying}
+								onClick={handleEnable}
+							>
+								<div className="content">Enable 2FA</div>
+
+								<div className="loader">
+									<BubbleSlide height="18px" color="var(--addToCart-text)" />
+								</div>
 							</EnableButton>
 						</div>
 					</SetupPanel>

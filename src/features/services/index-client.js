@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { store } from '../../store/index';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { handle2FaError } from '../../store/slice/2fa-handler';
 
 // Get user details
 const userDetails = () => {
@@ -9,12 +11,14 @@ const userDetails = () => {
 };
 
 const BASE_URL = import.meta.env.VITE_BASE_URL?.trim();
-const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(
-	' '
-) || ['GET', 'POST', 'PUT', 'DELETE'];
+const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(' ') || [
+	'GET',
+	'POST',
+	'PUT',
+	'DELETE',
+];
 
 console.log(BASE_URL);
-
 
 const successResponseHandler = (res) => {
 	return res;
@@ -28,9 +32,19 @@ const errorResponseHandler = (error) => {
 		'An unknown error occurred';
 
 	if (error.response && error.response.status === 400) {
-		if (error.response.code === '2FA_REQUIRED') {
-			console.error('Unauthorized, logging out...');
-			return;
+		const message = error?.response?.data?.message;
+		if (['2FA_REQUIRED', 'Invalid 2FA token'].includes(message)) {
+			store.dispatch(
+				handle2FaError({
+					url: error.config?.url,
+					payload: error.config?.data ? JSON.parse(error.config.data) : null,
+					options: {
+						method: error.config?.method,
+					},
+					isOpen: true,
+				})
+			);
+			return Promise.reject(error);
 		}
 	}
 

@@ -49,23 +49,68 @@ export const StatusBadge = styled.span`
 
 export const ToggleButton = styled.button`
 	font-size: 34px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
 	color: ${({ theme }) => theme.mainBody.sbText};
-	transition: 0.2s;
+	transition: all 0.2s ease;
+
+	cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+	.content {
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+		display: flex;
+		align-items: center;
+	}
+
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+	}
 
 	&:hover {
-		color: ${({ theme }) => theme.intro.logo};
-		transform: scale(1.05);
+		transform: ${({ disabled }) => (disabled ? 'none' : 'scale(1.05)')};
+		color: ${({ disabled, theme }) =>
+			disabled ? theme.mainBody.sbText : theme.intro.logo};
+	}
+
+	&:active {
+		transform: scale(0.95);
 	}
 `;
 
 export const GenerateButton = styled.button`
 	margin-top: 25px;
-	padding: 8px 16px;
+	padding: 10px 16px;
 	border-radius: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	width: 250px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
 	background: ${({ theme }) => theme.basicBtn.bgActive};
 	color: ${({ theme }) => theme.basicBtn.textActive};
-    font-size: 15px;
-	font-weight: 600;
+	transition: 0.2s;
+
+	.content {
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+	}
+
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
 `;
 
 export const SetupPanel = styled.div`
@@ -130,13 +175,28 @@ export const CodeBox = styled.div`
 
 export const EnableButton = styled.button`
 	width: 250px;
-	padding-inline: 10px;
-    padding-block: 8px;
+	padding: 10px;
 	border-radius: 10px;
 	font-weight: 600;
-    font-size: 15px;
+	font-size: 15px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
 	background: ${({ theme }) => theme.formBtn.background};
 	color: ${({ theme }) => theme.formBtn.text};
+	transition: 0.2s;
+
+	.content {
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+	}
+
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+	}
 
 	&:disabled {
 		opacity: 0.5;

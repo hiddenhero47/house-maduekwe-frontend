@@ -19,17 +19,18 @@ export const addressValidationSchema = Yup.object().shape({
 
 	description: Yup.string().trim().optional(),
 
-	coordinates: Yup.object()
-		.shape({
-			lat: Yup.number()
-				.typeError('Latitude must be a number')
-				.required('Latitude is required'),
-			lng: Yup.number()
-				.typeError('Longitude must be a number')
-				.required('Longitude is required'),
-		})
+	coordinates: Yup.object({
+		lat: Yup.number()
+			.typeError('Latitude must be a number')
+			.required('Latitude is required'),
+
+		lng: Yup.number()
+			.typeError('Longitude must be a number')
+			.required('Longitude is required'),
+	})
 		.nullable()
-		.optional(),
+		.notRequired()
+		.default(undefined),
 
 	isDefault: Yup.boolean().optional(),
 });

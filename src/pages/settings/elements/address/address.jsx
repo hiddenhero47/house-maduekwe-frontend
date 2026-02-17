@@ -10,6 +10,7 @@ import { AddressIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
 import CreateModal from './create-address';
 import AddressServices from "../../../../features/services/custom-hooks/addresses";
+import { getCountryByCode } from '../../../../utilities/city-state-country';
 
 function Address() {
 	const {data, isPending, isError, refetch} = AddressServices.getAll();
@@ -53,7 +54,7 @@ function Address() {
 						{
 							Header: () => 'Country',
 							accessor: 'country',
-							Cell: ({ value }) => <span className="nowrap">{value}</span>,
+							Cell: ({ value }) => <span className="nowrap">{getCountryByCode(value)?.name}</span>,
 						},
 						{
 							Header: () => 'State',

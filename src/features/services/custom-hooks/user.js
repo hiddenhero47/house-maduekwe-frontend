@@ -75,6 +75,7 @@ const useSetup2faMutation = () => {
 };
 
 const useVerify2faMutation = () => {
+	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: (token) =>
 			axiosCall({
@@ -82,6 +83,11 @@ const useVerify2faMutation = () => {
 				method: 'POST',
 				data: { token },
 			}),
+
+		onSuccess: (data) => {
+			queryClient.invalidateQueries(['users/getMe']);
+			toast.success(data?.message || 'Two-Factor Authentication Verified');
+		},
 	});
 };
 
@@ -98,15 +104,12 @@ const useToggle2faMutation = () => {
 			}),
 
 		onSuccess: (data) => {
-			// Update only the 2FA part of the user in Redux
 			dispatch(
-				setUser((prev) => ({
-					...prev,
+				updateUser({
 					user2fa: {
-						...prev?.user2fa,
 						enable: data?.user2fa?.enable,
 					},
-				}))
+				})
 			);
 			// Optional but recommended for sync
 			queryClient.invalidateQueries(['users/getMe']);
@@ -114,7 +117,6 @@ const useToggle2faMutation = () => {
 		},
 	});
 };
-
 
 const useGoogleLoginMutation = () => {
 	const dispatch = useDispatch();

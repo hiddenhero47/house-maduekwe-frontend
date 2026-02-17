@@ -32,8 +32,13 @@ function CreateModal({ ref, openModal, closeModal }) {
 
 	const { mutate: createAddress, isPending } = AddressServices.create();
 
-	const onSubmit = async (values) => {
-		createAddress(values);
+	const onSubmit = (values, { resetForm }) => {
+		createAddress(values, {
+			onSuccess: () => {
+				resetForm();
+				closeModal?.();
+			},
+		});
 	};
 
 	const {
