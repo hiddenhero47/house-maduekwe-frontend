@@ -25,6 +25,7 @@ import profile from '../../assets/images/profile1.svg?react';
 import SideMenu from './sub-components/dashboard-menu';
 import { RiHome2Fill } from 'react-icons/ri';
 import { RiHome2Line } from 'react-icons/ri';
+import TwoFaModal from "../../components/modal-assets/2fa-modal/index";
 
 function DashboardLayout() {
 	const { theme } = useSelector((state) => state.themes);
@@ -157,6 +158,7 @@ function DashboardLayout() {
 					<SideMenu close={() => isMobile() && closeSidebar()} />
 				</MenuModal>
 			</Modal.Left>
+			<TwoFaModal />
 		</ThemeProvider>
 	);
 }

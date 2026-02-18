@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { store } from '../../store/index';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { handle2FaError } from '../../store/slice/2fa-handler';
 
 // Get user details
 const userDetails = () => {
@@ -34,16 +32,7 @@ const errorResponseHandler = (error) => {
 	if (error.response && error.response.status === 400) {
 		const message = error?.response?.data?.message;
 		if (['2FA_REQUIRED', 'Invalid 2FA token'].includes(message)) {
-			store.dispatch(
-				handle2FaError({
-					url: error.config?.url,
-					payload: error.config?.data ? JSON.parse(error.config.data) : null,
-					options: {
-						method: error.config?.method,
-					},
-					isOpen: true,
-				})
-			);
+			error.is2FARequired = true;
 			return Promise.reject(error);
 		}
 	}
@@ -111,7 +100,7 @@ export const axiosCall = async (arg) => {
 			error.message ||
 			'An unknown error occurred';
 		console.error('Axios Error:', message);
-		throw message;
+		throw error;
 	}
 };
 

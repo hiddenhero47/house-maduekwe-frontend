@@ -12,6 +12,7 @@ import Modal from '../../components/modal/index_modal';
 import LeftMenu from './sub-components/app-menu';
 import ToolBar from './sub-components/holding-tool-bar';
 import Holding from "./sub-components/holding";
+import TwoFaModal from "../../components/modal-assets/2fa-modal/index";
 
 function IndexLayout() {
 	const { theme } = useSelector((state) => state.themes);
@@ -168,6 +169,8 @@ function IndexLayout() {
 			>
 				<Holding close={closeHolding}/>
 			</Modal.Center>
+
+			<TwoFaModal />
 		</ThemeProvider>
 	);
 }

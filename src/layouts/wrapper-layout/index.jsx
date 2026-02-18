@@ -5,6 +5,7 @@ import { colors } from '../../utilities/colors';
 import { useSelector } from 'react-redux';
 import ScrollToTop from '../scroll-to-top';
 import { LayoutWrapper } from './index.style';
+import TwoFaModal from "../../components/modal-assets/2fa-modal/index";
 
 function WrapperLayout() {
 	const { theme } = useSelector((state) => state.themes);
@@ -19,10 +20,8 @@ function WrapperLayout() {
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
 			<LayoutWrapper ref={layoutRef}>
-				
-
 				<Outlet />
-
+				<TwoFaModal />
 			</LayoutWrapper>
 		</ThemeProvider>
 	);

@@ -70,7 +70,7 @@ export const colors = {
 			background: '#000000',
 			text: '#ffffff',
 			hoverBg: '#383838',
-			disabledBg: '',
+			disabledBg: '#000000',
 		},
 
 		basicBtn: {
@@ -172,7 +172,7 @@ export const colors = {
 			background: '#333333',
 			text: '#e4e4e4',
 			hoverBg: '#4d4d4d',
-			disabledBg: '',
+			disabledBg: '#333333',
 		},
 
 		basicBtn: {

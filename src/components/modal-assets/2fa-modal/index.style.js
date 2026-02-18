@@ -1,39 +1,68 @@
 import styled from 'styled-components';
 
 export const ModalWrapper = styled.div`
-	width: clamp(300px, 90vw, 450px);
-	height: fit-content;
-	min-height: 200px;
+	width: clamp(320px, 90vw, 420px);
 	background-color: ${({ theme }) => theme?.mainBody?.container};
-	border-radius: 8px;
+	border-radius: 14px;
 	display: flex;
 	flex-direction: column;
-	padding-inline: 25px;
-	padding-block: 20px;
+	padding: 28px 28px 24px;
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 
 	.modal_header {
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
+		justify-content: flex-end;
+
+		.closeBtn {
+			font-size: 24px;
+			color: ${({ theme }) => theme.mainBody.sbText};
+			transition: 0.2s;
+
+			&:hover {
+				color: ${({ theme }) => theme.intro.logo};
+				transform: scale(1.05);
+			}
+		}
+	}
+
+	.icon_wrapper {
+		margin: 10px auto 18px;
+		width: 65px;
+		height: 65px;
+		border-radius: 50%;
+		background: ${({ theme }) => theme?.mainBody?.sbText}15;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			font-size: 30px;
+			color: ${({ theme }) => theme?.mainBody?.sbText};
+		}
+	}
+
+	.text_content {
+		text-align: center;
+		margin-bottom: 20px;
 
 		h3 {
 			font-size: 18px;
 			font-weight: 600;
 			color: ${({ theme }) => theme.mainBody.text};
+			margin-bottom: 6px;
 		}
 
 		p {
 			font-size: 13px;
 			color: ${({ theme }) => theme.mainBody.sbText};
-			margin-top: 5px;
-			max-width: 320px;
 		}
+	}
 
-		.closeBtn {
-			font-size: 22px;
-			color: ${({ theme }) => theme.mainBody.sbText};
-		}
+	.otp_wrapper {
+		margin: 10px 0 5px;
+		display: flex;
+		justify-content: center;
 	}
 `;
 
