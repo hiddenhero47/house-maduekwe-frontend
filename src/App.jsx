@@ -20,6 +20,7 @@ import Authentication from './pages/auth';
 import Overview from './pages-dashboard/home';
 import Product from './pages-dashboard/products';
 import ProductDesign from './pages-dashboard/product-design';
+import ProductUpdate from './pages-dashboard/product-update';
 import ProductGroups from './pages-dashboard/product-groups';
 import ProductClassing from './pages-dashboard/product-classing';
 import Orders from './pages-dashboard/orders';
@@ -49,7 +50,8 @@ function App() {
 						<Route path="/admin" element={<DashboardLayout />}>
 							<Route index element={<Overview />} />
 							<Route path="products" element={<Product />} />
-							<Route path="products/design/*" element={<ProductDesign />} />
+							<Route path="products/design" element={<ProductDesign />} />
+							<Route path="products/design/:id" element={<ProductUpdate />} />
 							<Route path="products/group" element={<ProductGroups />} />
 							<Route path="products/classification" element={<ProductClassing />} />
 							<Route path="orders" element={<Orders />} />

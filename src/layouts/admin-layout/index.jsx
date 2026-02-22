@@ -15,8 +15,6 @@ import {
 import Modal from '../../components/modal/index_modal';
 import { RiMenuUnfold2Line } from 'react-icons/ri';
 import { RiMenuUnfoldLine } from 'react-icons/ri';
-import { MdOutlineToggleOff } from 'react-icons/md';
-import { MdOutlineToggleOn } from 'react-icons/md';
 import { BsFillCloudSunFill } from 'react-icons/bs';
 import { FaCloudMoon } from 'react-icons/fa6';
 import { toggleTheme } from '../../store/slice/app-theme';
@@ -24,11 +22,13 @@ import { VectorIcon } from '../../components/icon-components/index.style';
 import profile from '../../assets/images/profile1.svg?react';
 import SideMenu from './sub-components/dashboard-menu';
 import { RiHome2Fill } from 'react-icons/ri';
-import { RiHome2Line } from 'react-icons/ri';
-import TwoFaModal from "../../components/modal-assets/2fa-modal/index";
+import TwoFaModal from '../../components/modal-assets/2fa-modal/index';
+import { ensureRole } from '../../store/slice/auth';
+import { roleType } from '../../utilities/app-const';
 
 function DashboardLayout() {
 	const { theme } = useSelector((state) => state.themes);
+	const { user } = useSelector((state) => state.auth);
 	const [menuIsActive, setMenuIsActive] = useState(true);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -65,6 +65,25 @@ function DashboardLayout() {
 		setMenuIsActive(!menuIsActive);
 	};
 
+	(() => {
+		dispatch(
+			ensureRole(
+				[roleType.ADMIN, roleType.SUPER_ADMIN], // ✅ allowed roles must be an array
+				() => {},
+				() => navigate('/')
+			)
+		);
+	})();
+
+	const showRole = (u) => {
+		const { role, email } = u;
+		if (!role || !email) return 'unauthorized';
+		const roleDisplays = {
+			[roleType.ADMIN]: role,
+			[roleType.SUPER_ADMIN]: role,
+		};
+		return roleDisplays[role] ?? 'unauthorized';
+	};
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
@@ -98,19 +117,6 @@ function DashboardLayout() {
 										</i>
 									</button>
 
-									{/* <div className="theme_logo">
-										<button
-											id="toggleBtn"
-											onClick={() => dispatch(toggleTheme())}
-											className="hover:scale-110 active:scale-95 transition-transform"
-										>
-											{theme === 'light' ? (
-												<MdOutlineToggleOn />
-											) : (
-												<MdOutlineToggleOff />
-											)}
-										</button>
-									</div> */}
 									<button
 										className="theme_logo"
 										onClick={() => dispatch(toggleTheme())}
@@ -129,10 +135,10 @@ function DashboardLayout() {
 									</div>
 									<div className="flex flex-col ml-[8px] font-sans">
 										<span className="text-[13px] text-[var(--mainBody-text)]">
-											charles
+											{user?.name || "Error"}
 										</span>
 										<span className="text-[11px] text-[var(--mainBody-kitTextDark)]">
-											admin
+											{showRole(user)}
 										</span>
 									</div>
 								</div>

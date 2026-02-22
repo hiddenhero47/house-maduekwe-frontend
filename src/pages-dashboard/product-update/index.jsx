@@ -1,5 +1,18 @@
 import React from 'react';
-import { Container, SaveBtn, AddBtn, FormBody } from './elements/index.style';
+import {
+	Container,
+	SaveBtn,
+	AddBtn,
+	FormBody,
+	AttributeBody,
+	AttributeBox,
+	Color,
+	Size,
+	PlaceholderCard,
+	Overlay,
+	SelectionBar,
+	DangerBtn,
+} from './elements/index.style';
 import { FiEdit } from 'react-icons/fi';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RiStickyNoteAddFill } from 'react-icons/ri';
@@ -13,6 +26,12 @@ import Comboboxes from '../../components/form-components/select/comboboxes';
 import SearchSelect from '../../components/form-components/select/search-select';
 import CustomFileInput from '../../components/form-components/file/custom-file-input';
 import { ItemStatusType } from '../../utilities/app-const';
+import { FaRuler } from 'react-icons/fa6';
+import { FaBrush } from 'react-icons/fa';
+import { CiEdit } from 'react-icons/ci';
+import { AiFillDelete } from 'react-icons/ai';
+import { FaTshirt } from 'react-icons/fa';
+import { FaImages } from "react-icons/fa6";
 
 function Index() {
 	const initialValues = {
@@ -81,6 +100,51 @@ function Index() {
 		label: value,
 		value: value,
 	}));
+
+	const onchangeAttributes = ({ AttributeId, key, value }) => {
+		const updatedAttributes = attributes.map((a) => {
+			if (a.Attribute === AttributeId) {
+				return {
+					...a,
+					[key]: value,
+				};
+			}
+			return a;
+		});
+		setFieldValue('attributes', updatedAttributes);
+	};
+
+	const getAttributesValue = ({ AttributeId, key }) => {
+		const attribute = attributes.find((a) => {
+			const id =
+				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
+
+			return id === AttributeId;
+		});
+
+		return attribute ? attribute[key] : undefined;
+	};
+
+	const addAttributes = (Attribute) => {
+		const exists = attributes.some((a) => {
+			const id =
+				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
+
+			return id === Attribute;
+		});
+
+		if (exists) return;
+
+		const newAttribute = {
+			Attribute,
+			isDefault: false,
+			quantity: 1,
+			additionalAmount: 0,
+			images: [],
+		};
+
+		setFieldValue('attributes', [...attributes, newAttribute]);
+	};
 
 	return (
 		<Container>
@@ -349,6 +413,180 @@ function Index() {
 								</div>
 							</div>
 						</FormBody>
+					</div>
+
+					{/* MEDIA SECTION */}
+					<div className="w-full pb-[30px]">
+						<AttributeBody>
+							<div className="main_wrapper">
+								<h3 className="mb-[18px]">PRODUCT MEDIA <FaImages /></h3>
+
+								<div className="flex flex-wrap gap-[30px] items-start">
+									{/* Placeholder Card */}
+									<div>
+										<p className="text-[12px] font-semibold mb-[8px] opacity-70 ml-[8px]">
+											Placeholder Image
+										</p>
+
+										<PlaceholderCard
+											onClick={() => {}}
+										>
+											{placeHolder?.url ? (
+												<div className='imageHolder rounded-[inherit]'>
+													<img src={placeHolder.url} alt="Placeholder" />
+												</div>
+											) : (
+												<span className="text-[12px] opacity-50">
+													No Placeholder
+												</span>
+											)}
+
+											<Overlay className="overlay">Change Placeholder</Overlay>
+										</PlaceholderCard>
+									</div>
+
+									{/* Manage Catalog */}
+									<div className='mt-[auto] mb-[30px]'>
+										<p className="text-[12px] font-semibold mb-[8px] opacity-70">
+											Image Catalog
+										</p>
+
+										<AddBtn onClick={() => {}}>
+											Manage Images
+											<IoIosArrowForward />
+										</AddBtn>
+
+										<p className="text-[11px] mt-[8px] opacity-50">
+											{imageCatalog?.length || 0} images uploaded
+										</p>
+									</div>
+								</div>
+							</div>
+						</AttributeBody>
+					</div>
+
+					<div className="w-full pb-[20px]">
+						<AttributeBody>
+							<div className="main_wrapper">
+								<h3 className="mb-[15px]">
+									SIZE <FaRuler />
+								</h3>
+
+								<div className="form_control mb-[20px]">
+									<CustomSelect
+										id="attributes"
+										name="attributes"
+										value={''}
+										onChange={(value) => addAttributes(value)}
+										onBlur={handleBlur}
+										isError={touched.attributes && errors.attributes}
+										errormessage={errors.attributes}
+										placeholder="Select a size attribute"
+										paddingX="14px"
+										paddingY="9px"
+										scrollToTop
+										useBackground
+										options={statusOptions || []}
+									/>
+								</div>
+
+								<AttributeBox>
+									<div className="attribute_control">
+										<Size className="ml-[5px]">XXL</Size>
+										<div className="w-full">
+											<CustomInput
+												type="number"
+												id="1234"
+												name="additionalAmount"
+												value={() =>
+													getAttributesValue({
+														AttributeId: '1234',
+														key: 'additionalAmount',
+													})
+												}
+												onChange={(e) =>
+													onchangeAttributes({
+														AttributeId: '1234',
+														key: 'additionalAmount',
+														value: e.target.value,
+													})
+												}
+												onBlur={handleBlur}
+												isError={false}
+												errormessage={errors.attributes}
+												placeholder="Additional Amount"
+												paddingX="10px"
+												paddingY="4px"
+												useBackground
+											/>
+										</div>
+									</div>
+								</AttributeBox>
+							</div>
+
+							<div className="main_wrapper">
+								<h3 className="mb-[15px]">
+									COLOR <FaBrush />
+								</h3>
+
+								<div className="form_control mb-[20px]">
+									<CustomSelect
+										id="attributes"
+										name="attributes"
+										value={''}
+										onChange={(value) => addAttributes(value)}
+										onBlur={handleBlur}
+										isError={touched.attributes && errors.attributes}
+										errormessage={errors.attributes}
+										placeholder="Select a color attribute"
+										paddingX="14px"
+										paddingY="9px"
+										scrollToTop
+										useBackground
+										options={statusOptions || []}
+									/>
+								</div>
+
+								<AttributeBox>
+									<div className="attribute_control">
+										<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
+											<Color $color={'#5b594f'} $active={true} />
+											<span className="name">dark green</span>
+										</div>
+										<div className="w-full">
+											<CustomInput
+												type="number"
+												id="1234"
+												name="additionalAmount"
+												value={() =>
+													getAttributesValue({
+														AttributeId: '1234',
+														key: 'additionalAmount',
+													})
+												}
+												onChange={(e) =>
+													onchangeAttributes({
+														AttributeId: '1234',
+														key: 'additionalAmount',
+														value: e.target.value,
+													})
+												}
+												onBlur={handleBlur}
+												isError={false}
+												errormessage={errors.attributes}
+												placeholder="Additional Amount"
+												paddingX="10px"
+												paddingY="4px"
+												useBackground
+											/>
+										</div>
+										<p className="edit ml-[5px]">
+											manage images <CiEdit />
+										</p>
+									</div>
+								</AttributeBox>
+							</div>
+						</AttributeBody>
 					</div>
 				</div>
 			</form>

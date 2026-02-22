@@ -56,13 +56,25 @@ export const Container = styled.div`
 		flex-wrap: wrap;
 	}
 
-	form {
+	.form_wrapper {
 		flex: 1;
 		max-height: 100%;
 		width: 100%;
 		display: grid;
 		grid-template-rows: 1fr;
 		overflow: hidden;
+	}
+
+	#form_wrapper {
+		width: 100%;
+		flex-basis: 0;
+		flex-grow: 1;
+		overflow: hidden;
+
+		padding-block: 18px;
+		border-radius: 10px;
+		background-color: ${({ theme }) => theme?.mainBody?.background};
+		border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
 	}
 
 	@media (max-width: 768px) {
@@ -187,10 +199,7 @@ export const FormBody = styled.div`
 	width: 100%;
 	min-height: 0;
 	padding-inline: clamp(10px, 3%, 32px);
-	padding-block: 28px;
-	border-radius: 10px;
-	background-color: ${({ theme }) => theme?.mainBody?.background};
-	border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+	padding-block: 15px;
 
 	#form_body_container {
 		width: 100%;

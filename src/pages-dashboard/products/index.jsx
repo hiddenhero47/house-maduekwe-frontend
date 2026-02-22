@@ -112,7 +112,7 @@ function Index() {
 									<GridItem key={index} className="grid_item">
 										<button
 											onDoubleClick={() =>
-												navigate(`/admin/products/design/edit?id=${item?._id}`)
+												navigate(`/admin/products/design/${item?._id}`)
 											}
 										>
 											<div className="imageHolder rounded-[inherit]">

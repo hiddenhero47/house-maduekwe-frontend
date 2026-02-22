@@ -2,6 +2,8 @@ import React from 'react';
 import { Container } from './elements/index.style';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
+import ImageSelector from '../../components/form-components/image-selector/selector';
+import { items } from '../../dummyData/shopItems';
 
 function Index() {
 	const data = [
@@ -23,6 +25,8 @@ function Index() {
 			email: "maduekwe@gmail.com",
 		},
 	];
+
+	const ImageCatalog = items[0].imageCatalog;
 	return (
 		<Container className="text-mainBody-yellow">
 			<p>Index home</p>
@@ -65,6 +69,8 @@ function Index() {
 				isLoading={false}
 				useStrip
 			/>
+
+			<ImageSelector component={<span>open</span>} options={ImageCatalog}/>
 		</Container>
 	);
 }
