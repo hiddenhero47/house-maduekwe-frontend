@@ -10,15 +10,12 @@ import {
 	Size,
 	PlaceholderCard,
 	Overlay,
-	SelectionBar,
-	DangerBtn,
 } from './elements/index.style';
 import { FiEdit } from 'react-icons/fi';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RiStickyNoteAddFill } from 'react-icons/ri';
 import { BsFillSave2Fill } from 'react-icons/bs';
 import { useFormik } from 'formik';
-import PhoneInput from '../../components/form-components/phone-number/phone-number';
 import CustomInput from '../../components/form-components/input/custom-input';
 import CustomTextarea from '../../components/form-components/input/custom-textarea';
 import CustomSelect from '../../components/form-components/select/custom-select';
@@ -29,34 +26,38 @@ import { ItemStatusType } from '../../utilities/app-const';
 import { FaRuler } from 'react-icons/fa6';
 import { FaBrush } from 'react-icons/fa';
 import { CiEdit } from 'react-icons/ci';
-import { AiFillDelete } from 'react-icons/ai';
-import { FaTshirt } from 'react-icons/fa';
-import { FaImages } from "react-icons/fa6";
+import { FaImages } from 'react-icons/fa6';
+import { items } from '../../dummyData/shopItems';
+import { attributeType } from '../../utilities/app-const';
+import { groupAttributesByType } from '../../utilities/basic-functions';
 
 function Index() {
+	const data = items[0];
+
 	const initialValues = {
-		name: '',
-		brand: '',
-		status: '',
-		description: '',
-		price: 0,
-		vat: 0,
-		currency: 'USD',
+		name: data?.name || '',
+		brand: data?.brand || '',
+		status: data?.status || '',
+		description: data?.description || '',
+		price: data?.price || 0,
+		vat: data?.vat || 0,
+		currency: data?.currency || 'USD',
 		currencySearchValue: '',
-		discount: 0,
-		category: 'fashion',
+		discount: data?.discount || 0,
+		category: data?.category || '',
 		categorySearchValue: '',
-		subCategory: '',
-		quantity: 1,
-		placeHolder: {},
-		imageCatalog: [],
-		attributes: [],
-		tags: [],
+		subCategory: data?.subCategory || '',
+		quantity: data?.quantity || 1,
+		placeHolder: data?.placeHolder || {},
+		imageCatalog: data?.imageCatalog || [],
+		attributes: data?.attributes || [],
+		classTags: [],
 	};
 
 	const onSubmit = async (values) => {
 		console.log(values);
 	};
+
 	const {
 		values,
 		errors,
@@ -419,7 +420,9 @@ function Index() {
 					<div className="w-full pb-[30px]">
 						<AttributeBody>
 							<div className="main_wrapper">
-								<h3 className="mb-[18px]">PRODUCT MEDIA <FaImages /></h3>
+								<h3 className="mb-[18px]">
+									PRODUCT MEDIA <FaImages />
+								</h3>
 
 								<div className="flex flex-wrap gap-[30px] items-start">
 									{/* Placeholder Card */}
@@ -428,11 +431,9 @@ function Index() {
 											Placeholder Image
 										</p>
 
-										<PlaceholderCard
-											onClick={() => {}}
-										>
+										<PlaceholderCard onClick={() => {}}>
 											{placeHolder?.url ? (
-												<div className='imageHolder rounded-[inherit]'>
+												<div className="imageHolder rounded-[inherit]">
 													<img src={placeHolder.url} alt="Placeholder" />
 												</div>
 											) : (
@@ -446,7 +447,7 @@ function Index() {
 									</div>
 
 									{/* Manage Catalog */}
-									<div className='mt-[auto] mb-[30px]'>
+									<div className="mt-[auto] mb-[30px]">
 										<p className="text-[12px] font-semibold mb-[8px] opacity-70">
 											Image Catalog
 										</p>
@@ -491,36 +492,40 @@ function Index() {
 								</div>
 
 								<AttributeBox>
-									<div className="attribute_control">
-										<Size className="ml-[5px]">XXL</Size>
-										<div className="w-full">
-											<CustomInput
-												type="number"
-												id="1234"
-												name="additionalAmount"
-												value={() =>
-													getAttributesValue({
-														AttributeId: '1234',
-														key: 'additionalAmount',
-													})
-												}
-												onChange={(e) =>
-													onchangeAttributes({
-														AttributeId: '1234',
-														key: 'additionalAmount',
-														value: e.target.value,
-													})
-												}
-												onBlur={handleBlur}
-												isError={false}
-												errormessage={errors.attributes}
-												placeholder="Additional Amount"
-												paddingX="10px"
-												paddingY="4px"
-												useBackground
-											/>
-										</div>
-									</div>
+									{groupAttributesByType(attributes)[attributeType.SIZE].map(
+										(att, index) => (
+											<div className="attribute_control" key={index}>
+												<Size className="ml-[5px]">{att?.Attribute?.display}</Size>
+												<div className="w-full">
+													<CustomInput
+														type="number"
+														id="1234"
+														name="additionalAmount"
+														value={() =>
+															getAttributesValue({
+																AttributeId: '1234',
+																key: 'additionalAmount',
+															})
+														}
+														onChange={(e) =>
+															onchangeAttributes({
+																AttributeId: '1234',
+																key: 'additionalAmount',
+																value: e.target.value,
+															})
+														}
+														onBlur={handleBlur}
+														isError={false}
+														errormessage={errors.attributes}
+														placeholder="Additional Amount"
+														paddingX="10px"
+														paddingY="4px"
+														useBackground
+													/>
+												</div>
+											</div>
+										)
+									)}
 								</AttributeBox>
 							</div>
 
@@ -548,42 +553,46 @@ function Index() {
 								</div>
 
 								<AttributeBox>
-									<div className="attribute_control">
-										<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
-											<Color $color={'#5b594f'} $active={true} />
-											<span className="name">dark green</span>
-										</div>
-										<div className="w-full">
-											<CustomInput
-												type="number"
-												id="1234"
-												name="additionalAmount"
-												value={() =>
-													getAttributesValue({
-														AttributeId: '1234',
-														key: 'additionalAmount',
-													})
-												}
-												onChange={(e) =>
-													onchangeAttributes({
-														AttributeId: '1234',
-														key: 'additionalAmount',
-														value: e.target.value,
-													})
-												}
-												onBlur={handleBlur}
-												isError={false}
-												errormessage={errors.attributes}
-												placeholder="Additional Amount"
-												paddingX="10px"
-												paddingY="4px"
-												useBackground
-											/>
-										</div>
-										<p className="edit ml-[5px]">
-											manage images <CiEdit />
-										</p>
-									</div>
+									{groupAttributesByType(attributes)[attributeType.COLOR].map(
+										(att, index) => (
+											<div className="attribute_control" key={index}>
+												<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
+													<Color $color={att?.Attribute?.display} $active={true} />
+													<span className="name">{att?.Attribute?.name}</span>
+												</div>
+												<div className="w-full">
+													<CustomInput
+														type="number"
+														id="1234"
+														name="additionalAmount"
+														value={() =>
+															getAttributesValue({
+																AttributeId: '1234',
+																key: 'additionalAmount',
+															})
+														}
+														onChange={(e) =>
+															onchangeAttributes({
+																AttributeId: '1234',
+																key: 'additionalAmount',
+																value: e.target.value,
+															})
+														}
+														onBlur={handleBlur}
+														isError={false}
+														errormessage={errors.attributes}
+														placeholder="Additional Amount"
+														paddingX="10px"
+														paddingY="4px"
+														useBackground
+													/>
+												</div>
+												<p className="edit ml-[5px]">
+													manage images <CiEdit />
+												</p>
+											</div>
+										)
+									)}
 								</AttributeBox>
 							</div>
 						</AttributeBody>
