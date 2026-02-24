@@ -72,23 +72,25 @@ function Index() {
 				useStrip
 			/>
 
-			<ImageSelector component={<span>open</span>} options={ImageCatalog} />
+			<ImageSelector options={ImageCatalog}>
+				<span className="ml-[50px]">open</span>
+			</ImageSelector>
 
-			<div className='w-[350px] flex flex-col mt-[50px]'>
+			<div className="w-[350px] flex flex-col mt-[50px]">
 				<ChipsInput
-				id="tag"
-				name="tag"
-				value={tag}
-				onChange={(v) => setTags(v)}
-				max={10}
-				// onBlur={handleBlur}
-				isError={true}
-				errormessage="error"
-				placeholder="Add tag and press Enter"
-				paddingX="14px"
-				paddingY="9px"
-				useBackground
-			/>
+					id="tag"
+					name="tag"
+					value={tag}
+					onChange={(v) => setTags(v)}
+					max={10}
+					// onBlur={handleBlur}
+					isError={false}
+					errormessage="error"
+					placeholder="Add tag and press Enter"
+					paddingX="14px"
+					paddingY="9px"
+					useBackground
+				/>
 			</div>
 		</Container>
 	);

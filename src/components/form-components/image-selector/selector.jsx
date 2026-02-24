@@ -21,11 +21,13 @@ function ImageSelector({
 	id,
 	disabled = false,
 	isMultiple = false,
-	component,
+	children,
 	isRemoval = false,
 }) {
 	const [preview, setPreview] = useState(null);
-	const [imageData, setImageData] = useState(null);
+	const [imageData, setImageData] = useState(
+		isMultiple ? value || [] : value || null
+	);
 
 	const modalRef = useRef(null);
 	const openModal = () => {
@@ -40,41 +42,57 @@ function ImageSelector({
 	};
 
 	const onForward = (selectedValue) => {
-		const result = isMultiple
-			? [...(imageData || []), selectedValue]
-			: selectedValue;
+		let result;
+
+		if (isMultiple) {
+			const current = imageData || [];
+
+			const exists = current.some((img) => img.id === selectedValue.id);
+
+			if (exists) {
+				// remove
+				result = current.filter((img) => img.id !== selectedValue.id);
+			} else {
+				// add
+				result = [...current, selectedValue];
+			}
+		} else {
+			result = selectedValue;
+		}
 
 		if (onChange) onChange(result);
-
 		if (setFieldValue) {
 			setFieldValue(name || id, result);
 		}
-
 		if (onBlur) onBlur(name ?? id);
-
-		setImageData(isMultiple ? result : selectedValue);
+		setImageData(result);
 	};
 
 	const isSelected = (item) => {
 		if (!imageData) return false;
-
 		// Multi-select case
 		if (Array.isArray(imageData)) {
 			return imageData.some((img) => img.url === item.url);
 		}
-
 		// Single select case
 		return imageData?.url === item.url;
 	};
 
+	const trigger = React.isValidElement(children)
+		? React.cloneElement(children, {
+				onClick: (e) => {
+					children.props.onClick?.(e);
+					if (disabled || !options || options.length === 0) {
+						return;
+					}
+					openModal();
+				},
+			})
+		: null;
+
 	return (
 		<>
-			<OpenBtn
-				disabled={disabled || !options || options.length === 0}
-				onClick={openModal}
-			>
-				{component}
-			</OpenBtn>
+			{trigger}
 
 			<Modal.Center
 				width="fit-content"
@@ -94,7 +112,7 @@ function ImageSelector({
 							</div>
 						</div>
 
-						<button className="closeBtn" onClick={closeModal}>
+						<button type="button" className="closeBtn" onClick={closeModal}>
 							<IoIosCloseCircle />
 						</button>
 					</div>
@@ -126,6 +144,7 @@ function ImageSelector({
 						<ModalGrid>
 							{options.map((item, index) => (
 								<ImageItem
+									type="button"
 									key={index}
 									$toBeRemoved={isRemoval && isSelected(item)}
 									$isSelected={isSelected(item)}

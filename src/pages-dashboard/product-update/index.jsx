@@ -10,6 +10,7 @@ import {
 	Size,
 	PlaceholderCard,
 	Overlay,
+	ChipBody,
 } from './elements/index.style';
 import { FiEdit } from 'react-icons/fi';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -22,14 +23,18 @@ import CustomSelect from '../../components/form-components/select/custom-select'
 import Comboboxes from '../../components/form-components/select/comboboxes';
 import SearchSelect from '../../components/form-components/select/search-select';
 import CustomFileInput from '../../components/form-components/file/custom-file-input';
+import ImageSelector from '../../components/form-components/image-selector/selector';
+import ChipsInput from '../../components/form-components/chips-input/chips-input';
 import { ItemStatusType } from '../../utilities/app-const';
 import { FaRuler } from 'react-icons/fa6';
 import { FaBrush } from 'react-icons/fa';
-import { CiEdit } from 'react-icons/ci';
 import { FaImages } from 'react-icons/fa6';
 import { items } from '../../dummyData/shopItems';
 import { attributeType } from '../../utilities/app-const';
 import { groupAttributesByType } from '../../utilities/basic-functions';
+import { BiSolidCategory } from 'react-icons/bi';
+import { MdDelete } from 'react-icons/md';
+import { TbTagsFilled } from "react-icons/tb";
 
 function Index() {
 	const data = items[0];
@@ -51,7 +56,9 @@ function Index() {
 		placeHolder: data?.placeHolder || {},
 		imageCatalog: data?.imageCatalog || [],
 		attributes: data?.attributes || [],
-		classTags: [],
+		classTags: data?.classTags || [],
+		highlights: data?.highlights || [],
+		removeImages: [],
 	};
 
 	const onSubmit = async (values) => {
@@ -89,20 +96,17 @@ function Index() {
 		placeHolder,
 		imageCatalog,
 		attributes,
-		tags,
+		classTags,
+		highlights,
+		removeImages,
 	} = values;
-
-	const selectData = [
-		{ label: 't-shirt', value: '1234' },
-		{ label: 'jeans', value: '1807' },
-	];
 
 	const statusOptions = Object.values(ItemStatusType).map((value) => ({
 		label: value,
 		value: value,
 	}));
 
-	const onchangeAttributes = ({ AttributeId, key, value }) => {
+	const onAttrChange = ({ AttributeId, key, value }) => {
 		const updatedAttributes = attributes.map((a) => {
 			if (a.Attribute === AttributeId) {
 				return {
@@ -115,7 +119,7 @@ function Index() {
 		setFieldValue('attributes', updatedAttributes);
 	};
 
-	const getAttributesValue = ({ AttributeId, key }) => {
+	const getAttrValue = ({ AttributeId, key }) => {
 		const attribute = attributes.find((a) => {
 			const id =
 				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
@@ -146,6 +150,8 @@ function Index() {
 
 		setFieldValue('attributes', [...attributes, newAttribute]);
 	};
+
+	const removeAttr = () => {};
 
 	return (
 		<Container>
@@ -254,7 +260,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={selectData || []}
+												options={[]}
 												searchValue={categorySearchValue}
 												onSearch={handleChange}
 												searchId="categorySearchValue"
@@ -352,7 +358,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={selectData || []}
+												options={[]}
 												searchValue={currencySearchValue}
 												onSearch={handleChange}
 												searchId="currencySearchValue"
@@ -416,7 +422,52 @@ function Index() {
 						</FormBody>
 					</div>
 
-					{/* MEDIA SECTION */}
+					<div className="w-full pb-[20px]">
+						<ChipBody>
+							<div className="main_wrapper">
+								<h3>PRODUCT TAGS <TbTagsFilled /></h3>
+
+								<div className="grid">
+									<div className="field">
+										<label>Features</label>
+										<ChipsInput
+											id="highlights"
+											name="highlights"
+											value={highlights}
+											setFieldValue={setFieldValue}
+											max={10}
+											onBlur={handleBlur}
+											isError={touched.highlights && errors.highlights}
+											errormessage={errors.highlights}
+											placeholder="Highlight and press Enter"
+											paddingX="14px"
+											paddingY="8px"
+											useBackground
+										/>
+									</div>
+
+									<div className="field">
+										<label>Search Tags</label>
+										<ChipsInput
+											id="classTags"
+											name="classTags"
+											value={classTags}
+											setFieldValue={setFieldValue}
+											max={10}
+											onBlur={handleBlur}
+											isError={touched.classTags && errors.classTags}
+											errormessage={errors.classTags}
+											placeholder="Add a tag and press Enter"
+											paddingX="14px"
+											paddingY="8px"
+											useBackground
+										/>
+									</div>
+								</div>
+							</div>
+						</ChipBody>
+					</div>
+
 					<div className="w-full pb-[30px]">
 						<AttributeBody>
 							<div className="main_wrapper">
@@ -431,19 +482,30 @@ function Index() {
 											Placeholder Image
 										</p>
 
-										<PlaceholderCard onClick={() => {}}>
-											{placeHolder?.url ? (
-												<div className="imageHolder rounded-[inherit]">
-													<img src={placeHolder.url} alt="Placeholder" />
-												</div>
-											) : (
-												<span className="text-[12px] opacity-50">
-													No Placeholder
-												</span>
-											)}
+										<ImageSelector
+											id="placeHolder"
+											name="placeHolder"
+											setFieldValue={setFieldValue}
+											onBlur={handleBlur}
+											options={imageCatalog}
+											value={placeHolder}
+										>
+											<PlaceholderCard>
+												{placeHolder?.url ? (
+													<div className="imageHolder rounded-[inherit]">
+														<img src={placeHolder.url} alt="Placeholder" />
+													</div>
+												) : (
+													<span className="text-[12px] opacity-50">
+														No Placeholder
+													</span>
+												)}
 
-											<Overlay className="overlay">Change Placeholder</Overlay>
-										</PlaceholderCard>
+												<Overlay className="overlay">
+													Change Placeholder
+												</Overlay>
+											</PlaceholderCard>
+										</ImageSelector>
 									</div>
 
 									{/* Manage Catalog */}
@@ -452,13 +514,24 @@ function Index() {
 											Image Catalog
 										</p>
 
-										<AddBtn onClick={() => {}}>
-											Manage Images
-											<IoIosArrowForward />
-										</AddBtn>
+										<ImageSelector
+											id="removeImages"
+											name="removeImages"
+											setFieldValue={setFieldValue}
+											onBlur={handleBlur}
+											options={imageCatalog}
+											value={removeImages}
+											isMultiple
+											isRemoval
+										>
+											<AddBtn type="button">
+												Manage Images
+												<IoIosArrowForward />
+											</AddBtn>
+										</ImageSelector>
 
 										<p className="text-[11px] mt-[8px] opacity-50">
-											{imageCatalog?.length || 0} images uploaded
+											{removeImages?.length || 0} images selected
 										</p>
 									</div>
 								</div>
@@ -487,7 +560,7 @@ function Index() {
 										paddingY="9px"
 										scrollToTop
 										useBackground
-										options={statusOptions || []}
+										options={[]}
 									/>
 								</div>
 
@@ -495,21 +568,21 @@ function Index() {
 									{groupAttributesByType(attributes)[attributeType.SIZE].map(
 										(att, index) => (
 											<div className="attribute_control" key={index}>
-												<Size className="ml-[5px]">{att?.Attribute?.display}</Size>
+												<Size className="ml-[5px] [word-spacing:7px]">
+													{att?.Attribute?.display} {att?.Attribute?.name}
+												</Size>
 												<div className="w-full">
 													<CustomInput
 														type="number"
-														id="1234"
-														name="additionalAmount"
-														value={() =>
-															getAttributesValue({
-																AttributeId: '1234',
-																key: 'additionalAmount',
-															})
-														}
+														id={att?.Attribute?._id}
+														name={att?.Attribute?._id}
+														value={getAttrValue({
+															AttributeId: att?.Attribute?._id,
+															key: 'additionalAmount',
+														})}
 														onChange={(e) =>
-															onchangeAttributes({
-																AttributeId: '1234',
+															onAttrChange({
+																AttributeId: att?.Attribute?._id,
 																key: 'additionalAmount',
 																value: e.target.value,
 															})
@@ -522,6 +595,15 @@ function Index() {
 														paddingY="4px"
 														useBackground
 													/>
+												</div>
+												<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+													<button
+														type="button"
+														className="delete"
+														onClick={() => removeAttr(att?.Attribute?._id)}
+													>
+														<MdDelete />
+													</button>
 												</div>
 											</div>
 										)
@@ -548,7 +630,7 @@ function Index() {
 										paddingY="9px"
 										scrollToTop
 										useBackground
-										options={statusOptions || []}
+										options={[]}
 									/>
 								</div>
 
@@ -557,23 +639,24 @@ function Index() {
 										(att, index) => (
 											<div className="attribute_control" key={index}>
 												<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
-													<Color $color={att?.Attribute?.display} $active={true} />
+													<Color
+														$color={att?.Attribute?.display}
+														$active={true}
+													/>
 													<span className="name">{att?.Attribute?.name}</span>
 												</div>
 												<div className="w-full">
 													<CustomInput
 														type="number"
-														id="1234"
+														id={att?.Attribute?._id}
 														name="additionalAmount"
-														value={() =>
-															getAttributesValue({
-																AttributeId: '1234',
-																key: 'additionalAmount',
-															})
-														}
+														value={getAttrValue({
+															AttributeId: att?.Attribute?._id,
+															key: 'additionalAmount',
+														})}
 														onChange={(e) =>
-															onchangeAttributes({
-																AttributeId: '1234',
+															onAttrChange({
+																AttributeId: att?.Attribute?._id,
 																key: 'additionalAmount',
 																value: e.target.value,
 															})
@@ -587,9 +670,34 @@ function Index() {
 														useBackground
 													/>
 												</div>
-												<p className="edit ml-[5px]">
-													manage images <CiEdit />
-												</p>
+												<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+													<button
+														type="button"
+														className="delete"
+														onClick={() => removeAttr(att?.Attribute?._id)}
+													>
+														<MdDelete />
+													</button>
+													<ImageSelector
+														options={imageCatalog}
+														onChange={(value) =>
+															onAttrChange({
+																AttributeId: att?.Attribute?._id,
+																key: 'images',
+																value,
+															})
+														}
+														value={getAttrValue({
+															AttributeId: att?.Attribute?._id,
+															key: 'images',
+														})}
+														isMultiple
+													>
+														<button type="button" className="edit">
+															<BiSolidCategory />
+														</button>
+													</ImageSelector>
+												</div>
 											</div>
 										)
 									)}

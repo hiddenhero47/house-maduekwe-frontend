@@ -314,12 +314,59 @@ export const AttributeBox = styled.div`
 		}
 
 		.edit {
-			font-size: 12px;
+			position: relative;
+			font-size: 20px;
 			text-transform: capitalize;
-			color: ${({ theme }) => theme.form.blue};
+			color: ${({ theme }) => theme.mainBody.kitTextDark};
 			display: flex;
 			gap: 5px;
 			align-items: center;
+		}
+
+		.edit::after {
+			content: '';
+			height: 2px;
+			width: 0;
+			position: absolute;
+			bottom: -4px;
+			/* left: 0; */
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: ${({ theme }) => theme.mainBody.kitTextDark};
+			border-radius: 9999px;
+			transition: width 0.25s ease;
+		}
+
+		.edit:hover::after {
+			width: 100%;
+		}
+
+		.delete {
+			position: relative;
+			font-size: 20px;
+			text-transform: capitalize;
+			color: ${({ theme }) => theme.intro.logo};
+			display: flex;
+			gap: 5px;
+			align-items: center;
+		}
+
+		.delete::after {
+			content: '';
+			height: 2px;
+			width: 0;
+			position: absolute;
+			bottom: -4px;
+			/* left: 0; */
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: ${({ theme }) => theme.intro.logo};
+			border-radius: 9999px;
+			transition: width 0.25s ease;
+		}
+
+		.delete:hover::after {
+			width: 100%;
 		}
 	}
 `;
@@ -466,37 +513,48 @@ export const Overlay = styled.div`
 	transition: opacity 0.2s ease;
 `;
 
-export const SelectionBar = styled.div`
-	position: sticky;
-	bottom: 0;
+export const ChipBody = styled.div`
+	width: 100%;
+	padding-inline: clamp(10px, 3%, 32px);
 
-	background: ${({ theme }) => theme.mainBody.cardBg};
-	border-top: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+	.main_wrapper {
+		border-top: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+		padding-block: 20px;
+	}
 
-	padding: 14px 18px;
+	h3 {
+		font-size: 0.98rem;
+		font-weight: 700;
+		color: ${({ theme }) => theme.mainBody.text};
+		line-height: 1.2;
+		display: flex;
+		gap: 6px;
+		margin-left: 10px;
+		margin-bottom: 18px;
+	}
 
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+	}
 
-	font-size: 14px;
-	font-weight: 600;
-`;
+	.field {
+		display: flex;
+		flex-direction: column;
+		max-width: 420px;
 
-export const DangerBtn = styled.button`
-	padding: 8px 14px;
-	border-radius: 6px;
+		label {
+			color: ${({ theme }) => theme?.mainBody?.sbText};
+			font-size: 0.875rem;
+			font-weight: 600;
+			margin-bottom: 8px;
+			margin-left: 8px;
+			transition: 0.15s ease;
+		}
 
-	border: none;
-	background: ${({ theme }) => theme.form.error};
-	color: white;
-
-	font-weight: 600;
-	cursor: pointer;
-
-	transition: 0.2s ease;
-
-	&:hover {
-		opacity: 0.9;
+		&:focus-within label {
+			color: ${({ theme }) => theme?.mainBody?.text};
+		}
 	}
 `;
