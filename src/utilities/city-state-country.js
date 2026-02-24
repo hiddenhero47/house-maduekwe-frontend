@@ -75,7 +75,7 @@ const countryByCode = new Map(
 export const getCurrencyOptions = () =>
 	currencies.currencies.map((currency) => ({
 		label: currency.currency,
-		value: normalize(currency.id),
+		value: normalize(currency.alphabetic_code),
 	}));
 
 export const getCurrencyCode = ({ currencyId, isNumeric = false }) => {
@@ -100,4 +100,33 @@ export const getCurrencyCodeByCountry = ({
 	if (!currency) return null;
 
 	return isNumeric ? currency.numeric_code : currency.alphabetic_code;
+};
+
+export const getCountryCurrencyOptions = (countryCodes = []) => {
+	if (!Array.isArray(countryCodes) || countryCodes.length === 0) return [];
+
+	const seen = new Set();
+	const options = [];
+
+	countryCodes.forEach((code) => {
+		const country = countryByCode.get(normalize(code));
+		if (!country) return;
+
+		const currency = currencyByCountryId.get(normalize(country.id));
+		if (!currency) return;
+
+		const currencyCode = currency.alphabetic_code;
+
+		// prevent duplicates (e.g. multiple EU countries -> EUR)
+		if (!seen.has(currencyCode)) {
+			seen.add(currencyCode);
+
+			options.push({
+				label: currency.currency,
+				value: currency.alphabetic_code,
+			});
+		}
+	});
+
+	return options;
 };

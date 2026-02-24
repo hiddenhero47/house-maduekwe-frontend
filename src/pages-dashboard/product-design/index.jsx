@@ -1,5 +1,11 @@
 import React from 'react';
-import { Container, SaveBtn, AddBtn, FormBody } from './elements/index.style';
+import {
+	Container,
+	SaveBtn,
+	AddBtn,
+	FormBody,
+	ChipBody,
+} from './elements/index.style';
 import { FiEdit } from 'react-icons/fi';
 import { IoIosArrowForward } from 'react-icons/io';
 import { RiStickyNoteAddFill } from 'react-icons/ri';
@@ -12,7 +18,10 @@ import CustomSelect from '../../components/form-components/select/custom-select'
 import Comboboxes from '../../components/form-components/select/comboboxes';
 import SearchSelect from '../../components/form-components/select/search-select';
 import CustomFileInput from '../../components/form-components/file/custom-file-input';
+import ChipsInput from '../../components/form-components/chips-input/chips-input';
 import { ItemStatusType } from '../../utilities/app-const';
+import { TbTagsFilled } from 'react-icons/tb';
+import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 
 function Index() {
 	const initialValues = {
@@ -23,7 +32,6 @@ function Index() {
 		price: 0,
 		vat: 0,
 		currency: 'USD',
-		currencySearchValue: '',
 		discount: 0,
 		category: 'fashion',
 		categorySearchValue: '',
@@ -32,7 +40,8 @@ function Index() {
 		placeHolder: {},
 		imageCatalog: [],
 		attributes: [],
-		tags: [],
+		highlights: [],
+		classTags: [],
 	};
 
 	const onSubmit = async (values) => {
@@ -60,7 +69,6 @@ function Index() {
 		price,
 		vat,
 		currency,
-		currencySearchValue,
 		discount,
 		category,
 		categorySearchValue,
@@ -69,7 +77,8 @@ function Index() {
 		placeHolder,
 		imageCatalog,
 		attributes,
-		tags,
+		highlights,
+		classTags,
 	} = values;
 
 	const selectData = [
@@ -81,6 +90,15 @@ function Index() {
 		label: value,
 		value: value,
 	}));
+
+	const currencyOptions = getCountryCurrencyOptions([
+		'US',
+		'CN',
+		'JP',
+		'DE',
+		'IN',
+		'NG',
+	]);
 
 	return (
 		<Container>
@@ -189,7 +207,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={selectData || []}
+												options={[]}
 												searchValue={categorySearchValue}
 												onSearch={handleChange}
 												searchId="categorySearchValue"
@@ -274,7 +292,7 @@ function Index() {
 
 										<div className="form_control">
 											<label htmlFor="">Currency</label>
-											<Comboboxes
+											<SearchSelect
 												id="currency"
 												name="currency"
 												value={currency}
@@ -287,10 +305,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={selectData || []}
-												searchValue={currencySearchValue}
-												onSearch={handleChange}
-												searchId="currencySearchValue"
+												options={currencyOptions || []}
 											/>
 										</div>
 
@@ -349,6 +364,54 @@ function Index() {
 								</div>
 							</div>
 						</FormBody>
+					</div>
+
+					<div className="w-full pb-[20px]">
+						<ChipBody>
+							<div className="main_wrapper">
+								<h3>
+									PRODUCT TAGS <TbTagsFilled />
+								</h3>
+
+								<div className="grid">
+									<div className="field">
+										<label>Features</label>
+										<ChipsInput
+											id="highlights"
+											name="highlights"
+											value={highlights}
+											setFieldValue={setFieldValue}
+											max={5}
+											onBlur={handleBlur}
+											isError={touched.highlights && errors.highlights}
+											errormessage={errors.highlights}
+											placeholder="Highlight and press Enter"
+											paddingX="14px"
+											paddingY="8px"
+											useBackground
+										/>
+									</div>
+
+									<div className="field">
+										<label>Search Tags</label>
+										<ChipsInput
+											id="classTags"
+											name="classTags"
+											value={classTags}
+											setFieldValue={setFieldValue}
+											max={10}
+											onBlur={handleBlur}
+											isError={touched.classTags && errors.classTags}
+											errormessage={errors.classTags}
+											placeholder="Add a tag and press Enter"
+											paddingX="14px"
+											paddingY="8px"
+											useBackground
+										/>
+									</div>
+								</div>
+							</div>
+						</ChipBody>
 					</div>
 				</div>
 			</form>

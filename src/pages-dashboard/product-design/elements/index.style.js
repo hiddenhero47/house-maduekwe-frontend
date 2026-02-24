@@ -246,3 +246,49 @@ export const FormBody = styled.div`
 		}
 	}
 `;
+
+export const ChipBody = styled.div`
+	width: 100%;
+	padding-inline: clamp(10px, 3%, 32px);
+
+	.main_wrapper {
+		border-top: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+		padding-block: 20px;
+	}
+
+	h3 {
+		font-size: 0.98rem;
+		font-weight: 700;
+		color: ${({ theme }) => theme.mainBody.text};
+		line-height: 1.2;
+		display: flex;
+		gap: 6px;
+		margin-left: 10px;
+		margin-bottom: 18px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		max-width: 420px;
+
+		label {
+			color: ${({ theme }) => theme?.mainBody?.sbText};
+			font-size: 0.875rem;
+			font-weight: 600;
+			margin-bottom: 8px;
+			margin-left: 8px;
+			transition: 0.15s ease;
+		}
+
+		&:focus-within label {
+			color: ${({ theme }) => theme?.mainBody?.text};
+		}
+	}
+`;

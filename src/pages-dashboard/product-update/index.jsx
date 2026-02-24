@@ -34,7 +34,8 @@ import { attributeType } from '../../utilities/app-const';
 import { groupAttributesByType } from '../../utilities/basic-functions';
 import { BiSolidCategory } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
-import { TbTagsFilled } from "react-icons/tb";
+import { TbTagsFilled } from 'react-icons/tb';
+import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 
 function Index() {
 	const data = items[0];
@@ -106,9 +107,20 @@ function Index() {
 		value: value,
 	}));
 
+	const currencyOptions = getCountryCurrencyOptions([
+		'US',
+		'CN',
+		'JP',
+		'DE',
+		'IN',
+		'NG',
+	]);
+
 	const onAttrChange = ({ AttributeId, key, value }) => {
 		const updatedAttributes = attributes.map((a) => {
-			if (a.Attribute === AttributeId) {
+			const id =
+				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
+			if (id === AttributeId) {
 				return {
 					...a,
 					[key]: value,
@@ -151,7 +163,16 @@ function Index() {
 		setFieldValue('attributes', [...attributes, newAttribute]);
 	};
 
-	const removeAttr = () => {};
+	const removeAttr = (AttributeId) => {
+		const updatedAttributes = attributes.filter((a) => {
+			const id =
+				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
+
+			return id !== AttributeId;
+		});
+
+		setFieldValue('attributes', updatedAttributes);
+	};
 
 	return (
 		<Container>
@@ -345,7 +366,7 @@ function Index() {
 
 										<div className="form_control">
 											<label htmlFor="">Currency</label>
-											<Comboboxes
+											<SearchSelect
 												id="currency"
 												name="currency"
 												value={currency}
@@ -358,10 +379,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={[]}
-												searchValue={currencySearchValue}
-												onSearch={handleChange}
-												searchId="currencySearchValue"
+												options={currencyOptions || []}
 											/>
 										</div>
 
@@ -425,7 +443,9 @@ function Index() {
 					<div className="w-full pb-[20px]">
 						<ChipBody>
 							<div className="main_wrapper">
-								<h3>PRODUCT TAGS <TbTagsFilled /></h3>
+								<h3>
+									PRODUCT TAGS <TbTagsFilled />
+								</h3>
 
 								<div className="grid">
 									<div className="field">
