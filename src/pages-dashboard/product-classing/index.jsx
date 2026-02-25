@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
 	Container,
 	TabNav,
@@ -11,6 +11,8 @@ import { TbSubtask } from 'react-icons/tb';
 import { SiCircleci } from 'react-icons/si';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
+import CreateAttribute from '../../components/modal-assets/classing-modal/create-attribute';
+import CreateCategory from '../../components/modal-assets/classing-modal/create-category';
 
 const data1 = [
 	{
@@ -58,6 +60,30 @@ const data2 = [
 
 function Index() {
 	const [section, setSection] = useState('categories');
+
+	const modalRefAttr = useRef(null);
+	const openModal = () => {
+		if (modalRefAttr.current) {
+			modalRefAttr.current.open();
+		}
+	};
+	const closeModal = () => {
+		if (modalRefAttr.current) {
+			modalRefAttr.current.close();
+		}
+	};
+
+	const modalRefCat = useRef(null);
+	const openModalCat = () => {
+		if (modalRefCat.current) {
+			modalRefCat.current.open();
+		}
+	};
+	const closeModalCat = () => {
+		if (modalRefCat.current) {
+			modalRefCat.current.close();
+		}
+	};
 	return (
 		<Container>
 			<h1>Product Classification</h1>
@@ -65,6 +91,7 @@ function Index() {
 			<TabNav>
 				<div id="NavWrapper">
 					<OptionBtn
+						type="button"
 						className="tabs"
 						$active={section === 'categories'}
 						onClick={() => setSection('categories')}
@@ -74,6 +101,7 @@ function Index() {
 					</OptionBtn>
 
 					<OptionBtn
+						type="button"
 						className="tabs"
 						$active={section === 'attributes'}
 						onClick={() => setSection('attributes')}
@@ -84,8 +112,10 @@ function Index() {
 				</div>
 
 				<div className="actions">
-					<CreateBtn>+ New Category</CreateBtn>
-					<CreateBtn>+ New Attribute</CreateBtn>
+					<CreateBtn type="button" onClick={openModalCat}>+ New Category</CreateBtn>
+					<CreateBtn type="button" onClick={openModal}>
+						+ New Attribute
+					</CreateBtn>
 				</div>
 			</TabNav>
 
@@ -97,7 +127,9 @@ function Index() {
 								Header: () => 'No',
 								accessor: '_nos',
 								Cell: ({ nos }) => (
-									<span className="font-semibold opacity-70 ml-[5px]">{nos}</span>
+									<span className="font-semibold opacity-70 ml-[5px]">
+										{nos}
+									</span>
 								),
 							},
 							{
@@ -176,6 +208,17 @@ function Index() {
 					/>
 				)}
 			</TableWrapper>
+			<CreateAttribute
+				ref={modalRefAttr}
+				closeModal={closeModal}
+				openModal={openModal}
+			/>
+
+			<CreateCategory
+				ref={modalRefCat}
+				closeModal={closeModalCat}
+				openModal={openModalCat}
+			/>
 		</Container>
 	);
 }

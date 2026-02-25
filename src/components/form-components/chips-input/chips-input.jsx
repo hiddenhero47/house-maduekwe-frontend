@@ -101,7 +101,7 @@ const ChipsInput = ({
 				{value.map((chip, index) => (
 					<Chip key={index}>
 						<span>{chip}</span>
-						<button onClick={() => removeChip(chip)}>
+						<button type="button" onClick={() => removeChip(chip)}>
 							<IoClose size={16} />
 						</button>
 					</Chip>

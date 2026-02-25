@@ -95,6 +95,7 @@ const CustomSelect = ({
 					)}
 
 					<button
+						type="button"
 						className="arrow"
 						style={{
 							transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',

@@ -122,6 +122,7 @@ const SearchSelect = ({
 						<span className="placeholder form_word">{placeholder}</span>
 					)}
 					<button
+						type="button"
 						className="arrow"
 						style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)' }}
 					>
