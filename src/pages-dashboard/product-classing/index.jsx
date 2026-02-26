@@ -5,6 +5,7 @@ import {
 	OptionBtn,
 	CreateBtn,
 	TableWrapper,
+	ColorBox,
 } from './elements/index.style';
 import { BiSolidCabinet } from 'react-icons/bi';
 import { TbSubtask } from 'react-icons/tb';
@@ -13,53 +14,52 @@ import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import CreateAttribute from '../../components/modal-assets/classing-modal/create-attribute';
 import CreateCategory from '../../components/modal-assets/classing-modal/create-category';
-
-const data1 = [
-	{
-		_id: '66c8f1a92f4a3e9d7b21c001',
-		name: 'Fashion Clothing',
-		createdAt: '2024-08-22T10:15:30.000Z',
-		updatedAt: '2024-08-22T10:15:30.000Z',
-	},
-];
-
-const data2 = [
-	{
-		_id: '66c8f2e12f4a3e9d7b21c101',
-		name: 'Size',
-		value: 42,
-		type: 'size',
-		display: 'Medium',
-		createdAt: '2024-08-22T11:05:10.000Z',
-	},
-	{
-		_id: '66c8f2e12f4a3e9d7b21c101',
-		name: 'Size',
-		value: 42,
-		type: 'size',
-		display: 'Medium',
-		createdAt: '2024-08-22T11:05:10.000Z',
-	},
-	{
-		_id: '66c8f2e12f4a3e9d7b21c101',
-		name: 'Size',
-		value: 42,
-		type: 'size',
-		display: 'Medium',
-		createdAt: '2024-08-22T11:05:10.000Z',
-	},
-	{
-		_id: '66c8f2e12f4a3e9d7b21c101',
-		name: 'Size',
-		value: 42,
-		type: 'size',
-		display: 'Medium',
-		createdAt: '2024-08-22T11:05:10.000Z',
-	},
-];
+import { useSearchParams } from 'react-router-dom';
+import CategoryServices from '../../features/services/custom-hooks/category';
+import AttributeServices from '../../features/services/custom-hooks/attribute';
+import { attributeType } from '../../utilities/app-const';
 
 function Index() {
 	const [section, setSection] = useState('categories');
+
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const pageCat = Number(searchParams.get('pageCat')) || 1;
+	const pageAttr = Number(searchParams.get('pageAttr')) || 1;
+
+	const {
+		data: dataCat,
+		isPending: isPendingCat,
+		isError: isErrorCat,
+		refetch: refetchCat,
+	} = CategoryServices.get({
+		page: pageCat,
+		limit: 10,
+	});
+
+	const {
+		data: dataAttr,
+		isPending: isPendingAttr,
+		isError: isErrorAttr,
+		refetch: refetchAttr,
+	} = AttributeServices.getAll({
+		page: pageAttr,
+		limit: 10,
+	});
+
+	const { data: category = [], pagination: paginationCat } = dataCat || {};
+
+	const { data: attribute = [], pagination: paginationAttr } = dataAttr || {};
+
+	const flipPageCat = (p) => {
+		searchParams.set('pageCat', p);
+		setSearchParams(searchParams);
+	};
+
+	const flipPageAttr = (p) => {
+		searchParams.set('pageAttr', p);
+		setSearchParams(searchParams);
+	};
 
 	const modalRefAttr = useRef(null);
 	const openModal = () => {
@@ -83,6 +83,12 @@ function Index() {
 		if (modalRefCat.current) {
 			modalRefCat.current.close();
 		}
+	};
+
+	const ensureArray = (value) => {
+		if (Array.isArray(value)) return value;
+		if (value == null) return [];
+		return [value];
 	};
 	return (
 		<Container>
@@ -112,7 +118,9 @@ function Index() {
 				</div>
 
 				<div className="actions">
-					<CreateBtn type="button" onClick={openModalCat}>+ New Category</CreateBtn>
+					<CreateBtn type="button" onClick={openModalCat}>
+						+ New Category
+					</CreateBtn>
 					<CreateBtn type="button" onClick={openModal}>
 						+ New Attribute
 					</CreateBtn>
@@ -136,7 +144,7 @@ function Index() {
 								Header: () => 'Name',
 								accessor: 'name',
 								Cell: ({ value }) => (
-									<span className="font-semibold ml-[8px]">{value}</span>
+									<span className="font-semibold">{value}</span>
 								),
 							},
 							{
@@ -157,12 +165,42 @@ function Index() {
 									</span>
 								),
 							},
+							{
+								Header: () => 'Display',
+								accessor: 'type',
+								Cell: ({ value, row }) => (
+									<span className="ml-[10px]">
+										{value === attributeType.COLOR ? (
+											<span>
+												{ensureArray(row?.original?.display).map((c, i) => (
+													<ColorBox className='color_box' $color={c} key={i} />
+												))}
+											</span>
+										) : (
+											<span className="text-xm font-semibold uppercase opacity-70">
+												{row?.original?.display}
+											</span>
+										)}
+									</span>
+								),
+							},
 						]}
-						dataSource={data2 || []}
+						dataSource={attribute || []}
 						useStrip
-						isLoading={false}
+						isLoading={isPendingAttr}
+						emptyIcon={
+							<NoDataIcon
+								width="150px"
+								height="150px"
+								color="var(--mainBody-sbText)"
+							/>
+						}
 						emptyText="NO ATTRIBUTES"
 						emptySbText="You haven’t added any attributes yet."
+						refetch={() => refetchAttr()}
+						currentPage={paginationAttr?.total}
+						totalPages={pageAttr}
+						changePage={flipPageAttr}
 					/>
 				)}
 
@@ -200,11 +238,22 @@ function Index() {
 								),
 							},
 						]}
-						dataSource={data1 || []}
+						dataSource={category || []}
 						useStrip
-						isLoading={false}
+						isLoading={isPendingCat}
+						emptyIcon={
+							<NoDataIcon
+								width="150px"
+								height="150px"
+								color="var(--mainBody-sbText)"
+							/>
+						}
 						emptyText="NO CATEGORIES"
 						emptySbText="You haven’t created any categories yet."
+						refetch={() => refetchCat}
+						currentPage={paginationCat?.total}
+						totalPages={pageCat}
+						changePage={flipPageCat}
 					/>
 				)}
 			</TableWrapper>

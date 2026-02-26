@@ -11,7 +11,13 @@ const objectIdValidation = Yup.string()
 
 // Attribute schema
 export const attributeValidationSchema = Yup.object().shape({
-	Attribute: objectIdValidation,
+	Attribute: Yup.object()
+		.shape({
+			_id: Yup.string()
+				.matches(objectIdRegex, 'Invalid Attribute ID')
+				.required('Attribute ID is required'),
+		})
+		.required('Attribute is required'),
 	isDefault: Yup.boolean(),
 	quantity: Yup.number()
 		.typeError('Quantity must be a number')

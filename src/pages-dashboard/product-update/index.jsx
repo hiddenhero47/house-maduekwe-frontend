@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
 	Container,
 	SaveBtn,
@@ -36,9 +36,31 @@ import { BiSolidCategory } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
+import CategoryServices from '../../features/services/custom-hooks/category';
+import AttributeServices from '../../features/services/custom-hooks/attribute';
+import { buildShopItemFormData } from "../../utilities/basic-functions";
 
 function Index() {
 	const data = items[0];
+
+	const { data: dataCat, isPending: isPendingCat } = CategoryServices.get({
+		limit: 100,
+	});
+
+	const { data: dataColor, isPending: isPendingColor } =
+		AttributeServices.getAll({
+			limit: 100,
+			type: attributeType.COLOR,
+			search: '',
+		});
+
+	const { data: dataSize, isPending: isPendingSize } = AttributeServices.getAll(
+		{
+			limit: 100,
+			type: attributeType.SIZE,
+			search: '',
+		}
+	);
 
 	const initialValues = {
 		name: data?.name || '',
@@ -60,10 +82,12 @@ function Index() {
 		classTags: data?.classTags || [],
 		highlights: data?.highlights || [],
 		removeImages: [],
+		imageFiles: [],
 	};
 
 	const onSubmit = async (values) => {
-		console.log(values);
+		const formData = buildShopItemFormData(values);
+		console.log(formData);
 	};
 
 	const {
@@ -100,6 +124,7 @@ function Index() {
 		classTags,
 		highlights,
 		removeImages,
+		imageFiles,
 	} = values;
 
 	const statusOptions = Object.values(ItemStatusType).map((value) => ({
@@ -116,19 +141,42 @@ function Index() {
 		'NG',
 	]);
 
+	const categoryOptions = useMemo(() => {
+		if (!dataCat?.data) return [];
+
+		return dataCat?.data.map((cat) => ({
+			label: cat?.name,
+			value: cat?._id,
+		}));
+	}, [dataCat?.data]);
+
+	const colorOptions = useMemo(() => {
+		if (!dataColor?.data) return [];
+
+		return dataColor?.data.map((color) => ({
+			label: color?.name,
+			value: color?._id,
+		}));
+	}, [dataColor?.data]);
+
+	const sizeOptions = useMemo(() => {
+		if (!dataSize?.data) return [];
+
+		return dataSize?.data.map((size) => ({
+			label: `${size?.name},  ${size?.display}, ${size?.value}`,
+			value: size?._id,
+		}));
+	}, [dataSize?.data]);
+
+	const getAttributeId = (attr) =>
+		typeof attr?.Attribute === 'object' ? attr.Attribute?._id : attr?.Attribute;
+
 	const onAttrChange = ({ AttributeId, key, value }) => {
-		const updatedAttributes = attributes.map((a) => {
-			const id =
-				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
-			if (id === AttributeId) {
-				return {
-					...a,
-					[key]: value,
-				};
-			}
-			return a;
-		});
-		setFieldValue('attributes', updatedAttributes);
+		const updated = attributes.map((attr) =>
+			getAttributeId(attr) === AttributeId ? { ...attr, [key]: value } : attr
+		);
+
+		setFieldValue('attributes', updated);
 	};
 
 	const getAttrValue = ({ AttributeId, key }) => {
@@ -142,21 +190,29 @@ function Index() {
 		return attribute ? attribute[key] : undefined;
 	};
 
-	const addAttributes = (Attribute) => {
-		const exists = attributes.some((a) => {
-			const id =
-				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
+	const addAttributes = ({ type, AttributeId }) => {
+		if (!AttributeId) return;
 
-			return id === Attribute;
-		});
-
+		// Prevent duplicates
+		const exists = attributes.some(
+			(attr) => getAttributeId(attr) === AttributeId
+		);
 		if (exists) return;
+
+		// Pick correct source safely
+		const source =
+			type === attributeType.COLOR
+				? dataColor?.data || []
+				: dataSize?.data || [];
+
+		const Attribute = source.find((item) => item?._id === AttributeId);
+		if (!Attribute) return; // extra safety
 
 		const newAttribute = {
 			Attribute,
 			isDefault: false,
 			quantity: 1,
-			additionalAmount: 0,
+			additionalAmount: "",
 			images: [],
 		};
 
@@ -164,14 +220,10 @@ function Index() {
 	};
 
 	const removeAttr = (AttributeId) => {
-		const updatedAttributes = attributes.filter((a) => {
-			const id =
-				typeof a.Attribute === 'object' ? a.Attribute._id : a.Attribute;
-
-			return id !== AttributeId;
-		});
-
-		setFieldValue('attributes', updatedAttributes);
+		setFieldValue(
+			'attributes',
+			attributes.filter((attr) => getAttributeId(attr) !== AttributeId)
+		);
 	};
 
 	return (
@@ -189,7 +241,7 @@ function Index() {
 				</div>
 
 				<div className="actions">
-					<SaveBtn>
+					<SaveBtn type='submit' onClick={handleSubmit}>
 						<div className="content">
 							<BsFillSave2Fill />
 							Save
@@ -281,7 +333,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={[]}
+												options={categoryOptions || []}
 												searchValue={categorySearchValue}
 												onSearch={handleChange}
 												searchId="categorySearchValue"
@@ -421,13 +473,13 @@ function Index() {
 
 										<div className="form_control">
 											<CustomFileInput
-												id="imageCatalog"
-												name="imageCatalog"
-												value={imageCatalog}
+												id="imageFiles"
+												name="imageFiles"
+												value={imageFiles}
 												setFieldValue={setFieldValue}
 												onBlur={handleBlur}
-												isError={touched.imageCatalog && errors.imageCatalog}
-												errormessage={errors.imageCatalog}
+												isError={touched.imageFiles && errors.imageFiles}
+												errormessage={errors.imageFiles}
 												accept="image/png, image/jpeg"
 												width="100%"
 												isMultiple
@@ -571,7 +623,12 @@ function Index() {
 										id="attributes"
 										name="attributes"
 										value={''}
-										onChange={(value) => addAttributes(value)}
+										onChange={(value) =>
+											addAttributes({
+												type: attributeType.SIZE,
+												AttributeId: value,
+											})
+										}
 										onBlur={handleBlur}
 										isError={touched.attributes && errors.attributes}
 										errormessage={errors.attributes}
@@ -580,12 +637,12 @@ function Index() {
 										paddingY="9px"
 										scrollToTop
 										useBackground
-										options={[]}
+										options={sizeOptions || []}
 									/>
 								</div>
 
 								<AttributeBox>
-									{groupAttributesByType(attributes)[attributeType.SIZE].map(
+									{(groupAttributesByType(attributes)[attributeType.SIZE] || []).map(
 										(att, index) => (
 											<div className="attribute_control" key={index}>
 												<Size className="ml-[5px] [word-spacing:7px]">
@@ -641,7 +698,12 @@ function Index() {
 										id="attributes"
 										name="attributes"
 										value={''}
-										onChange={(value) => addAttributes(value)}
+										onChange={(value) =>
+											addAttributes({
+												type: attributeType.COLOR,
+												AttributeId: value,
+											})
+										}
 										onBlur={handleBlur}
 										isError={touched.attributes && errors.attributes}
 										errormessage={errors.attributes}
@@ -650,12 +712,12 @@ function Index() {
 										paddingY="9px"
 										scrollToTop
 										useBackground
-										options={[]}
+										options={colorOptions || []}
 									/>
 								</div>
 
 								<AttributeBox>
-									{groupAttributesByType(attributes)[attributeType.COLOR].map(
+									{(groupAttributesByType(attributes)[attributeType.COLOR] || []).map(
 										(att, index) => (
 											<div className="attribute_control" key={index}>
 												<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">

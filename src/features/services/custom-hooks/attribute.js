@@ -3,13 +3,14 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 // Get all attributes
-const useGetAttributesQuery = () => {
+const useGetAttributesQuery = (params = {}) => {
 	return useQuery({
-		queryKey: ['attributes'],
+		queryKey: ['attributes', params],
 		queryFn: () =>
 			axiosCall({
 				url: '/api/attributes',
 				method: 'GET',
+				params,
 			}),
 		refetchOnWindowFocus: false,
 	});

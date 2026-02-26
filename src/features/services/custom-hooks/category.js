@@ -3,13 +3,14 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 // Get categories
-const useGetCategoriesQuery = () => {
+const useGetCategoriesQuery = (params = {}) => {
 	return useQuery({
-		queryKey: ['categories'],
+		queryKey: ['categories', params],
 		queryFn: () =>
 			axiosCall({
 				url: '/api/categories',
 				method: 'GET',
+				params,
 			}),
 		refetchOnWindowFocus: false,
 	});

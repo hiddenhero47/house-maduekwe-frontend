@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
 	Container,
 	SaveBtn,
@@ -22,8 +22,17 @@ import ChipsInput from '../../components/form-components/chips-input/chips-input
 import { ItemStatusType } from '../../utilities/app-const';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
+import CategoryServices from '../../features/services/custom-hooks/category';
+import { buildShopItemFormData } from "../../utilities/basic-functions";
 
 function Index() {
+	const {
+		data: dataCat,
+		isPending: isPendingCat,
+	} = CategoryServices.get({
+		limit: 100,
+	});
+
 	const initialValues = {
 		name: '',
 		brand: '',
@@ -42,10 +51,12 @@ function Index() {
 		attributes: [],
 		highlights: [],
 		classTags: [],
+		imageFiles: []
 	};
 
 	const onSubmit = async (values) => {
-		console.log(values);
+		const formData = buildShopItemFormData(values);
+		console.log(formData);
 	};
 	const {
 		values,
@@ -79,12 +90,8 @@ function Index() {
 		attributes,
 		highlights,
 		classTags,
+		imageFiles,
 	} = values;
-
-	const selectData = [
-		{ label: 't-shirt', value: '1234' },
-		{ label: 'jeans', value: '1807' },
-	];
 
 	const statusOptions = Object.values(ItemStatusType).map((value) => ({
 		label: value,
@@ -99,6 +106,15 @@ function Index() {
 		'IN',
 		'NG',
 	]);
+
+	const categoryOptions = useMemo(() => {
+		if (!dataCat?.data) return [];
+
+		return dataCat?.data.map((cat) => ({
+			label: cat?.name,
+			value: cat?._id,
+		}));
+	}, [dataCat?.data]);
 
 	return (
 		<Container>
@@ -115,7 +131,7 @@ function Index() {
 				</div>
 
 				<div className="actions">
-					<SaveBtn>
+					<SaveBtn type='submit' onClick={handleSubmit}>
 						<div className="content">
 							<BsFillSave2Fill />
 							Save
@@ -207,7 +223,7 @@ function Index() {
 												paddingY="9px"
 												scrollToTop
 												useBackground
-												options={[]}
+												options={categoryOptions || []}
 												searchValue={categorySearchValue}
 												onSearch={handleChange}
 												searchId="categorySearchValue"
@@ -347,13 +363,13 @@ function Index() {
 
 										<div className="form_control">
 											<CustomFileInput
-												id="imageCatalog"
-												name="imageCatalog"
-												value={imageCatalog}
+												id="imageFiles"
+												name="imageFiles"
+												value={imageFiles}
 												setFieldValue={setFieldValue}
 												onBlur={handleBlur}
-												isError={touched.imageCatalog && errors.imageCatalog}
-												errormessage={errors.imageCatalog}
+												isError={touched.imageFiles && errors.imageFiles}
+												errormessage={errors.imageFiles}
 												accept="image/png, image/jpeg"
 												width="100%"
 												isMultiple

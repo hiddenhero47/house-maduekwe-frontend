@@ -110,5 +110,23 @@ export const TableWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	margin-top: 5vh;
+	margin-top: 3vh;
+
+	td:has(.color_box) {
+		display: flex;
+		align-items: center;
+		vertical-align: middle;
+		text-align: center;
+	}
+`;
+
+export const ColorBox = styled.span`
+	display: inline-flex;
+	width: 16px;
+	height: 16px;
+	background-color: ${({ $color }) => $color || '#000000'};
+	border-radius: 3px;
+	border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+	vertical-align: middle;
+	margin-right: 3px;
 `;

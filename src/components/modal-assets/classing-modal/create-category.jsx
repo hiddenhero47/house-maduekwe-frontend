@@ -3,13 +3,11 @@ import Modal from '../../modal/index_modal';
 import { useFormik } from 'formik';
 import { IoClose } from 'react-icons/io5';
 import CustomInput from '../../form-components/input/custom-input';
-import {
-	ModalWrapper,
-	MyForm,
-	SubmitBtn,
-} from './create-category.style';
+import { ModalWrapper, MyForm, SubmitBtn } from './create-category.style';
 import { categoryValidationSchema } from '../../../features/validations/category-validation';
 import CategoryServices from '../../../features/services/custom-hooks/category';
+import BubbleSlide from '../../loaders/bubbles/BubbleSlide';
+import { BiSolidCabinet } from 'react-icons/bi';
 
 function CreateCategory({ ref, openModal, closeModal }) {
 	const initialValues = {
@@ -19,28 +17,20 @@ function CreateCategory({ ref, openModal, closeModal }) {
 	const { mutate: createCategory, isPending } = CategoryServices.create();
 
 	const onSubmit = (values, { resetForm }) => {
-        console.log(values);
-        
-		// createCategory(values, {
-		// 	onSuccess: () => {
-		// 		resetForm();
-		// 		closeModal?.();
-		// 	},
-		// });
+		createCategory(values, {
+			onSuccess: () => {
+				resetForm();
+				closeModal?.();
+			},
+		});
 	};
 
-	const {
-		values,
-		errors,
-		touched,
-		handleChange,
-		handleBlur,
-		handleSubmit,
-	} = useFormik({
-		initialValues,
-		validationSchema: categoryValidationSchema,
-		onSubmit,
-	});
+	const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+		useFormik({
+			initialValues,
+			validationSchema: categoryValidationSchema,
+			onSubmit,
+		});
 
 	const { name } = values;
 
@@ -48,7 +38,7 @@ function CreateCategory({ ref, openModal, closeModal }) {
 		<Modal.Center
 			width="fit-content"
 			maxWidth="500px"
-            onClose={() => {}}
+			onClose={() => {}}
 			onOpen={() => {}}
 			refName={ref}
 			animation
@@ -58,8 +48,8 @@ function CreateCategory({ ref, openModal, closeModal }) {
 					<div>
 						<h3>Create Category</h3>
 						<p>
-							Categories help organize your products for better filtering
-							and structure.
+							Categories help organize your products for better filtering and
+							structure.
 						</p>
 					</div>
 
@@ -90,13 +80,10 @@ function CreateCategory({ ref, openModal, closeModal }) {
 						</div>
 					</div>
 
-					<SubmitBtn
-						type="submit"
-						$isLoading={isPending}
-						disabled={isPending}
-					>
-						<div className="content">
-							{isPending ? 'Creating...' : 'Create Category'}
+					<SubmitBtn type="submit" $isLoading={isPending} disabled={isPending}>
+						<div className="content">Create Category <BiSolidCabinet /></div>
+						<div className="loader">
+							<BubbleSlide color="var(--addToCart-text)" height="20px" />
 						</div>
 					</SubmitBtn>
 				</MyForm>

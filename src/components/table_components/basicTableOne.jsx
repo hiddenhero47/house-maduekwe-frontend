@@ -11,7 +11,7 @@ import Candle from '../loaders/candles/Candle';
 
 function CustomTable({
 	isLoading,
-	dataSource,
+	dataSource = [],
 	fields,
 	onDoubleCallRow,
 	onCallRow,
@@ -72,7 +72,7 @@ function CustomTable({
 						</thead>
 						{!isLoading && dataSource.length !== 0 ? (
 							<tbody className="text-left">
-								{dataSource.map((dataItem, dataIndex) => (
+								{dataSource?.map((dataItem, dataIndex) => (
 									<tr
 										key={dataIndex}
 										onClick={() => callRow(dataItem)}

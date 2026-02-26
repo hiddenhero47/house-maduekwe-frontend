@@ -185,7 +185,28 @@ export const SubmitBtn = styled.button`
 		align-items: center;
 		gap: 6px;
 		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
-		font-size: 0.9rem;
+		font-size: 0.87rem;
+		font-weight: 600;
+		font-family: Inter;
+
+		svg {
+			font-size: 17px;
+		}
+	}
+
+	.loader {
+		display: ${(props) => (props.$isLoading ? 'flex' : 'none')};
+		position: absolute;
+		margin: auto;
+		z-index: 2;
+	}
+
+	@media (max-width: 500px) {
+		padding-inline: 7px;
+		.content {
+			gap: 4px;
+			font-size: 12px;
+		}
 	}
 `;
 

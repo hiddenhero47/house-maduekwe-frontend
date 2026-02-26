@@ -15,6 +15,8 @@ import {
 import { attributeType } from '../../../utilities/app-const';
 import { attributeValidationSchema } from '../../../features/validations/attribute-validation';
 import AttributeServices from '../../../features/services/custom-hooks/attribute';
+import BubbleSlide from '../../loaders/bubbles/BubbleSlide';
+import { SiCircleci } from 'react-icons/si';
 
 const attributeTypeOptions = [
 	{ label: 'Color', value: attributeType.COLOR },
@@ -35,18 +37,16 @@ function CreateAttribute({ ref, openModal, closeModal }) {
 	const { mutate: createAttribute, isPending } = AttributeServices.create();
 
 	const onSubmit = (values, { resetForm }) => {
-		console.log(values);
-
-		// const attribute = {
-		// 	...values,
-		// 	display: values.isMixed ? values.multiDisplay : values.display,
-		// };
-		// createAttribute(attribute, {
-		// 	onSuccess: () => {
-		// 		resetForm();
-		// 		closeModal?.();
-		// 	},
-		// });
+		const attribute = {
+			...values,
+			display: values.isMixed ? values.multiDisplay : values.display,
+		};
+		createAttribute(attribute, {
+			onSuccess: () => {
+				resetForm();
+				closeModal?.();
+			},
+		});
 	};
 
 	const {
@@ -140,7 +140,7 @@ function CreateAttribute({ ref, openModal, closeModal }) {
 												type="color"
 												id="value"
 												name="value"
-												value={value || "#000000"}
+												value={value || '#000000'}
 												onChange={handleChange}
 												onBlur={handleBlur}
 												isError={touched.value && errors.value}
@@ -262,7 +262,10 @@ function CreateAttribute({ ref, openModal, closeModal }) {
 					</div>
 
 					<SubmitBtn type="submit" $isLoading={isPending} disabled={isPending}>
-						<div className="content">Create Attribute</div>
+						<div className="content">Create Attribute <SiCircleci /></div>
+						<div className="loader">
+							<BubbleSlide color="var(--addToCart-text)" height="20px" />
+						</div>
 					</SubmitBtn>
 				</MyForm>
 			</ModalWrapper>

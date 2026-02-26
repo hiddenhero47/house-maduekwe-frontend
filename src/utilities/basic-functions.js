@@ -224,6 +224,7 @@ export const getFromLocalStorage = (value) => {
 };
 
 export const groupAttributesByType = (attributes = []) => {
+	if (!attributes) return [];
 	return attributes.reduce((acc, item) => {
 		const type = item?.Attribute?.type;
 
@@ -237,4 +238,50 @@ export const groupAttributesByType = (attributes = []) => {
 
 		return acc;
 	}, {});
+};
+
+export const buildShopItemFormData = (values) => {
+	const {
+		imageFiles,
+		imageCatalog, // discard
+		categorySearchValue, // discard
+		attributes,
+		...others
+	} = values;
+
+	const formData = new FormData();
+
+	// ✅ Ensure attributes always defaults to []
+	const formattedAttributes = Array.isArray(attributes)
+		? attributes.map((attr) => ({
+				...attr,
+				Attribute:
+					typeof attr.Attribute === 'object'
+						? attr.Attribute._id
+						: attr.Attribute,
+			}))
+		: [];
+
+	// ✅ Append normal fields dynamically
+	Object.entries({
+		...others,
+		attributes: formattedAttributes,
+	}).forEach(([key, value]) => {
+		if (value === undefined || value === null) return;
+
+		if (Array.isArray(value) || typeof value === 'object') {
+			formData.append(key, JSON.stringify(value));
+		} else {
+			formData.append(key, value);
+		}
+	});
+
+	// ✅ Append main images
+	if (Array.isArray(imageFiles) && imageFiles.length > 0) {
+		imageFiles.forEach((file) => {
+			formData.append('imageCatalog', file);
+		});
+	}
+
+	return formData;
 };
