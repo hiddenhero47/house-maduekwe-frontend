@@ -4,7 +4,7 @@ export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	overflow-y: auto;
+	overflow-y: hidden;
 	padding: 24px;
 	padding-bottom: 32px;
 	gap: 14px;
@@ -14,6 +14,14 @@ export const Container = styled.div`
 		font-weight: 700;
 		color: ${({ theme }) => theme?.mainBody?.text};
 		letter-spacing: -0.02em;
+	}
+
+	#display_body {
+		flex-grow: 1;
+		flex-basis: 0;
+		margin-top: 2vh;
+		width: 100%;
+		overflow-y: auto;
 	}
 `;
 
@@ -110,7 +118,6 @@ export const TableWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	margin-top: 3vh;
 
 	td:has(.color_box) {
 		display: flex;

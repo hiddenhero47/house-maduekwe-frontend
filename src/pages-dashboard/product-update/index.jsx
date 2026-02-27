@@ -31,21 +31,43 @@ import { FaBrush } from 'react-icons/fa';
 import { FaImages } from 'react-icons/fa6';
 import { items } from '../../dummyData/shopItems';
 import { attributeType } from '../../utilities/app-const';
-import { groupAttributesByType } from '../../utilities/basic-functions';
+import {
+	groupAttributesByType,
+	buildShopItemFormData,
+	generateColorImage,
+} from '../../utilities/basic-functions';
 import { BiSolidCategory } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 import CategoryServices from '../../features/services/custom-hooks/category';
 import AttributeServices from '../../features/services/custom-hooks/attribute';
-import { buildShopItemFormData } from "../../utilities/basic-functions";
+import { shopItemValidationSchema } from '../../features/validations/shopItem-validation';
+import { useParams } from 'react-router-dom';
+import ShopItemServices from '../../features/services/custom-hooks/shop-items';
+import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
+
+const logFormData = (formData) => {
+	const obj = {};
+
+	for (let [key, value] of formData.entries()) {
+		obj[key] = value;
+	}
+
+	console.log(JSON.parse(obj.data));
+};
 
 function Index() {
-	const data = items[0];
+	const { id } = useParams();
+	const { data, isPending, isSuccess } = ShopItemServices.getOne(id);
+	const product = data?.data ?? null;
 
 	const { data: dataCat, isPending: isPendingCat } = CategoryServices.get({
 		limit: 100,
 	});
+
+	const { mutate: updataProduct, isPending: isLoading } =
+		ShopItemServices.update();
 
 	const { data: dataColor, isPending: isPendingColor } =
 		AttributeServices.getAll({
@@ -62,32 +84,40 @@ function Index() {
 		}
 	);
 
-	const initialValues = {
-		name: data?.name || '',
-		brand: data?.brand || '',
-		status: data?.status || '',
-		description: data?.description || '',
-		price: data?.price || 0,
-		vat: data?.vat || 0,
-		currency: data?.currency || 'USD',
-		currencySearchValue: '',
-		discount: data?.discount || 0,
-		category: data?.category || '',
-		categorySearchValue: '',
-		subCategory: data?.subCategory || '',
-		quantity: data?.quantity || 1,
-		placeHolder: data?.placeHolder || {},
-		imageCatalog: data?.imageCatalog || [],
-		attributes: data?.attributes || [],
-		classTags: data?.classTags || [],
-		highlights: data?.highlights || [],
-		removeImages: [],
-		imageFiles: [],
-	};
+	const initialValues = useMemo(
+		() => ({
+			name: product?.name || '',
+			brand: product?.brand || '',
+			status: product?.status || '',
+			description: product?.description || '',
+			price: product?.price || 0,
+			vat: product?.vat || 0,
+			currency: product?.currency || 'USD',
+			currencySearchValue: '',
+			discount: product?.discount || 0,
+			category: product?.category || '',
+			categorySearchValue: '',
+			subCategory: product?.subCategory || '',
+			quantity: product?.quantity || 1,
+			placeHolder: product?.placeHolder || {},
+			imageCatalog: product?.imageCatalog || [],
+			attributes: product?.attributes || [],
+			classTags: product?.classTags || [],
+			highlights: product?.highlights || [],
+			removeImages: [],
+			imageFiles: [],
+		}),
+		[product]
+	);
 
 	const onSubmit = async (values) => {
 		const formData = buildShopItemFormData(values);
-		console.log(formData);
+		updataProduct(
+			{ data: formData, id: id },
+			{
+				onSuccess: (data) => {},
+			}
+		);
 	};
 
 	const {
@@ -100,8 +130,9 @@ function Index() {
 		handleSubmit,
 	} = useFormik({
 		initialValues,
-		// validationSchema: validationSchema,
+		validationSchema: shopItemValidationSchema,
 		onSubmit,
+		enableReinitialize: true,
 	});
 
 	const {
@@ -156,6 +187,7 @@ function Index() {
 		return dataColor?.data.map((color) => ({
 			label: color?.name,
 			value: color?._id,
+			image: generateColorImage(color?.display || '#000000'),
 		}));
 	}, [dataColor?.data]);
 
@@ -212,7 +244,7 @@ function Index() {
 			Attribute,
 			isDefault: false,
 			quantity: 1,
-			additionalAmount: "",
+			additionalAmount: '',
 			images: [],
 		};
 
@@ -235,16 +267,19 @@ function Index() {
 					</div>
 
 					<div>
-						<h1>Create Product</h1>
-						<p>Create & edit product experience for customers</p>
+						<h1 id="#title1">Create Product</h1>
+						<p id="#title2">Create & edit product experience for customers</p>
 					</div>
 				</div>
 
 				<div className="actions">
-					<SaveBtn type='submit' onClick={handleSubmit}>
+					<SaveBtn type="submit" onClick={handleSubmit} $isLoading={isLoading}>
 						<div className="content">
 							<BsFillSave2Fill />
 							Save
+						</div>
+						<div className='loader'>
+							<BubbleSlide color="var(--mainBody-text)" height="20px" />
 						</div>
 					</SaveBtn>
 
@@ -390,7 +425,7 @@ function Index() {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												isError={touched.price && errors.price}
-												errormessage={errors.name}
+												errormessage={errors.price}
 												placeholder="Product price"
 												paddingX="14px"
 												paddingY="9px"
@@ -642,49 +677,49 @@ function Index() {
 								</div>
 
 								<AttributeBox>
-									{(groupAttributesByType(attributes)[attributeType.SIZE] || []).map(
-										(att, index) => (
-											<div className="attribute_control" key={index}>
-												<Size className="ml-[5px] [word-spacing:7px]">
-													{att?.Attribute?.display} {att?.Attribute?.name}
-												</Size>
-												<div className="w-full">
-													<CustomInput
-														type="number"
-														id={att?.Attribute?._id}
-														name={att?.Attribute?._id}
-														value={getAttrValue({
+									{(
+										groupAttributesByType(attributes)[attributeType.SIZE] || []
+									).map((att, index) => (
+										<div className="attribute_control" key={index}>
+											<Size className="ml-[5px] [word-spacing:7px]">
+												{att?.Attribute?.display} {att?.Attribute?.name}
+											</Size>
+											<div className="w-full">
+												<CustomInput
+													type="number"
+													id={att?.Attribute?._id}
+													name={att?.Attribute?._id}
+													value={getAttrValue({
+														AttributeId: att?.Attribute?._id,
+														key: 'additionalAmount',
+													})}
+													onChange={(e) =>
+														onAttrChange({
 															AttributeId: att?.Attribute?._id,
 															key: 'additionalAmount',
-														})}
-														onChange={(e) =>
-															onAttrChange({
-																AttributeId: att?.Attribute?._id,
-																key: 'additionalAmount',
-																value: e.target.value,
-															})
-														}
-														onBlur={handleBlur}
-														isError={false}
-														errormessage={errors.attributes}
-														placeholder="Additional Amount"
-														paddingX="10px"
-														paddingY="4px"
-														useBackground
-													/>
-												</div>
-												<div className="flex ml-[5px] gap-[10%] mt-[3px]">
-													<button
-														type="button"
-														className="delete"
-														onClick={() => removeAttr(att?.Attribute?._id)}
-													>
-														<MdDelete />
-													</button>
-												</div>
+															value: e.target.value,
+														})
+													}
+													onBlur={handleBlur}
+													isError={false}
+													errormessage={errors.attributes}
+													placeholder="Additional Amount"
+													paddingX="10px"
+													paddingY="4px"
+													useBackground
+												/>
 											</div>
-										)
-									)}
+											<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+												<button
+													type="button"
+													className="delete"
+													onClick={() => removeAttr(att?.Attribute?._id)}
+												>
+													<MdDelete />
+												</button>
+											</div>
+										</div>
+									))}
 								</AttributeBox>
 							</div>
 
@@ -717,72 +752,72 @@ function Index() {
 								</div>
 
 								<AttributeBox>
-									{(groupAttributesByType(attributes)[attributeType.COLOR] || []).map(
-										(att, index) => (
-											<div className="attribute_control" key={index}>
-												<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
-													<Color
-														$color={att?.Attribute?.display}
-														$active={true}
-													/>
-													<span className="name">{att?.Attribute?.name}</span>
-												</div>
-												<div className="w-full">
-													<CustomInput
-														type="number"
-														id={att?.Attribute?._id}
-														name="additionalAmount"
-														value={getAttrValue({
+									{(
+										groupAttributesByType(attributes)[attributeType.COLOR] || []
+									).map((att, index) => (
+										<div className="attribute_control" key={index}>
+											<div className="ml-[5px] mb-[5px] flex gap-[10px] items-center">
+												<Color
+													$color={att?.Attribute?.display}
+													$active={true}
+												/>
+												<span className="name">{att?.Attribute?.name}</span>
+											</div>
+											<div className="w-full">
+												<CustomInput
+													type="number"
+													id={att?.Attribute?._id}
+													name="additionalAmount"
+													value={getAttrValue({
+														AttributeId: att?.Attribute?._id,
+														key: 'additionalAmount',
+													})}
+													onChange={(e) =>
+														onAttrChange({
 															AttributeId: att?.Attribute?._id,
 															key: 'additionalAmount',
-														})}
-														onChange={(e) =>
-															onAttrChange({
-																AttributeId: att?.Attribute?._id,
-																key: 'additionalAmount',
-																value: e.target.value,
-															})
-														}
-														onBlur={handleBlur}
-														isError={false}
-														errormessage={errors.attributes}
-														placeholder="Additional Amount"
-														paddingX="10px"
-														paddingY="4px"
-														useBackground
-													/>
-												</div>
-												<div className="flex ml-[5px] gap-[10%] mt-[3px]">
-													<button
-														type="button"
-														className="delete"
-														onClick={() => removeAttr(att?.Attribute?._id)}
-													>
-														<MdDelete />
-													</button>
-													<ImageSelector
-														options={imageCatalog}
-														onChange={(value) =>
-															onAttrChange({
-																AttributeId: att?.Attribute?._id,
-																key: 'images',
-																value,
-															})
-														}
-														value={getAttrValue({
+															value: e.target.value,
+														})
+													}
+													onBlur={handleBlur}
+													isError={false}
+													errormessage={errors.attributes}
+													placeholder="Additional Amount"
+													paddingX="10px"
+													paddingY="4px"
+													useBackground
+												/>
+											</div>
+											<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+												<button
+													type="button"
+													className="delete"
+													onClick={() => removeAttr(att?.Attribute?._id)}
+												>
+													<MdDelete />
+												</button>
+												<ImageSelector
+													options={imageCatalog}
+													onChange={(value) =>
+														onAttrChange({
 															AttributeId: att?.Attribute?._id,
 															key: 'images',
-														})}
-														isMultiple
-													>
-														<button type="button" className="edit">
-															<BiSolidCategory />
-														</button>
-													</ImageSelector>
-												</div>
+															value,
+														})
+													}
+													value={getAttrValue({
+														AttributeId: att?.Attribute?._id,
+														key: 'images',
+													})}
+													isMultiple
+												>
+													<button type="button" className="edit">
+														<BiSolidCategory />
+													</button>
+												</ImageSelector>
 											</div>
-										)
-									)}
+										</div>
+									))}
 								</AttributeBox>
 							</div>
 						</AttributeBody>

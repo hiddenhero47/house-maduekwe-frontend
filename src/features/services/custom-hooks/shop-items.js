@@ -70,7 +70,9 @@ const useUpdateShopItemMutation = () => {
 				data,
 			}),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['shop-items'] });
+			queryClient.invalidateQueries({
+				queryKey: ['shop-items', 'shop-item-related'],
+			});
 			toast.success('Shop item updated successfully');
 		},
 	});

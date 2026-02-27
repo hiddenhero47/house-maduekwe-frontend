@@ -36,17 +36,21 @@ export const Container = styled.div`
 		font-size: 18px;
 	}
 
-	h1 {
+	#title1 {
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: ${({ theme }) => theme.mainBody.text};
 		line-height: 1.2;
 	}
 
-	p {
+	#title2 {
 		font-size: 0.875rem;
 		color: ${({ theme }) => theme.mainBody.sbText};
 		margin-top: 2px;
+	}
+
+	.Form_error {
+		font-size: 11.5px;
 	}
 
 	.actions {

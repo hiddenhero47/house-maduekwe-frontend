@@ -127,136 +127,146 @@ function Index() {
 				</div>
 			</TabNav>
 
-			<TableWrapper>
-				{section === 'attributes' && (
-					<CustomTable
-						fields={[
-							{
-								Header: () => 'No',
-								accessor: '_nos',
-								Cell: ({ nos }) => (
-									<span className="font-semibold opacity-70 ml-[5px]">
-										{nos}
-									</span>
-								),
-							},
-							{
-								Header: () => 'Name',
-								accessor: 'name',
-								Cell: ({ value }) => (
-									<span className="font-semibold">{value}</span>
-								),
-							},
-							{
-								Header: () => 'Value',
-								accessor: 'value',
-								Cell: ({ value }) => (
-									<span className="text-sm ml-[8px]">
-										{Array.isArray(value) ? value.join(', ') : String(value)}
-									</span>
-								),
-							},
-							{
-								Header: () => 'Type',
-								accessor: 'type',
-								Cell: ({ value }) => (
-									<span className="text-xs font-semibold uppercase opacity-70 ml-[8px]">
-										{value}
-									</span>
-								),
-							},
-							{
-								Header: () => 'Display',
-								accessor: 'type',
-								Cell: ({ value, row }) => (
-									<span className="ml-[10px]">
-										{value === attributeType.COLOR ? (
-											<span>
-												{ensureArray(row?.original?.display).map((c, i) => (
-													<ColorBox className='color_box' $color={c} key={i} />
-												))}
+			<div id="display_body" className="Y_scroll_style">
+				<div>
+					<TableWrapper>
+						{section === 'attributes' && (
+							<CustomTable
+								fields={[
+									{
+										Header: () => 'No',
+										accessor: '_nos',
+										Cell: ({ nos }) => (
+											<span className="font-semibold opacity-70 ml-[5px]">
+												{nos}
 											</span>
-										) : (
-											<span className="text-xm font-semibold uppercase opacity-70">
-												{row?.original?.display}
+										),
+									},
+									{
+										Header: () => 'Name',
+										accessor: 'name',
+										Cell: ({ value }) => (
+											<span className="font-semibold">{value}</span>
+										),
+									},
+									{
+										Header: () => 'Value',
+										accessor: 'value',
+										Cell: ({ value }) => (
+											<span className="text-sm ml-[8px]">
+												{Array.isArray(value)
+													? value.join(', ')
+													: String(value)}
 											</span>
-										)}
-									</span>
-								),
-							},
-						]}
-						dataSource={attribute || []}
-						useStrip
-						isLoading={isPendingAttr}
-						emptyIcon={
-							<NoDataIcon
-								width="150px"
-								height="150px"
-								color="var(--mainBody-sbText)"
+										),
+									},
+									{
+										Header: () => 'Type',
+										accessor: 'type',
+										Cell: ({ value }) => (
+											<span className="text-xs font-semibold uppercase opacity-70 ml-[8px]">
+												{value}
+											</span>
+										),
+									},
+									{
+										Header: () => 'Display',
+										accessor: 'type',
+										Cell: ({ value, row }) => (
+											<span className="ml-[10px]">
+												{value === attributeType.COLOR ? (
+													<span>
+														{ensureArray(row?.original?.display).map((c, i) => (
+															<ColorBox
+																className="color_box"
+																$color={c}
+																key={i}
+															/>
+														))}
+													</span>
+												) : (
+													<span className="text-xm font-semibold uppercase opacity-70">
+														{row?.original?.display}
+													</span>
+												)}
+											</span>
+										),
+									},
+								]}
+								dataSource={attribute || []}
+								useStrip
+								isLoading={isPendingAttr}
+								emptyIcon={
+									<NoDataIcon
+										width="150px"
+										height="150px"
+										color="var(--mainBody-sbText)"
+									/>
+								}
+								emptyText="NO ATTRIBUTES"
+								emptySbText="You haven’t added any attributes yet."
+								refetch={() => refetchAttr()}
+								currentPage={pageAttr}
+								totalPages={paginationAttr?.totalPages}
+								changePage={flipPageAttr}
 							/>
-						}
-						emptyText="NO ATTRIBUTES"
-						emptySbText="You haven’t added any attributes yet."
-						refetch={() => refetchAttr()}
-						currentPage={paginationAttr?.total}
-						totalPages={pageAttr}
-						changePage={flipPageAttr}
-					/>
-				)}
+						)}
 
-				{section === 'categories' && (
-					<CustomTable
-						fields={[
-							{
-								Header: () => 'No',
-								accessor: '_nos',
-								Cell: ({ nos }) => (
-									<span className="font-semibold opacity-70">{nos}</span>
-								),
-							},
-							{
-								Header: () => 'Name',
-								accessor: 'name',
-								Cell: ({ value }) => (
-									<span className="font-semibold">{value}</span>
-								),
-							},
-							{
-								Header: () => 'ID',
-								accessor: '_id',
-								Cell: ({ value }) => (
-									<span className="text-xs opacity-60">{value}</span>
-								),
-							},
-							{
-								Header: () => 'Date',
-								accessor: 'createdAt',
-								Cell: ({ value }) => (
-									<span className="text-xs opacity-70">
-										{new Date(value).toLocaleDateString()}
-									</span>
-								),
-							},
-						]}
-						dataSource={category || []}
-						useStrip
-						isLoading={isPendingCat}
-						emptyIcon={
-							<NoDataIcon
-								width="150px"
-								height="150px"
-								color="var(--mainBody-sbText)"
+						{section === 'categories' && (
+							<CustomTable
+								fields={[
+									{
+										Header: () => 'No',
+										accessor: '_nos',
+										Cell: ({ nos }) => (
+											<span className="font-semibold opacity-70">{nos}</span>
+										),
+									},
+									{
+										Header: () => 'Name',
+										accessor: 'name',
+										Cell: ({ value }) => (
+											<span className="font-semibold">{value}</span>
+										),
+									},
+									{
+										Header: () => 'ID',
+										accessor: '_id',
+										Cell: ({ value }) => (
+											<span className="text-xs opacity-60">{value}</span>
+										),
+									},
+									{
+										Header: () => 'Date',
+										accessor: 'createdAt',
+										Cell: ({ value }) => (
+											<span className="text-xs opacity-70">
+												{new Date(value).toLocaleDateString()}
+											</span>
+										),
+									},
+								]}
+								dataSource={category || []}
+								useStrip
+								isLoading={isPendingCat}
+								emptyIcon={
+									<NoDataIcon
+										width="150px"
+										height="150px"
+										color="var(--mainBody-sbText)"
+									/>
+								}
+								emptyText="NO CATEGORIES"
+								emptySbText="You haven’t created any categories yet."
+								refetch={() => refetchCat}
+								currentPage={pageCat}
+								totalPages={paginationCat?.totalPages}
+								changePage={flipPageCat}
 							/>
-						}
-						emptyText="NO CATEGORIES"
-						emptySbText="You haven’t created any categories yet."
-						refetch={() => refetchCat}
-						currentPage={paginationCat?.total}
-						totalPages={pageCat}
-						changePage={flipPageCat}
-					/>
-				)}
-			</TableWrapper>
+						)}
+					</TableWrapper>
+				</div>
+			</div>
 			<CreateAttribute
 				ref={modalRefAttr}
 				closeModal={closeModal}

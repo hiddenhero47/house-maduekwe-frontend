@@ -23,15 +23,20 @@ import { ItemStatusType } from '../../utilities/app-const';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 import CategoryServices from '../../features/services/custom-hooks/category';
-import { buildShopItemFormData } from "../../utilities/basic-functions";
+import { buildShopItemFormData } from '../../utilities/basic-functions';
+import { shopItemValidationSchema } from '../../features/validations/shopItem-validation';
+import ShopItemServices from '../../features/services/custom-hooks/shop-items';
+import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
+import { useNavigate } from 'react-router-dom';
 
 function Index() {
-	const {
-		data: dataCat,
-		isPending: isPendingCat,
-	} = CategoryServices.get({
+	const navigate = useNavigate();
+
+	const { data: dataCat, isPending: isPendingCat } = CategoryServices.get({
 		limit: 100,
 	});
+
+	const {mutate: createProduct, isPending} = ShopItemServices.create();
 
 	const initialValues = {
 		name: '',
@@ -42,7 +47,7 @@ function Index() {
 		vat: 0,
 		currency: 'USD',
 		discount: 0,
-		category: 'fashion',
+		category: '',
 		categorySearchValue: '',
 		subCategory: '',
 		quantity: 1,
@@ -51,12 +56,17 @@ function Index() {
 		attributes: [],
 		highlights: [],
 		classTags: [],
-		imageFiles: []
+		imageFiles: [],
 	};
 
-	const onSubmit = async (values) => {
+	const onSubmit = async (values, {resetForm}) => {
 		const formData = buildShopItemFormData(values);
-		console.log(formData);
+		createProduct(formData, {
+				onSuccess: (data) => {
+				resetForm();
+				navigate(`/admin/products/design/${data?.item?._id}`);
+			},
+		});
 	};
 	const {
 		values,
@@ -68,7 +78,7 @@ function Index() {
 		handleSubmit,
 	} = useFormik({
 		initialValues,
-		// validationSchema: validationSchema,
+		validationSchema: shopItemValidationSchema,
 		onSubmit,
 	});
 
@@ -125,16 +135,19 @@ function Index() {
 					</div>
 
 					<div>
-						<h1>Create Product</h1>
-						<p>Create & edit product experience for customers</p>
+						<h1 id="title1">Create Product</h1>
+						<p id="title2">Create & edit product experience for customers</p>
 					</div>
 				</div>
 
 				<div className="actions">
-					<SaveBtn type='submit' onClick={handleSubmit}>
+					<SaveBtn type="submit" onClick={handleSubmit} $isLoading={isPending}>
 						<div className="content">
 							<BsFillSave2Fill />
 							Save
+						</div>
+						<div className='loader'>
+							<BubbleSlide color="var(--mainBody-text)" height="20px" />
 						</div>
 					</SaveBtn>
 
@@ -280,7 +293,7 @@ function Index() {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												isError={touched.price && errors.price}
-												errormessage={errors.name}
+												errormessage={errors.price}
 												placeholder="Product price"
 												paddingX="14px"
 												paddingY="9px"

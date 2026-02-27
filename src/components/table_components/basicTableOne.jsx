@@ -134,7 +134,7 @@ function CustomTable({
 			</div>
 
 			{currentPage && changePage && totalPages && showPagination ? (
-				<div className="mt-[15px] flex w-full justify-end">
+				<div className="mt-[10px] pr-[25px] flex w-full justify-end">
 					<BasicPg
 						currentPage={currentPage}
 						changePage={changePage}

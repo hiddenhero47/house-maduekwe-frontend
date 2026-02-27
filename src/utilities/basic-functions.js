@@ -240,6 +240,37 @@ export const groupAttributesByType = (attributes = []) => {
 	}, {});
 };
 
+export const generateColorImage = (colors, width = 40, height = 40) => {
+	if (!colors) return '';
+
+	const canvas = document.createElement('canvas');
+	const ctx = canvas.getContext('2d');
+
+	if (!ctx) return '';
+
+	canvas.width = width;
+	canvas.height = height;
+
+	const colorArray = Array.isArray(colors) ? colors : [colors];
+
+	if (colorArray.length > 1) {
+		// diagonal gradient
+		const gradient = ctx.createLinearGradient(0, 0, width, height);
+
+		colorArray.forEach((color, index) => {
+			gradient.addColorStop(index / (colorArray.length - 1), color);
+		});
+
+		ctx.fillStyle = gradient;
+	} else {
+		ctx.fillStyle = colorArray[0];
+	}
+
+	ctx.fillRect(0, 0, width, height);
+
+	return canvas.toDataURL('image/png');
+};
+
 export const buildShopItemFormData = (values) => {
 	const {
 		imageFiles,
@@ -251,7 +282,7 @@ export const buildShopItemFormData = (values) => {
 
 	const formData = new FormData();
 
-	// ✅ Ensure attributes always defaults to []
+	// ✅ Format attributes
 	const formattedAttributes = Array.isArray(attributes)
 		? attributes.map((attr) => ({
 				...attr,
@@ -262,21 +293,22 @@ export const buildShopItemFormData = (values) => {
 			}))
 		: [];
 
-	// ✅ Append normal fields dynamically
-	Object.entries({
+	// ✅ Build clean payload
+	const payload = {
 		...others,
 		attributes: formattedAttributes,
-	}).forEach(([key, value]) => {
-		if (value === undefined || value === null) return;
+	};
 
-		if (Array.isArray(value) || typeof value === 'object') {
-			formData.append(key, JSON.stringify(value));
-		} else {
-			formData.append(key, value);
-		}
-	});
+	const cleanedPayload = Object.fromEntries(
+		Object.entries(payload).filter(
+			([_, value]) => value !== undefined && value !== null
+		)
+	);
 
-	// ✅ Append main images
+	// 🔥 IMPORTANT: Send everything as ONE JSON string
+	formData.append('data', JSON.stringify(cleanedPayload));
+
+	// ✅ Append images separately
 	if (Array.isArray(imageFiles) && imageFiles.length > 0) {
 		imageFiles.forEach((file) => {
 			formData.append('imageCatalog', file);

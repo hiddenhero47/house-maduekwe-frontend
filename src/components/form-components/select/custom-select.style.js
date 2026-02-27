@@ -205,6 +205,7 @@ export const ImageHolder = styled.div`
 	height: 100%;
 	overflow: hidden;
 	position: relative;
+	border-radius: 3px;
 
 	img {
 		width: 100%;

@@ -5,7 +5,7 @@ export const BTTableGrid = styled.div`
 	height: auto;
 	overflow: hidden;
 	display: grid;
-	grid-template-rows: 1fr 55px;
+	grid-template-rows: 1fr 50px;
 `;
 
 export const BTWrapperOne = styled.div`
