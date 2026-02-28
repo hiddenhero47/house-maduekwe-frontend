@@ -341,7 +341,12 @@ function ShopItem({
 											draggable="false"
 											onContextMenu={(e) => e.preventDefault()}
 											// style={{ touchAction: 'none' }}
-											$position={getImagePosition(image?.url)}
+											onLoad={(e) => {
+												const img = e.currentTarget;
+												const ratio = img.naturalWidth / img.naturalHeight;
+												const position = ratio < 0.66 ? 'top' : 'center';
+												img.style.objectPosition = position;
+											}}
 										/>
 									</div>
 								))}

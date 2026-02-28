@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { MasonryGrid, MasonryItem} from './index.style';
-import { items } from '../../../dummyData/shopItems';
 import ShopItem from '../../../components/shop-item-display-unit/index';
 
 function MasonryLayout({ data = [], isLoading = false }) {
@@ -12,7 +11,7 @@ function MasonryLayout({ data = [], isLoading = false }) {
 						<MasonryItem key={item?._id || i}>
 							<ShopItem
 								isLoading={isLoading}
-								product={items[0]}
+								product={item}
 								width="100%"
 								height="100%"
 							/>

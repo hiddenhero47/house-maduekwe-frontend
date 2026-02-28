@@ -1,23 +1,32 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ScrollToTop from '../scroll-to-top';
-import { LayoutWrapper, Navigation } from './index.style';
+import { LayoutWrapper, Navigation, CartBtn } from './index.style';
 import Intro from '../app-intros/intro';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { FaCartShopping } from 'react-icons/fa6';
 import Modal from '../../components/modal/index_modal';
 import LeftMenu from './sub-components/app-menu';
 import ToolBar from './sub-components/holding-tool-bar';
-import Holding from "./sub-components/holding";
-import TwoFaModal from "../../components/modal-assets/2fa-modal/index";
+import Holding from './sub-components/holding';
+import TwoFaModal from '../../components/modal-assets/2fa-modal/index';
+import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
+import CartServices from '../../features/services/custom-hooks/cart';
+
+// shop-item
 
 function IndexLayout() {
 	const { theme } = useSelector((state) => state.themes);
 	const { holdings, show } = useSelector((state) => state.holdings);
+	const { data, dragType, dragEnd } = useSelector((state) => state.dragBoard);
+
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const { mutate: addToCart, isPending } = CartServices.add();
 
 	if (typeof document !== 'undefined') {
 		document.body?.setAttribute('data-theme', theme);
@@ -73,6 +82,17 @@ function IndexLayout() {
 		}
 	};
 
+	useEffect(() => {
+		const isValidData =
+			data && typeof data === 'object' && Object.keys(data).length > 0;
+
+		if (dragType === 'shop-item' && dragEnd && isValidData) {
+			addToCart({ itemList: [data] });
+			dispatch(resetDrag());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
+
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
@@ -116,16 +136,17 @@ function IndexLayout() {
 							id="cartWrapper"
 							className="flex flex-col w-fit gap-[3px] intro-x"
 						>
-							<button
+							<CartBtn
 								id="myCart"
 								className="flex items-center text-[17px] gap-[5px]"
 								onClick={() => navigate('/my-cart')}
+								$isLoading={isPending}
 							>
 								<span>Cart</span>
 								<i className="text-[20px]">
 									<FaCartShopping />
 								</i>
-							</button>
+							</CartBtn>
 
 							<div id="line2" className="h-[1.5px] w-full flex gap-[4px]">
 								<div id="grow" />
@@ -167,7 +188,7 @@ function IndexLayout() {
 				refName={modalHoldingRef}
 				animation={true}
 			>
-				<Holding close={closeHolding}/>
+				<Holding close={closeHolding} />
 			</Modal.Center>
 
 			<TwoFaModal />
