@@ -58,7 +58,7 @@ function ShopItem({
 
 	const cartServer = () => {
 		const selectedItem = {
-			shopItemId: product?._id,
+			shopItem: product?._id,
 			quantity: 1,
 			selectedAttributes: [
 				...(attribute.currentColor ? [attribute.currentColor] : []),

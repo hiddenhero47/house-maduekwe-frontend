@@ -39,11 +39,11 @@ const useRemoveFromCartMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (itemIds) =>
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/cart',
 				method: 'DELETE',
-				data: { itemIds },
+				data,
 			}),
 
 		onSuccess: () => {

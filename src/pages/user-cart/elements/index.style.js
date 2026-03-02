@@ -36,7 +36,8 @@ export const Container = styled.div`
 	}
 
 	#cartSummary {
-		margin-top: 30px;
+		/* margin-top: 30px; */
+		flex-direction: column;
 	}
 
 	#cartItems {
@@ -60,11 +61,11 @@ export const Item = styled.div`
 	width: 100%;
 	align-content: center;
 	/* gap: clamp(12px, 3vw, 32px); */
-
 	transition: background 0.2s ease;
 	padding-block: 5px;
 	padding: 10px;
 	border-radius: 8px;
+	position: relative;
 
 	&:hover {
 		background-color: ${({ theme }) =>
@@ -118,6 +119,20 @@ export const Item = styled.div`
 	}
 `;
 
+export const ItemLoader = styled.div`
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.35);
+	display: ${(props) => (props.$isLoading ? 'flex' : 'none')};
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	border-radius: 8px;
+`;
+
 export const SummaryContainer = styled.div`
 	width: 80%;
 	max-width: 615px;
@@ -151,6 +166,120 @@ export const SummaryContainer = styled.div`
 				font-size: 15px;
 			}
 		}
+	}
+`;
+
+export const AddressSelect = styled.div`
+	width: 80%;
+	max-width: 615px;
+	padding: 24px;
+	border-radius: 5px;
+	margin-inline: auto;
+	margin-bottom: 20px;
+	background-color: ${({ theme }) => theme?.mainBody.container};
+	border: 1px solid ${({ theme }) => theme?.mainBody.line};
+	position: relative;
+
+	@media (max-width: 800px) {
+		width: 100%;
+	}
+
+	h3 {
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 14px;
+	}
+
+	.address_list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+
+		max-height: 220px;
+		overflow-y: auto;
+
+		/* smooth scrollbar */
+		scroll-behavior: smooth;
+	}
+
+	.empty_state {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 120px;
+		color: ${({ theme }) => theme?.mainBody.sbText};
+		font-size: 14px;
+	}
+
+	.loading_overlay {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.15);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: inherit;
+		backdrop-filter: blur(2px);
+		z-index: 3;
+	}
+`;
+
+export const AddressBox = styled.div`
+	position: relative;
+	padding-inline: 14px;
+	padding-block: 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.25s ease;
+
+	background: ${({ theme }) =>
+		theme.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'};
+
+	border: 1px solid
+		${({ theme, $isSelected }) =>
+			$isSelected ? theme?.intro?.logo : theme?.mainBody.line};
+
+	/* Left Accent */
+	border-left: 4px solid
+		${({ theme, $isSelected }) =>
+			$isSelected ? theme?.intro?.logo : 'transparent'};
+
+	&:hover {
+		/* transform: translateY(-2px); */
+		box-shadow: 0 4px 14px
+			${({ theme }) =>
+				theme.mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.08)'};
+	}
+
+	/* Paper Fold Effect */
+	${({ $isSelected, theme }) =>
+		$isSelected &&
+		`
+		&::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 0;
+			height: 0;
+			border-top: 24px solid ${theme.intro.logo};
+			border-left: 24px solid transparent;
+			border-top-right-radius: 6px;
+		}
+	`}
+
+	.full_address {
+		font-size: 14px;
+		margin-bottom: 6px;
+		color: ${({ theme }) => theme?.mainBody.text};
+		line-height: 1.4;
+	}
+
+	.meta {
+		display: flex;
+		gap: 15px;
+		font-size: 13px;
+		color: ${({ theme }) => theme?.mainBody.sbText};
 	}
 `;
 
