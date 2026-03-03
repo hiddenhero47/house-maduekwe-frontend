@@ -223,6 +223,24 @@ export const getFromLocalStorage = (value) => {
 	return localStorage.getItem(value);
 };
 
+export const getCurrencySymbol = (currencyCode = 'USD') => {
+	try {
+		const formatter = new Intl.NumberFormat('en', {
+			style: 'currency',
+			currency: currencyCode,
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 0,
+		});
+
+		return (
+			formatter.formatToParts(1).find((part) => part.type === 'currency')
+				?.value || currencyCode
+		);
+	} catch (err) {
+		return currencyCode;
+	}
+};
+
 export const groupAttributesByType = (attributes = []) => {
 	if (!attributes) return [];
 	return attributes.reduce((acc, item) => {

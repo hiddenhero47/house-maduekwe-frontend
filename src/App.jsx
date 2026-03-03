@@ -16,6 +16,7 @@ import ProductOverview from './pages/product-overview';
 import UserCart from './pages/user-cart';
 import ShopeItems from './pages/shope-items';
 import Authentication from './pages/auth';
+import Checkout from './pages/checkout ';
 // Dashboard pages
 import Overview from './pages-dashboard/home';
 import Product from './pages-dashboard/products';
@@ -45,6 +46,7 @@ function App() {
 							<Route path="/overview/:id" element={<ProductOverview />} />
 							<Route path="/my-cart" element={<UserCart />} />
 							<Route path="/products/*" element={<ShopeItems />} />
+							<Route path="/checkout" element={<Checkout />} />
 						</Route>
 
 						<Route path="/admin" element={<DashboardLayout />}>

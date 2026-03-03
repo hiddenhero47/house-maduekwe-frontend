@@ -188,6 +188,10 @@ export const AddressSelect = styled.div`
 		font-size: 16px;
 		font-weight: 600;
 		margin-bottom: 14px;
+
+		span {
+			font-size: 14px;
+		}
 	}
 
 	.address_list {
