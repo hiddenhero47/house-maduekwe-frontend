@@ -28,6 +28,19 @@ const useGetOrdersQuery = (params = {}) => {
 	});
 };
 
+const useGetOrderByIdQuery = (id) => {
+	return useQuery({
+		queryKey: ['orders', id],
+		queryFn: () =>
+			axiosCall({
+				url: `/api/orders/${id}`,
+				method: 'GET',
+			}),
+		enabled: !!id,
+		refetchOnWindowFocus: false,
+	});
+};
+
 const useUpdateOrderStatusMutation = () => {
 	const queryClient = useQueryClient();
 
@@ -87,11 +100,13 @@ export {
 	useUpdateOrderStatusMutation,
 	useConfirmCheckoutMutation,
 	useCheckoutMutation,
+	useGetOrderByIdQuery,
 };
 
 const OrderServices = {
 	getMy: useGetMyOrdersQuery,
 	getAll: useGetOrdersQuery,
+	getOne: useGetOrderByIdQuery,
 	updateStatus: useUpdateOrderStatusMutation,
 };
 
