@@ -8,6 +8,7 @@ export const colors = {
 			sbLine: '#cccccc',
 			text: '#000',
 			sbText: '#6F6F6F',
+			chipBoxBg: "#fdfdfd",
 			menuBg: '#fdfdfd',
 			menuActive: '#f2f2f2',
 			menuBorder: '#e6e6e6',
@@ -37,7 +38,8 @@ export const colors = {
 			line: '#ebebeb',
 			cardLine: '#ebebeb',
 			cardSbLine: '#e6e6e6',
-			overlayLight: 'rgba(255, 255, 255, 0.04)'
+			overlayLight: 'rgba(255, 255, 255, 0.04)',
+			overlayDark: 'rgba(0, 0, 0, 0.04)'
 		},
 
 		intro: {
@@ -70,7 +72,7 @@ export const colors = {
 			background: '#000000',
 			text: '#ffffff',
 			hoverBg: '#383838',
-			disabledBg: '',
+			disabledBg: '#000000',
 		},
 
 		basicBtn: {
@@ -109,6 +111,7 @@ export const colors = {
 			sbLine: '#4d4d4d',
 			text: '#d9d9d9',
 			sbText: '#989898',
+			chipBoxBg: "#1d1d1d",
 			menuBg: '#202020',
 			menuActive: '#323232',
 			menuBorder: '#313131',
@@ -138,7 +141,8 @@ export const colors = {
 			line: '#333333',
 			cardLine: '#262626',
 			cardSbLine: '#333333',
-			overlayDark: 'rgba(0, 0, 0, 0.04)'
+			overlayLight: 'rgba(255, 255, 255, 0.04)',
+			overlayDark: 'rgba(0, 0, 0, 0.04)',
 		},
 
 		intro: {
@@ -172,7 +176,7 @@ export const colors = {
 			background: '#333333',
 			text: '#e4e4e4',
 			hoverBg: '#4d4d4d',
-			disabledBg: '',
+			disabledBg: '#333333',
 		},
 
 		basicBtn: {

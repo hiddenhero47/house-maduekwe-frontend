@@ -11,11 +11,17 @@ import { FaGoogle } from 'react-icons/fa';
 import { userLoginValidationSchema } from '../../../../features/validations/user-validation';
 import UserServices from '../../../../features/services/custom-hooks/user';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleOpen } from '../../../../store/slice/2fa-handler';
+import { setTwoFaRetry } from '../../../../components/modal-assets/2fa-modal/retry-manager';
 
 function SignIn() {
+	const dispatch = useDispatch();
+
 	const {
 		mutate: loginUser,
-		isLoading,
+		mutateAsync: lazyLoginUser,
+		isPending,
 		isSuccess,
 		isError,
 		error,
@@ -28,7 +34,19 @@ function SignIn() {
 	};
 
 	const onSubmit = async (values) => {
-		loginUser(values);
+		loginUser(values, {
+			onError: (error, variables) => {
+				if (error?.is2FARequired) {
+					setTwoFaRetry((otp) =>
+						lazyLoginUser({
+							...variables,
+							token: otp,
+						})
+					);
+					dispatch(handleOpen(true));
+				}
+			},
+		});
 	};
 
 	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
@@ -84,7 +102,7 @@ function SignIn() {
 					Forgot Password?
 				</Link>
 
-				<SubmitBtn $isLoading={isLoading} type="submit">
+				<SubmitBtn $isLoading={isPending} disabled={isPending} type="submit">
 					<div className="content">
 						<HiOutlineLogin />
 						Log In

@@ -360,6 +360,6 @@ export const Size = styled.button`
 `;
 
 export const Image = styled.img`
-	object-position: ${({ $position }) => $position || 'center'};
+	/* object-position: ${({ $position }) => $position || 'center'}; */
 	transition: object-position 0.3s ease;
 `;

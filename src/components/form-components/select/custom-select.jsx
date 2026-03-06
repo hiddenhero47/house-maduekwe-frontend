@@ -29,7 +29,7 @@ const CustomSelect = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const menuRef = useRef(null);
-    const bodyRef = useRef(null);
+	const bodyRef = useRef(null);
 
 	const selectedOption = options.find((option) => option.value === value);
 
@@ -51,21 +51,27 @@ const CustomSelect = ({
 		setIsOpen(true);
 	};
 
+	const handleBlur = () => {
+		if (onBlur) {
+			onBlur(name ?? id);
+		}
+	};
+
 	return (
 		<>
 			<CustomSelectContainer
 				tabIndex={0}
-				onBlur={onBlur}
+				onBlur={handleBlur}
 				id={id}
 				className="select_wrapper"
 			>
 				<CustomSelectValue
-					className={`${className || ""} custom_select`}
+					className={`${className || ''} custom_select`}
 					onClick={handleSelectClick}
 					$isError={isError || false}
 					$isOpen={isOpen}
 					$useBackground={useBackground}
-                    ref={bodyRef}
+					ref={bodyRef}
 					$disabled={disabled}
 					$paddingX={paddingX}
 					$paddingY={paddingY}
@@ -89,6 +95,7 @@ const CustomSelect = ({
 					)}
 
 					<button
+						type="button"
 						className="arrow"
 						style={{
 							transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
@@ -118,10 +125,10 @@ const CustomSelect = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{options.map((option) => (
+						{options.map((option, index) => (
 							<Option
 								className="select_option"
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 							>
@@ -139,7 +146,7 @@ const CustomSelect = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error className='Form_error'>{errormessage} !</Error>}
+			{isError && <Error className="Form_error">{errormessage} !</Error>}
 		</>
 	);
 };

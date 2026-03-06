@@ -222,7 +222,7 @@ function CustomFileInput({
 							</span>
 						</div>
 					</div>
-					<button className="file_clear_btn" onClick={handelClear}>
+					<button type="button" className="file_clear_btn" onClick={handelClear}>
 						<i className="isIcon">
 							<LuFileX />
 						</i>

@@ -3,107 +3,103 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 const useGetPaymentProvidersQuery = (params = {}) => {
-	return useQuery(
-		['payment-providers', params],
-		() =>
+	return useQuery({
+		queryKey: ['payment-providers', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/payment-providers',
 				method: 'GET',
 				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useGetClientPaymentProvidersQuery = () => {
-	return useQuery(
-		['payment-providers', 'client'],
-		() =>
+	return useQuery({
+		queryKey: ['payment-providers', 'client'],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/payment-providers/client',
 				method: 'GET',
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useCreatePaymentProviderMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/payment-providers',
 				method: 'POST',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['payment-providers']);
-				toast.success('Payment provider created successfully');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['payment-providers'],
+			});
+			toast.success('Payment provider created successfully');
+		},
+	});
 };
 
 const useUpdatePaymentProviderMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		({ id, data }) =>
+	return useMutation({
+		mutationFn: ({ id, data }) =>
 			axiosCall({
 				url: `/api/payment-providers/${id}`,
 				method: 'PUT',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['payment-providers']);
-				toast.success('Payment provider updated successfully');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['payment-providers'],
+			});
+			toast.success('Payment provider updated successfully');
+		},
+	});
 };
 
 const useDisablePaymentProviderMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(id) =>
+	return useMutation({
+		mutationFn: (id) =>
 			axiosCall({
 				url: `/api/payment-providers/${id}`,
 				method: 'DELETE',
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['payment-providers']);
-				toast.success('Payment provider disabled');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['payment-providers'],
+			});
+			toast.success('Payment provider disabled');
+		},
+	});
 };
 
 const useDeletePaymentProviderMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		({ id, data }) =>
+	return useMutation({
+		mutationFn: ({ id, data }) =>
 			axiosCall({
 				url: `/api/payment-providers/${id}/permanent`,
 				method: 'DELETE',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['payment-providers']);
-				toast.success('Payment provider permanently deleted');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['payment-providers'],
+			});
+			toast.success('Payment provider permanently deleted');
+		},
+	});
 };
 
 export {

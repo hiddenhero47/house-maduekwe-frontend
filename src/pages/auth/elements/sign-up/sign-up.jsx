@@ -16,7 +16,7 @@ function SignUp() {
 	const navigate = useNavigate();
 	const {
 		mutate: registerUser,
-		isLoading,
+		isPending,
 		isSuccess,
 		isError,
 		error,
@@ -100,7 +100,7 @@ function SignUp() {
 					/>
 				</div>
 
-				<SubmitBtn $isLoading={isLoading} type="submit" className="mt-[5px]">
+				<SubmitBtn $isLoading={isPending} disabled={isPending} type="submit" className="mt-[5px]">
 					<div className="content">
 						<HiOutlineLogin />
 						Sign up

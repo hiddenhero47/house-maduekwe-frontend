@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SecurityWrapper, AccountNav, OptionBtn } from './account.style';
 import UserDetails from './user-details/user-details';
+import TwoFAauthentication from './2fa-authentication/2fa-authentication';
 
 function AccountSettings() {
 	const profile = {
@@ -45,6 +46,8 @@ function AccountSettings() {
 			</AccountNav>
 			<div id="accountBody">
 				{option === profile.DETAILS && <UserDetails />}
+
+				{option === profile.TWO_FA && <TwoFAauthentication />}
 			</div>
 		</SecurityWrapper>
 	);

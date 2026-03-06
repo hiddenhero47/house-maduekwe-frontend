@@ -57,9 +57,9 @@ const SearchSelect = ({
 		setIsOpen(true);
 	};
 
-	const handleBlur = (e) => {
+	const handleBlur = () => {
 		if (onBlur) {
-			onBlur(e);
+			onBlur(name ?? id);
 		}
 	};
 
@@ -122,6 +122,7 @@ const SearchSelect = ({
 						<span className="placeholder form_word">{placeholder}</span>
 					)}
 					<button
+						type="button"
 						className="arrow"
 						style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)' }}
 					>
@@ -161,9 +162,9 @@ const SearchSelect = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{filter(options).map((option) => (
+						{filter(options).map((option, index) => (
 							<Option
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 								className="option"
@@ -182,7 +183,7 @@ const SearchSelect = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error className='Form_error'>{errormessage}!</Error>}
+			{isError && <Error className="Form_error">{errormessage}!</Error>}
 		</>
 	);
 };

@@ -14,6 +14,7 @@ import {
 } from 'react-router-dom';
 import MasonryLayout from './elements/masonry-layout';
 import BasicPg from '../../components/table_components/pagination/basicPg';
+import ShopItemServices from '../../features/services/custom-hooks/shop-items';
 
 function Index() {
 	const theme = useTheme();
@@ -22,10 +23,21 @@ function Index() {
 
 	const { category, minPrice, maxPrice, attributes, keyWord } = useParams();
 	const page = Number(new URLSearchParams(location.search).get('page')) || 1;
+
 	const isProducts = useMatch('/products');
 	const isNewArrivals = useMatch('/products/new-arrivals');
 
-	const limit = 12;
+	const { data, isPending } = ShopItemServices.get({
+		page: page,
+		limit: 100,
+		category: category || '',
+		attributes: attributes || '',
+		classTags: keyWord || '',
+		minPrice: minPrice || '',
+		maxPrice: maxPrice || '',
+	});
+
+	const { data: products = [], pagination } = data || {};
 
 	const resetFilter = () => {
 		navigate({
@@ -102,13 +114,13 @@ function Index() {
 				<div className="flex justify-start mx-[auto] mt-[20px] w-[90%]">
 					<BasicPg
 						currentPage={page || 1}
-						totalPages={5}
+						totalPages={pagination?.totalPages}
 						changePage={flipPage}
 					/>
 				</div>
 
 				<div className="w-full flex justify-center mt-[2vh]">
-					<MasonryLayout data={Array(limit).fill(limit)} />
+					<MasonryLayout data={products} />
 				</div>
 			</section>
 		</Container>

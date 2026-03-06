@@ -1,94 +1,132 @@
-import countriesJson from "./countries.json";
-import statesJson from "./states.json";
-import citiesJson from "./cities.json";
-import currenciesJson from "./accepted-currencies.json";
+import countriesJson from './countries.json';
+import statesJson from './states.json';
+import citiesJson from './cities.json';
+import currenciesJson from './accepted-currencies.json';
 
 const countries = countriesJson;
 const states = statesJson;
 const cities = citiesJson;
 const currencies = currenciesJson;
 
+const normalize = (val) => val?.toString();
+
 // Country
-export const getCountryOptions = () => {
-    return countries.countries.map((country) => ({
-        label: `${country.flag_emoji} ${country.name}`,
-        value: country.id.toString(),
-    }));
-};
+export const getCountryOptions = () =>
+	countries.countries.map((country) => ({
+		label: `${country.flag_emoji} ${country.name}`,
+		value: normalize(country.sort_name),
+	}));
 
-export const getCountrySortName = (countryId) => {
-    const country = countries.countries.find((country) => country.id.toString() === countryId);
-    return country ? country.sort_name : null;
-};
-
-export const getCountryId = (countryCode) => {
-    const country = countries.countries.find((country) => country.sort_name === countryCode);
-    return country ? country.id.toString() : null;
-};
-
-export const getCountryName = (countryId) => {
-    const country = countries.countries.find((country) => country.id.toString() === countryId);
-    return country ? country.name : null;
-};
+export const getCountryByCode = (countryCode) =>
+	countries.countries.find(
+		(c) => normalize(c.sort_name) === normalize(countryCode)
+	);
 
 // States
-export const getStatesOptions = (countryId) => {
-    const filteredStates = states.states.filter((state) => state.country_id === countryId);
-    const resultStates = filteredStates.length > 0 ? filteredStates : states.states;
+export const getStatesOptions = (countryCode) => {
+	const country = getCountryByCode(countryCode);
+	if (!country) return [];
 
-    return resultStates.map((state) => ({
-        label: state.name,
-        value: state.id,
-    }));
-};
-
-export const getStatesId = ({ countryId, stateName }) => {
-    const state = states.states.find((state) => state.country_id === countryId && state.name === stateName);
-    return state ? state.id : null;
-};
-
-export const getStatesName = (stateId) => {
-    const state = states.states.find((state) => state.id === stateId);
-    return state ? state.name : null;
+	return states.states
+		.filter((state) => normalize(state.country_id) === normalize(country.id))
+		.map((state) => ({
+			label: state.name,
+			value: state.name,
+		}));
 };
 
 // Cities
-export const getCitiesOptions = (stateId) => {
-    const filteredCities = cities?.cities?.filter((city) => city.state_id === stateId);
-    const resultCities = filteredCities.length > 0 ? filteredCities : cities.cities;
+export const getCitiesOptions = (countryCode, stateName) => {
+	const country = getCountryByCode(countryCode);
+	if (!country || !stateName) return [];
 
-    return resultCities.map((city) => ({
-        label: city.name,
-        value: city.id,
-    }));
-};
+	const state = states.states.find(
+		(s) =>
+			normalize(s.country_id) === normalize(country.id) &&
+			s.name.toLowerCase() === stateName.toLowerCase()
+	);
 
-export const getCityId = ({ stateId, cityName }) => {
-    const city = cities?.cities.find((city) => city.state_id === stateId && city.name === cityName);
-    return city ? city.id : null;
-};
+	if (!state) return [];
 
-export const getCitiesName = (cityId) => {
-    const city = cities.cities.find((city) => city.id === cityId);
-    return city ? city.name : "Unknown City";
+	return cities.cities
+		.filter((city) => normalize(city.state_id) === normalize(state.id))
+		.map((city) => ({
+			label: city.name,
+			value: city.name,
+		}));
 };
 
 // Currencies
-export const getCurrencyOptions = () => {
-    return currencies.currencies.map((currency) => ({
-        label: currency.currency,
-        value: currency.id.toString(),
-    }));
-};
+
+// Currency lookups
+const currencyById = new Map(
+	currencies.currencies.map((c) => [normalize(c.id), c])
+);
+
+const currencyByCountryId = new Map(
+	currencies.currencies.map((c) => [normalize(c.country_id), c])
+);
+
+// Country lookup
+const countryByCode = new Map(
+	countries.countries.map((c) => [normalize(c.sort_name), c])
+);
+
+export const getCurrencyOptions = () =>
+	currencies.currencies.map((currency) => ({
+		label: currency.currency,
+		value: normalize(currency.alphabetic_code),
+	}));
 
 export const getCurrencyCode = ({ currencyId, isNumeric = false }) => {
-    const currency = currencies.currencies.find((currency) => currency.id.toString() === currencyId);
-    return currency ? (isNumeric ? currency.numeric_code : currency.alphabetic_code) : null;
+	if (!currencyId) return null;
+
+	const currency = currencyById.get(normalize(currencyId));
+	if (!currency) return null;
+
+	return isNumeric ? currency.numeric_code : currency.alphabetic_code;
 };
 
-export const getCurrencyCodeByCounty = ({ countryCode, isNumeric = false }) => {
-    const country = countries.countries.find((country) => country.sort_name === countryCode);
-    const currency = country ? currencies.currencies.find((currency) => currency.country_id === country.id) : null;
+export const getCurrencyCodeByCountry = ({
+	countryCode,
+	isNumeric = false,
+}) => {
+	if (!countryCode) return null;
 
-    return currency ? (isNumeric ? currency.numeric_code : currency.alphabetic_code) : null;
+	const country = countryByCode.get(normalize(countryCode));
+	if (!country) return null;
+
+	const currency = currencyByCountryId.get(normalize(country.id));
+	if (!currency) return null;
+
+	return isNumeric ? currency.numeric_code : currency.alphabetic_code;
+};
+
+export const getCountryCurrencyOptions = (countryCodes = []) => {
+	if (!Array.isArray(countryCodes) || countryCodes.length === 0) return [];
+
+	const seen = new Set();
+	const options = [];
+
+	countryCodes.forEach((code) => {
+		const country = countryByCode.get(normalize(code));
+		if (!country) return;
+
+		const currency = currencyByCountryId.get(normalize(country.id));
+		if (!currency) return;
+
+		const currencyCode = currency.alphabetic_code;
+
+		// prevent duplicates (e.g. multiple EU countries -> EUR)
+		if (!seen.has(currencyCode)) {
+			seen.add(currencyCode);
+
+			options.push({
+				label: currency.currency,
+				value: currency.alphabetic_code,
+			});
+		}
+	});
+
+	return options;
 };

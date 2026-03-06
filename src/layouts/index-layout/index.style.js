@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes, css} from 'styled-components';
 
 export const LayoutWrapper = styled.div`
 	width: 100%;
@@ -129,4 +129,29 @@ export const ToolBar = styled.button`
 		width: 5.5556vmin;
 		height: 5.5556vmin;
 	}
+`;
+
+const shake = keyframes`
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-15deg); }
+  40% { transform: rotate(15deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+`;
+
+const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+`;
+
+export const CartBtn = styled.button`
+  ${({ $isLoading }) =>
+    $isLoading &&
+    css`
+      i svg {
+        animation: ${bounce} 0.6s ease-in-out infinite;
+        transform-origin: center;
+      }
+    `}
 `;

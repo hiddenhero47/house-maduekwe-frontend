@@ -3,73 +3,71 @@ import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
 const useGetItemGroupsQuery = () => {
-	return useQuery(
-		['item-groups'],
-		() =>
+	return useQuery({
+		queryKey: ['item-groups'],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/item-groups',
 				method: 'GET',
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
 const useCreateItemGroupMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/item-groups',
 				method: 'POST',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['item-groups']);
-				toast.success('Item group created successfully');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['item-groups'],
+			});
+			toast.success('Item group created successfully');
+		},
+	});
 };
 
 const useUpdateItemGroupMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		({ id, data }) =>
+	return useMutation({
+		mutationFn: ({ id, data }) =>
 			axiosCall({
 				url: `/api/item-groups/${id}`,
 				method: 'PUT',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['item-groups']);
-				toast.success('Item group updated successfully');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['item-groups'],
+			});
+			toast.success('Item group updated successfully');
+		},
+	});
 };
 
 const useDeleteItemGroupMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(id) =>
+	return useMutation({
+		mutationFn: (id) =>
 			axiosCall({
 				url: `/api/item-groups/${id}`,
 				method: 'DELETE',
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['item-groups']);
-				toast.success('Item group deleted');
-			},
-		}
-	);
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['item-groups'],
+			});
+			toast.success('Item group deleted');
+		},
+	});
 };
 
 export {

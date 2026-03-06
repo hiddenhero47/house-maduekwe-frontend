@@ -5,8 +5,7 @@ import BlackImage2 from './imageData/black2.avif';
 import RedImage from './imageData/red.avif';
 import RedImage2 from './imageData/red2.avif';
 
-const description = `
-Cool and suitable for that classy casual look. You can wear this withjeans/chinos and sneakers. 
+const description = `Cool and suitable for that classy casual look. You can wear this withjeans/chinos and sneakers. 
 Stand out,look sharp. With the sizes , you have more options to choose from and at a pocket friendly budget. 100% cotton. 
 This is driven by the desire to provide our customers with quality and affordable clothing and accessories. 
 This package contains round neck short sleeve t-shirt, made from the best cotton fabric, 

@@ -36,17 +36,21 @@ export const Container = styled.div`
 		font-size: 18px;
 	}
 
-	h1 {
+	#title1 {
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: ${({ theme }) => theme.mainBody.text};
 		line-height: 1.2;
 	}
 
-	p {
+	#title2 {
 		font-size: 0.875rem;
 		color: ${({ theme }) => theme.mainBody.sbText};
 		margin-top: 2px;
+	}
+
+	.Form_error {
+		font-size: 11.5px;
 	}
 
 	.actions {
@@ -56,13 +60,25 @@ export const Container = styled.div`
 		flex-wrap: wrap;
 	}
 
-	form {
+	.form_wrapper {
 		flex: 1;
 		max-height: 100%;
 		width: 100%;
 		display: grid;
 		grid-template-rows: 1fr;
 		overflow: hidden;
+	}
+
+	#form_wrapper {
+		width: 100%;
+		flex-basis: 0;
+		flex-grow: 1;
+		overflow: hidden;
+
+		padding-block: 18px;
+		border-radius: 10px;
+		background-color: ${({ theme }) => theme?.mainBody?.background};
+		border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
 	}
 
 	@media (max-width: 768px) {
@@ -187,10 +203,7 @@ export const FormBody = styled.div`
 	width: 100%;
 	min-height: 0;
 	padding-inline: clamp(10px, 3%, 32px);
-	padding-block: 28px;
-	border-radius: 10px;
-	background-color: ${({ theme }) => theme?.mainBody?.background};
-	border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+	padding-block: 15px;
 
 	#form_body_container {
 		width: 100%;
@@ -234,6 +247,52 @@ export const FormBody = styled.div`
 			label {
 				color: ${({ theme }) => theme?.mainBody?.text};
 			}
+		}
+	}
+`;
+
+export const ChipBody = styled.div`
+	width: 100%;
+	padding-inline: clamp(10px, 3%, 32px);
+
+	.main_wrapper {
+		border-top: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
+		padding-block: 20px;
+	}
+
+	h3 {
+		font-size: 0.98rem;
+		font-weight: 700;
+		color: ${({ theme }) => theme.mainBody.text};
+		line-height: 1.2;
+		display: flex;
+		gap: 6px;
+		margin-left: 10px;
+		margin-bottom: 18px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		max-width: 420px;
+
+		label {
+			color: ${({ theme }) => theme?.mainBody?.sbText};
+			font-size: 0.875rem;
+			font-weight: 600;
+			margin-bottom: 8px;
+			margin-left: 8px;
+			transition: 0.15s ease;
+		}
+
+		&:focus-within label {
+			color: ${({ theme }) => theme?.mainBody?.text};
 		}
 	}
 `;

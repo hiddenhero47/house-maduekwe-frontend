@@ -9,12 +9,14 @@ const userDetails = () => {
 };
 
 const BASE_URL = import.meta.env.VITE_BASE_URL?.trim();
-const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(
-	' '
-) || ['GET', 'POST', 'PUT', 'DELETE'];
+const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(' ') || [
+	'GET',
+	'POST',
+	'PUT',
+	'DELETE',
+];
 
 console.log(BASE_URL);
-
 
 const successResponseHandler = (res) => {
 	return res;
@@ -28,9 +30,10 @@ const errorResponseHandler = (error) => {
 		'An unknown error occurred';
 
 	if (error.response && error.response.status === 400) {
-		if (error.response.code === '2FA_REQUIRED') {
-			console.error('Unauthorized, logging out...');
-			return;
+		const message = error?.response?.data?.message;
+		if (['2FA_REQUIRED', 'Invalid 2FA token'].includes(message)) {
+			error.is2FARequired = true;
+			return Promise.reject(error);
 		}
 	}
 
@@ -97,7 +100,7 @@ export const axiosCall = async (arg) => {
 			error.message ||
 			'An unknown error occurred';
 		console.error('Axios Error:', message);
-		throw message;
+		throw error;
 	}
 };
 

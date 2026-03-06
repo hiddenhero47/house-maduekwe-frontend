@@ -1,18 +1,43 @@
-import React from 'react';
-import { AddressWrapper, TableWrapper, AddBtn } from './address.style';
+import React, { useRef } from 'react';
+import {
+	AddressWrapper,
+	TableWrapper,
+	AddBtn,
+} from './address.style';
 import { IoIosAdd } from 'react-icons/io';
 import CustomTable from '../../../../components/table_components/basicTableOne';
 import { AddressIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
+import CreateModal from './create-address';
+import AddressServices from "../../../../features/services/custom-hooks/addresses";
+import { getCountryByCode } from '../../../../utilities/city-state-country';
 
 function Address() {
+	const {data, isPending, isError, refetch} = AddressServices.getAll();
+
+	const modalRef = useRef(null);
+	// Open the side menu
+	const openModal = () => {
+		if (modalRef.current) {
+			modalRef.current.open();
+		}
+	};
+	// Close the side menu
+	const closeModal = () => {
+		if (modalRef.current) {
+			modalRef.current.close();
+		}
+	};
+
 	return (
 		<AddressWrapper>
 			<div className="flex justify-between items-center mt-[25px]">
-				<h3 className="heading -intro-x font-family: var(--font-sans);">User Address</h3>
+				<h3 className="heading -intro-x font-family: var(--font-sans);">
+					User Address
+				</h3>
 				<span className="intro-x">
-					<AddBtn type="button">
-						<IoIosAdd size={20}/>
+					<AddBtn type="button" onClick={openModal}>
+						<IoIosAdd size={20} />
 						New Address
 					</AddBtn>
 				</span>
@@ -29,7 +54,7 @@ function Address() {
 						{
 							Header: () => 'Country',
 							accessor: 'country',
-							Cell: ({ value }) => <span className="nowrap">{value}</span>,
+							Cell: ({ value }) => <span className="nowrap">{getCountryByCode(value)?.name}</span>,
 						},
 						{
 							Header: () => 'State',
@@ -51,7 +76,7 @@ function Address() {
 							),
 						},
 					]}
-					dataSource={[]}
+					dataSource={data || []}
 					emptyIcon={
 						<AddressIcon
 							width="80px"
@@ -61,11 +86,13 @@ function Address() {
 					}
 					emptyText="NO ADDRESSES YET"
 					emptySbText="Add an address to see one here."
-					addData={() => {}}
-					isLoading={false}
+					addData={() => openModal()}
+					isLoading={isPending}
 					useStrip
 				/>
 			</TableWrapper>
+
+			<CreateModal ref={modalRef} openModal={openModal} closeModal={closeModal} />
 		</AddressWrapper>
 	);
 }

@@ -77,7 +77,7 @@ function LeftMenu({ closeMe, openHolding }) {
 					}}
 				>
 					<div id="avatar">
-						<div className="imageHolder">
+						<div className="imageHolder rounded-[inherit]">
 							{user?.avatar?.url ? (
 								<img
 									className="rounded-[inherit]"

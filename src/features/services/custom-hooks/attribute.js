@@ -2,89 +2,88 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
-const useGetAttributesQuery = () => {
-	return useQuery(
-		['attributes'],
-		() =>
+// Get all attributes
+const useGetAttributesQuery = (params = {}) => {
+	return useQuery({
+		queryKey: ['attributes', params],
+		queryFn: () =>
 			axiosCall({
 				url: '/api/attributes',
 				method: 'GET',
+				params,
 			}),
-		{
-			refetchOnWindowFocus: false,
-		}
-	);
+		refetchOnWindowFocus: false,
+	});
 };
 
+// Get attribute by ID
 const useGetAttributeByIdQuery = (id) => {
-	return useQuery(
-		['attribute', id],
-		() =>
+	return useQuery({
+		queryKey: ['attribute', id],
+		queryFn: () =>
 			axiosCall({
 				url: `/api/attributes/${id}`,
 				method: 'GET',
 			}),
-		{
-			enabled: !!id,
-			refetchOnWindowFocus: false,
-		}
-	);
+		enabled: !!id,
+		refetchOnWindowFocus: false,
+	});
 };
 
+// Create attribute
 const useCreateAttributeMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(data) =>
+	return useMutation({
+		mutationFn: (data) =>
 			axiosCall({
 				url: '/api/attributes',
 				method: 'POST',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['attributes']);
-				toast.success('Attribute created successfully');
-			},
-		}
-	);
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['attributes'] });
+			toast.success('Attribute created successfully');
+		},
+	});
 };
 
+// Update attribute
 const useUpdateAttributeMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		({ id, data }) =>
+	return useMutation({
+		mutationFn: ({ id, data }) =>
 			axiosCall({
 				url: `/api/attributes/${id}`,
 				method: 'PUT',
 				data,
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['attributes']);
-				toast.success('Attribute updated successfully');
-			},
-		}
-	);
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['attributes'] });
+			toast.success('Attribute updated successfully');
+		},
+	});
 };
 
+// Delete attribute
 const useDeleteAttributeMutation = () => {
 	const queryClient = useQueryClient();
 
-	return useMutation(
-		(id) =>
+	return useMutation({
+		mutationFn: (id) =>
 			axiosCall({
 				url: `/api/attributes/${id}`,
 				method: 'DELETE',
 			}),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries(['attributes']);
-				toast.success('Attribute deleted successfully');
-			},
-		}
-	);
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['attributes'] });
+			toast.success('Attribute deleted successfully');
+		},
+	});
 };
 
 export {

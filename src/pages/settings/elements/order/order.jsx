@@ -4,8 +4,26 @@ import CustomTable from '../../../../components/table_components/basicTableOne';
 import { OrderIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
 import { BsBoxSeam } from 'react-icons/bs';
+import { OrderServices } from '../../../../features/services/custom-hooks/orders';
+import { useSearchParams } from 'react-router-dom';
 
 function Order() {
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const page = Number(searchParams.get('page')) || 1;
+
+	const { data, isPending, isError, refetch } = OrderServices.getMy({
+		page: page,
+		limit: 10,
+	});
+
+	const { data: orders = [], pagination } = data || {};
+
+	const flipPage = (p) => {
+		searchParams.set('page', p);
+		setSearchParams(searchParams);
+	};
+
 	return (
 		<AddressWrapper>
 			<h3 className="heading font-family: var(--font-sans)">
@@ -67,8 +85,8 @@ function Order() {
 							),
 						},
 					]}
-					dataSource={[]}
-					isLoading={false}
+					dataSource={orders || []}
+					isLoading={isPending}
 					useStrip
 					emptyIcon={
 						<OrderIcon
@@ -79,7 +97,10 @@ function Order() {
 					}
 					emptyText="NO ORDERS YET"
 					emptySbText="You haven to place an order to see it here."
-					refetch={() => {}}
+					refetch={() => refetch()}
+					currentPage={page}
+					totalPages={pagination?.totalPages || 1}
+					changePage={flipPage}
 				/>
 			</TableWrapper>
 		</AddressWrapper>
