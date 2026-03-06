@@ -119,7 +119,7 @@ function Index() {
 	}, [data, selectedAddr, excludedItems]);
 
 	const checkoutCart = async () => {
-		if (!data?.itemList?.length || !selectedAddr || checkoutData) return;
+		if (!data?.itemList?.length || !selectedAddr || !checkoutData) return;
 
 		const allItemIds = data.itemList.map((item) => item._id);
 		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
@@ -332,7 +332,7 @@ function Index() {
 								>
 									<div className="content">Checkout</div>
 									<div className="loader">
-										<BubbleSlide color="var(--mainBody-text)" height="20px" />
+										<BubbleSlide color="var(--addToCart-text)" height="20px" />
 									</div>
 								</CheckoutBtn>
 

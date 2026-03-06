@@ -4,10 +4,10 @@ import { toast } from 'react-toastify';
 
 const useGetMyPaymentsQuery = (params = {}) => {
 	return useQuery({
-		queryKey: ['payments', 'me', params],
+		queryKey: ['payment', 'me', params],
 		queryFn: () =>
 			axiosCall({
-				url: '/api/payments/me',
+				url: '/api/payment/me',
 				method: 'GET',
 				params,
 			}),
@@ -17,10 +17,10 @@ const useGetMyPaymentsQuery = (params = {}) => {
 
 const useGetPaymentsQuery = (params = {}) => {
 	return useQuery({
-		queryKey: ['payments', params],
+		queryKey: ['payment', params],
 		queryFn: () =>
 			axiosCall({
-				url: '/api/payments',
+				url: '/api/payment',
 				method: 'GET',
 				params,
 			}),
@@ -34,7 +34,7 @@ const useCreateStripeIntentMutation = () => {
 	return useMutation({
 		mutationFn: (data) =>
 			axiosCall({
-				url: '/api/payments/stripe-intent',
+				url: '/api/payment/stripe-intent',
 				method: 'POST',
 				data,
 			}),

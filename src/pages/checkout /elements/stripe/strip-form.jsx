@@ -49,7 +49,7 @@ function StripePaymentForm({
 	};
 
 	return (
-		<>
+		<div className='flex flex-col w-full gap-[20px]'>
 			<div className="w-full">
 				<PaymentElement />
 			</div>
@@ -60,7 +60,7 @@ function StripePaymentForm({
 					<BubbleSlide height="25px" />
 				</div>
 			</PayNowBtn>
-		</>
+		</div>
 	);
 }
 

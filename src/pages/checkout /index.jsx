@@ -29,7 +29,7 @@ function Index() {
 
 	const { order, payment } = data || {};
 
-	const { data: providers } = PaymentProviderServices.getOne(orderId);
+	const { data: providers } = PaymentProviderServices.getClient();
 
 	const { mutateAsync: createStripeIntent, isPending: isCreatingIntent } =
 		PaymentServices.createStripeIntent();
@@ -143,7 +143,7 @@ function Index() {
 					<div>
 						<h3>Order Summary</h3>
 						<p className="items_count">
-							{order?.item?.length || 'Nill'} items in cart
+							{order?.items?.length || 'Nill'} items in cart
 						</p>
 					</div>
 
