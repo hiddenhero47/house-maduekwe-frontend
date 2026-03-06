@@ -9,13 +9,12 @@ import {
 	ItemLoader,
 	AddressSelect,
 	AddressBox,
+	CheckoutBtn,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import { MdOutlineToggleOff } from 'react-icons/md';
 import { MdOutlineToggleOn } from 'react-icons/md';
 import CartServices from '../../features/services/custom-hooks/cart';
-import { roleType } from '../../utilities/app-const';
-import { ensureRole } from '../../store/slice/auth';
 import CartLoader from './elements/cart-loader/cart-loader';
 import { groupAttributesByType } from '../../utilities/basic-functions';
 import { attributeType } from '../../utilities/app-const';
@@ -40,6 +39,9 @@ function Index() {
 
 	const { mutate: confirmCheckout, isPending: isConfirming } =
 		CheckoutServices.confirm();
+
+	const { mutate: checkout, isPending: isCheckingOut } =
+		CheckoutServices.checkout();
 
 	const [checkoutData, setCheckoutData] = useState({});
 	const [excludedItems, setExcludedItems] = useState([]);
@@ -115,6 +117,28 @@ function Index() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, selectedAddr, excludedItems]);
+
+	const checkoutCart = async () => {
+		if (!data?.itemList?.length || !selectedAddr || checkoutData) return;
+
+		const allItemIds = data.itemList.map((item) => item._id);
+		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
+
+		if (finalItemIds.length > 0) {
+			checkout(
+				{
+					itemList: finalItemIds,
+					selectedAddress: selectedAddr,
+				},
+				{
+					onSuccess: (response) => {
+						const orderId = response?.order?._id;
+						navigate(`/checkout/${orderId}`);
+					},
+				}
+			);
+		}
+	};
 
 	return (
 		<Container className="Y_scroll_style">
@@ -267,7 +291,6 @@ function Index() {
 						<div className="w-full flex flex-col">
 							<h3 className="mb-[24px] font-semibold text-[18px] note flex items-center justify-between">
 								Order summary
-
 								{isConfirming && (
 									<BubbleSlide color="var(--mainBody-text)" height="20px" />
 								)}
@@ -302,11 +325,19 @@ function Index() {
 							</div>
 
 							<Footer>
-								<button onClick={() => {}} className="btn btn_checkout">
-									Checkout
-								</button>
+								<CheckoutBtn
+									type="button"
+									onClick={checkoutCart}
+									$isLoading={isCheckingOut}
+								>
+									<div className="content">Checkout</div>
+									<div className="loader">
+										<BubbleSlide color="var(--mainBody-text)" height="20px" />
+									</div>
+								</CheckoutBtn>
 
 								<button
+									type="button"
 									onClick={() => navigate('/products')}
 									className="btn btn_continue"
 								>

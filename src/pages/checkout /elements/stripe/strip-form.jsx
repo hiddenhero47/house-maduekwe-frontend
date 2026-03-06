@@ -4,6 +4,8 @@ import {
 	useStripe,
 	useElements,
 } from '@stripe/react-stripe-js';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function StripePaymentForm({
 	isPaying,
@@ -12,6 +14,8 @@ function StripePaymentForm({
 	PayNowBtn,
 	BubbleSlide,
 }) {
+	const navigate = useNavigate();
+
 	const stripe = useStripe();
 	const elements = useElements();
 
@@ -33,7 +37,9 @@ function StripePaymentForm({
 			}
 
 			if (paymentIntent?.status === 'succeeded') {
-				console.log('Payment success', paymentIntent);
+				console.log('Payment success 🎉', paymentIntent);
+				toast.success('Payment success 🎉');
+				navigate('/settings?currentSettings=orders');
 			}
 		} catch {
 			setError('Something went wrong during payment.');

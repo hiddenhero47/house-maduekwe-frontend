@@ -345,15 +345,6 @@ export const Footer = styled.div`
 		padding-block: 12px;
 	}
 
-	.btn_checkout {
-		background-color: ${({ theme }) => theme?.addToCart.background};
-		color: ${({ theme }) => theme?.addToCart.text};
-
-		&:hover {
-			background-color: ${({ theme }) => theme?.addToCart.hoverBg};
-		}
-	}
-
 	/* Container queries */
 	@container footer (max-width: 400px) {
 		.btn {
@@ -453,5 +444,63 @@ export const ColorCircle = styled.div`
 	@media (max-width: 500px) {
 		width: 11px;
 		height: 11px;
+	}
+`;
+
+export const CheckoutBtn = styled.button`
+    width: 100%;
+	padding-block: 14px;
+	padding-inline: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background-color: ${({ $isLoading, disabled, theme }) =>
+		!$isLoading && disabled
+			? theme?.addToCart?.background
+			: theme?.addToCart?.background};
+	position: relative;
+	cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+	transition: all 0.2s ease-in-out;
+	color: ${({ theme }) => theme?.addToCart?.text};
+	transition:
+		background 0.25s ease,
+		transform 0.2s ease,
+		opacity 0.2s ease;
+
+	&:active {
+		transform: scale(0.97);
+	}
+
+	&:hover {
+		transform: translateY(-1px);
+		opacity: 0.92;
+		color: ${({ theme }) => theme.addToCart.text};
+		background-color: ${({ theme }) => theme.addToCart.hoverBg};
+	}
+
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+		font-weight: 600;
+		font-size: 15px;
+		font-family: Inter;
+	}
+
+	.loader {
+		display: ${(props) => (props.$isLoading ? 'flex' : 'none')};
+		position: absolute;
+		margin: auto;
+		z-index: 2;
+	}
+
+	@media (max-width: 500px) {
+		padding-inline: 7px;
+		.content {
+			gap: 4px;
+			font-size: 12px;
+		}
 	}
 `;
