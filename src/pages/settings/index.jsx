@@ -95,7 +95,8 @@ function Index() {
 							$active={isActive(settings.ORDERS)}
 							onClick={() => navigateTo(settings.ORDERS)}
 						>
-							Order History
+							
+							{orderId ? "Back To History" : "Order History"}
 						</NavBarBtn>
 					</div>
 				</Header>

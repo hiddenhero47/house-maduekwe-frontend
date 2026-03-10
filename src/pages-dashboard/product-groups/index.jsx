@@ -6,6 +6,7 @@ import CustomInput from '../../components/form-components/input/custom-input';
 import { IoAddOutline } from 'react-icons/io5';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
+import { FiEdit } from "react-icons/fi";
 
 function Index() {
 	const [groupName, setGroupName] = useState('');
@@ -77,7 +78,9 @@ function Index() {
 							<span className="text-[12px] font-semibold opacity-70">
 								Add product
 							</span>
-							<span className="text-[14px] font-bold">0</span>
+							<span className="text-[14px] font-bold flex items-center gap-[10px]">
+								0 <button className='text-[var(--intro-logo)] text-[12px]'>manage</button>
+							</span>
 						</p>
 					</div>
 
@@ -108,7 +111,7 @@ function Index() {
 							),
 						},
 						{
-							Header: () => <span className='ml-[10px]'>ID</span>,
+							Header: () => <span className="ml-[10px]">ID</span>,
 							accessor: '_id',
 							Cell: ({ value }) => (
 								<span className="text-xs opacity-60">{value}</span>
@@ -124,7 +127,7 @@ function Index() {
 							),
 						},
 						{
-							Header: () => <span>Manage Products</span>,
+							Header: () => <span>Manage Group</span>,
 							accessor: 'manage',
 							Cell: ({ row }) => (
 								<button
@@ -137,7 +140,7 @@ function Index() {
 										console.log('Manage items for:', row.original);
 									}}
 								>
-									Manage
+									<div className='flex items-center gap-[5px]'>Edit <FiEdit /></div>
 								</button>
 							),
 						},

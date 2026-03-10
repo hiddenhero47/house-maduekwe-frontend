@@ -18,12 +18,19 @@ import { LuFullscreen } from 'react-icons/lu';
 import { items } from '../../dummyData/shopItems';
 import Details from './elements/details';
 import ShopItem from '../../components/shop-item-display-unit/index';
+import ShopItemServices from '../../features/services/custom-hooks/shop-items';
 
 function Index() {
-	const product = items[0];
+	const navigate = useNavigate();
 	const { id } = useParams();
 
+	const { data, isPending } = ShopItemServices.getOne(id);
+	const { data: product = {} } = data || {};
+	const { data: related, isPending: isLoadingRelated } =
+		ShopItemServices.getRelated(id, 4);
+
 	const [index, setIndex] = useState(0);
+	const [quantity, setQuantity] = useState(1);
 	const [attribute, configAttribute] = useState({
 		currentDisplay: null,
 		currentSize: null,
@@ -51,54 +58,47 @@ function Index() {
 		if (newIndex >= 0 && newIndex < productDisplay.length) setIndex(newIndex);
 	};
 
-	const getImagePosition = (image) => {
-		if (!image?.width || !image?.height) return 'center';
-		const ratio = image.width / image.height;
-		// Square-ish (0.8 to 1.25)
-		if (ratio > 0.8 && ratio < 1.25) return 'center';
-		// Tall or wide rectangle → top gives better visual
-		return 'top';
-	};
-
 	const sideImages = useMemo(() => {
 		const data = product?.imageCatalog || [];
 		const shuffled = [...data].sort(() => Math.random() - 0.5);
 		return shuffled.slice(0, 2);
 	}, [product]);
 
-	const alsoLikeData = Array(4).fill({ ...product });
+	const alsoLikeData = Array(4).fill({ ...items[0] });
 
 	return (
 		<Container className="Y_scroll_style">
 			<nav aria-label="Breadcrumb" className="w-100px">
 				<List role="list">
-					<li className=" flex items-center text-[14px]">
-						<CrumbLink as={Link} to="/men">
-							Men
-						</CrumbLink>
-						<i className="flex items-center text-[15px] text-[var(--mainBody-sbText)]">
-							<IoIosArrowForward />
-						</i>
-					</li>
+					{product?.category && (
+						<li className=" flex items-center text-[14px]">
+							<CrumbLink type='button' onClick={() => navigate('/products')}>
+								{product?.category?.name}
+							</CrumbLink>
+							<i className="flex items-center text-[15px] text-[var(--mainBody-sbText)]">
+								<IoIosArrowForward />
+							</i>
+						</li>
+					)}
 
-					<li className=" flex items-center text-[14px]">
-						<CrumbLink as={Link} to="/men/clothing">
-							Clothing
-						</CrumbLink>
-						<i className="flex items-center text-[15px] text-[var(--mainBody-sbText)]">
-							<IoIosArrowForward />
-						</i>
-					</li>
+					{product?.subCategory && (
+						<li className=" flex items-center text-[14px]">
+							<CrumbLink type='button' onClick={() => navigate('/products')}>
+								{product?.subCategory}
+							</CrumbLink>
+							<i className="flex items-center text-[15px] text-[var(--mainBody-sbText)]">
+								<IoIosArrowForward />
+							</i>
+						</li>
+					)}
 
-					<li className=" flex items-center text-[14px]">
-						<CrumbLink
-							className="inactive"
-							as={Link}
-							to="/men/clothing/basic-tee"
-						>
-							Basic Tee 6-Pack
-						</CrumbLink>
-					</li>
+					{product?.name && (
+						<li className=" flex items-center text-[14px]">
+							<CrumbLink type='button' className="inactive" onClick={() => navigate('/products')}>
+								{product?.name}
+							</CrumbLink>
+						</li>
+					)}
 				</List>
 			</nav>
 
@@ -129,7 +129,12 @@ function Index() {
 									<Image
 										src={image?.url}
 										alt="Error"
-										$position={getImagePosition(image?.url)}
+										onLoad={(e) => {
+											const img = e.currentTarget;
+											const ratio = img.naturalWidth / img.naturalHeight;
+											const position = ratio < 0.8 ? 'top' : 'center';
+											img.style.objectPosition = position;
+										}}
 									/>
 								</div>
 							))}
@@ -156,7 +161,12 @@ function Index() {
 									<Image
 										src={sideImages[0]?.url}
 										alt="Error"
-										$position={getImagePosition(sideImages[0]?.url)}
+										onLoad={(e) => {
+											const img = e.currentTarget;
+											const ratio = img.naturalWidth / img.naturalHeight;
+											const position = ratio < 0.8 ? 'top' : 'center';
+											img.style.objectPosition = position;
+										}}
 									/>
 								</div>
 							</div>
@@ -169,7 +179,12 @@ function Index() {
 									<Image
 										src={sideImages[1]?.url}
 										alt="Error"
-										$position={getImagePosition(sideImages[1]?.url)}
+										onLoad={(e) => {
+											const img = e.currentTarget;
+											const ratio = img.naturalWidth / img.naturalHeight;
+											const position = ratio < 0.8 ? 'top' : 'center';
+											img.style.objectPosition = position;
+										}}
 									/>
 								</div>
 							</div>
@@ -183,12 +198,16 @@ function Index() {
 						attribute={attribute}
 						configAttribute={configAttribute}
 						setIndex={setIndex}
+						quantity={quantity}
+						setQuantity={setQuantity}
 					/>
 				</div>
 			</ItemSection>
 
 			<AlsoLike>
-				<h3 id='mightLikeTitle' className="text-[var(--mainBody-text)]">you might also like</h3>
+				<h3 id="mightLikeTitle" className="text-[var(--mainBody-text)]">
+					you might also like
+				</h3>
 
 				<div id="alsoLike">
 					{alsoLikeData.map((x, i) => (
