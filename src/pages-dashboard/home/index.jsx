@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Container } from './elements/index.style';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
-import ImageSelector from '../../components/form-components/image-selector/selector';
-import { items } from '../../dummyData/shopItems';
-import ChipsInput from '../../components/form-components/chips-input/chips-input';
+import FilterProductDisplay from "../../components/modal-assets/filter-modal/filter&product/filter&product";
+import SelectShopItemsModal from "../../components/modal-assets/group-item-modal/filter&product/filter&product";
 
 function Index() {
-	const [tag, setTags] = useState([]);
 	const data = [
 		{
 			firstName: 'Okonkwo',
@@ -28,7 +26,17 @@ function Index() {
 		},
 	];
 
-	const ImageCatalog = items[0].imageCatalog;
+	const modalRef = useRef(null);
+	const openModal = () => {
+		if (modalRef.current) {
+			modalRef.current.open();
+		}
+	};
+	const closeModal = () => {
+		if (modalRef.current) {
+			modalRef.current.close();
+		}
+	};
 	return (
 		<Container className="text-mainBody-yellow">
 			<p>Index home</p>
@@ -72,26 +80,9 @@ function Index() {
 				useStrip
 			/>
 
-			<ImageSelector options={ImageCatalog}>
-				<span className="ml-[50px]">open</span>
-			</ImageSelector>
+			<button type='button' onClick={openModal}>filter</button>
 
-			<div className="w-[350px] flex flex-col mt-[50px]">
-				<ChipsInput
-					id="tag"
-					name="tag"
-					value={tag}
-					onChange={(v) => setTags(v)}
-					max={10}
-					// onBlur={handleBlur}
-					isError={false}
-					errormessage="error"
-					placeholder="Add tag and press Enter"
-					paddingX="14px"
-					paddingY="9px"
-					useBackground
-				/>
-			</div>
+			<SelectShopItemsModal ref={modalRef} closeModal={closeModal} />
 		</Container>
 	);
 }
