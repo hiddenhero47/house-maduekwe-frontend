@@ -2,13 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from 'react-toastify';
 
-const useGetItemGroupsQuery = () => {
+const useGetItemGroupsQuery = (params = {}) => {
 	return useQuery({
-		queryKey: ['item-groups'],
+		queryKey: ['item-groups', params],
 		queryFn: () =>
 			axiosCall({
 				url: '/api/item-groups',
 				method: 'GET',
+				params,
 			}),
 		refetchOnWindowFocus: false,
 	});

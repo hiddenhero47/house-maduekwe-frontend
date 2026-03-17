@@ -4,6 +4,7 @@ import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import FilterProductDisplay from "../../components/modal-assets/filter-modal/filter&product/filter&product";
 import SelectShopItemsModal from "../../components/modal-assets/group-item-modal/filter&product/filter&product";
+import SelectItemGroupModal from "../../components/modal-assets/group-item-modal/filter&group/filter&group";
 
 function Index() {
 	const data = [
@@ -25,18 +26,6 @@ function Index() {
 			email: 'maduekwe@gmail.com',
 		},
 	];
-
-	const modalRef = useRef(null);
-	const openModal = () => {
-		if (modalRef.current) {
-			modalRef.current.open();
-		}
-	};
-	const closeModal = () => {
-		if (modalRef.current) {
-			modalRef.current.close();
-		}
-	};
 	return (
 		<Container className="text-mainBody-yellow">
 			<p>Index home</p>
@@ -79,10 +68,6 @@ function Index() {
 				isLoading={false}
 				useStrip
 			/>
-
-			<button type='button' onClick={openModal}>filter</button>
-
-			<SelectShopItemsModal ref={modalRef} closeModal={closeModal} />
 		</Container>
 	);
 }

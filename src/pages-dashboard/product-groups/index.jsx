@@ -6,40 +6,57 @@ import CustomInput from '../../components/form-components/input/custom-input';
 import { IoAddOutline } from 'react-icons/io5';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
-import { FiEdit } from "react-icons/fi";
+import { FiEdit } from 'react-icons/fi';
+import { useFormik } from 'formik';
+import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function Index() {
-	const [groupName, setGroupName] = useState('');
+	const navigate = useNavigate();
+	const [searchParams, setSearchParams] = useSearchParams();
 
-	const isEditing = false;
+	const { mutate: createGroup, isPending: isCreating } =
+		ItemGroupServices.create();
 
-	const data = [
-		{
-			_id: '6900d4dfa716ddc39de4b1ad',
-			groupName: 'Beverages',
-			shopItems: ['id1', 'id2', 'id3'],
-		},
-		{
-			_id: '6900d4dfa716ddc39de4b1ad',
-			groupName: 'Beverages',
-			shopItems: ['id1', 'id2', 'id3'],
-		},
-		{
-			_id: '6900d4dfa716ddc39de4b1ad',
-			groupName: 'Beverages',
-			shopItems: ['id1', 'id2', 'id3'],
-		},
-		{
-			_id: '6900d4dfa716ddc39de4b1ad',
-			groupName: 'Beverages',
-			shopItems: ['id1', 'id2', 'id3'],
-		},
-		{
-			_id: '6900d4dfa716ddc39de4b1ad',
-			groupName: 'Beverages',
-			shopItems: ['id1', 'id2', 'id3'],
-		},
-	];
+	const { mutate: updateGroup, isPending: isUpdating } =
+		ItemGroupServices.update();
+
+	const page = Number(searchParams.get('page')) || 1;
+
+	const { data, isPending } = ItemGroupServices.get({
+		limit: 12,
+		page: page,
+	});
+
+	const { data: itemGroups = [], pagination } = data || {};
+
+	const initialValues = {
+		id: '',
+		groupName: '',
+		shopItems: [],
+		isEditing: false,
+	};
+
+	const onSubmit = (values, { resetForm }) => {
+		const { id, isEditing, ...others } = values;
+		const data = { others };
+
+		if (isEditing && id) {
+			updateGroup({ id, data });
+		} else {
+			createGroup(data);
+		}
+	};
+
+	const { values, errors, touched, handleChange, handleBlur, setFieldValue } =
+		useFormik({
+			initialValues,
+			// validationSchema: validationSchema,
+			onSubmit,
+		});
+
+	const { groupName, shopItems, id, isEditing } = values;
+
 	return (
 		<Container>
 			<h1>Group Products</h1>
@@ -49,19 +66,20 @@ function Index() {
 			</button>
 
 			<FormNav>
-				{isEditing ? <p>ID: 6900d4dfa716ddc39de4b1ad</p> : <p>New Group</p>}
+				{isEditing ? <p>ID: {id}</p> : <p>New Group</p>}
 
 				<form action="">
 					<div className="form_control">
 						<label htmlFor="">Name</label>
 						<CustomInput
 							type="text"
-							id="name"
-							name="name"
+							id="groupName"
+							name="groupName"
 							value={groupName}
-							onChange={(e) => setGroupName(e.target.value)}
-							isError={false}
-							errormessage=""
+							onChange={handleChange}
+							onBlur={handleBlur}
+							isError={touched.groupName && errors.groupName}
+							errormessage={errors.groupName}
 							placeholder="Group Name"
 							paddingX="14px"
 							paddingY="9px"
@@ -79,7 +97,10 @@ function Index() {
 								Add product
 							</span>
 							<span className="text-[14px] font-bold flex items-center gap-[10px]">
-								0 <button className='text-[var(--intro-logo)] text-[12px]'>manage</button>
+								0{' '}
+								<button className="text-[var(--intro-logo)] text-[12px]">
+									manage
+								</button>
 							</span>
 						</p>
 					</div>
@@ -140,12 +161,14 @@ function Index() {
 										console.log('Manage items for:', row.original);
 									}}
 								>
-									<div className='flex items-center gap-[5px]'>Edit <FiEdit /></div>
+									<div className="flex items-center gap-[5px]">
+										Edit <FiEdit />
+									</div>
 								</button>
 							),
 						},
 					]}
-					dataSource={data || []}
+					dataSource={itemGroups || []}
 					useStrip
 					isLoading={false}
 					emptyIcon={
