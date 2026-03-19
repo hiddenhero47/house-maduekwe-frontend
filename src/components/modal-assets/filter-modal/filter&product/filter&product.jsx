@@ -41,6 +41,7 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 		if (filterHandler) {
 			filterHandler({ ...others });
 		}
+		closeModal();
 	};
 
 	const { values, errors, handleBlur, touched, handleChange } = useFormik({

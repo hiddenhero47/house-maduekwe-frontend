@@ -9,7 +9,7 @@ import ItemGroupServices from '../../../../features/services/custom-hooks/item-g
 
 function SelectItemGroupModal({ ref, closeModal, onApply }) {
 	const [filters, setFilters] = useState({});
-	const [selectedGroups, setSelectedGroups] = useState([]);
+	const [selectedGroup, setSelectedGroup] = useState(null);
 
 	const { values, handleChange } = useFormik({
 		initialValues: {
@@ -27,19 +27,11 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 
 	const groups = data?.data || [];
 
-	const toggleGroup = (group) => {
-		setSelectedGroups((prev) => {
-			const exists = prev.find((g) => g._id === group._id);
-
-			if (exists) {
-				return prev.filter((g) => g._id !== group._id);
-			}
-
-			return [...prev, group];
-		});
+	const selectGroup = (group) => {
+		setSelectedGroup((prev) => (prev?._id === group._id ? null : group));
 	};
 
-	const isSelected = (id) => selectedGroups.some((group) => group._id === id);
+	const isSelected = (id) => selectedGroup?._id === id;
 
 	return (
 		<Modal.Center
@@ -47,7 +39,7 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 			maxWidth="500px"
 			refName={ref}
 			onClose={() => {}}
-			onOpen={() => {}}
+			onOpen={() => setSelectedGroup(null)}
 			animation
 		>
 			<FilterModalWrapper>
@@ -61,7 +53,7 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 					<IoClose className="closeBtn" onClick={closeModal} />
 				</div>
 
-				<div className='crater_wrapper'></div>
+				<div className="crater_wrapper"></div>
 
 				{/* SEARCH */}
 				<form
@@ -103,7 +95,7 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 							{groups.map((group) => (
 								<GroupItem
 									key={group._id}
-									onClick={() => toggleGroup(group)}
+									onClick={() => selectGroup(group)}
 									className={isSelected(group._id) ? 'selected' : ''}
 								>
 									<div className="info">
@@ -134,9 +126,12 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 					<button
 						className="apply_btn"
 						type="button"
-						onClick={() => onApply(selectedGroups)}
+						onClick={() => {
+							onApply(selectedGroup);
+							closeModal();
+						}}
 					>
-						Add {selectedGroups.length} Groups
+						Add a Groups
 					</button>
 				</div>
 			</FilterModalWrapper>

@@ -26,8 +26,6 @@ function SelectShopItemsModal({ ref, closeModal, onApply }) {
 		initialValues,
 		onSubmit: (vals) => {
 			const { categorySearchValue, ...others } = vals;
-			console.log(others);
-
 			setFilters(others);
 		},
 	});
@@ -88,7 +86,7 @@ function SelectShopItemsModal({ ref, closeModal, onApply }) {
 			maxWidth="100vw"
 			refName={ref}
 			onClose={() => {}}
-			onOpen={() => {}}
+			onOpen={() => setSelectedItems([])}
 			animation
 		>
 			<FilterModalWrapper>
@@ -104,7 +102,7 @@ function SelectShopItemsModal({ ref, closeModal, onApply }) {
 					<IoClose className="closeBtn" onClick={closeModal} />
 				</div>
 
-				<div className='crater_wrapper'>
+				<div className="crater_wrapper">
 					<form
 						className="craters"
 						onSubmit={(e) => {
@@ -247,7 +245,10 @@ function SelectShopItemsModal({ ref, closeModal, onApply }) {
 							<button
 								className="apply_btn"
 								type="button"
-								onClick={() => onApply(selectedItems)}
+								onClick={() => {
+									onApply(selectedItems);
+									closeModal();
+								}}
 							>
 								Add {selectedItems.length} Products
 							</button>

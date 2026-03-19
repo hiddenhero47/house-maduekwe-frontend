@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { Container, FormNav, SaveBtn } from './elements/index.style';
 import { VscNewFolder } from 'react-icons/vsc';
 import { BsFillSave2Fill } from 'react-icons/bs';
@@ -10,6 +10,8 @@ import { FiEdit } from 'react-icons/fi';
 import { useFormik } from 'formik';
 import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import SelectShopItemsModal from '../../components/modal-assets/group-item-modal/filter&product/filter&product';
+import ManageShopItemsModal from './elements/manage-modal/manage-modal';
 
 function Index() {
 	const navigate = useNavigate();
@@ -38,37 +40,72 @@ function Index() {
 	};
 
 	const onSubmit = (values, { resetForm }) => {
-		const { id, isEditing, ...others } = values;
-		const data = { others };
+		const { id, isEditing, shopItems, groupName } = values;
+		const shopItemsId = shopItems?.map((item) => item?._id);
+		const data = { shopItems: shopItemsId, groupName };
 
 		if (isEditing && id) {
 			updateGroup({ id, data });
+			resetForm();
 		} else {
 			createGroup(data);
+			resetForm();
 		}
 	};
 
-	const { values, errors, touched, handleChange, handleBlur, setFieldValue } =
-		useFormik({
-			initialValues,
-			// validationSchema: validationSchema,
-			onSubmit,
-		});
+	const {
+		values,
+		errors,
+		touched,
+		handleChange,
+		handleBlur,
+		setFieldValue,
+		resetForm,
+		handleSubmit,
+	} = useFormik({
+		initialValues,
+		// validationSchema: validationSchema,
+		onSubmit,
+	});
 
 	const { groupName, shopItems, id, isEditing } = values;
+
+	const addItemRef = useRef(null);
+	const openModalAdd = () => {
+		if (addItemRef.current) {
+			addItemRef.current.open();
+		}
+	};
+	const closeModalAdd = () => {
+		if (addItemRef.current) {
+			addItemRef.current.close();
+		}
+	};
+
+	const manageModalRef = useRef(null);
+	const openModalMange = () => {
+		if (manageModalRef.current) {
+			manageModalRef.current.open();
+		}
+	};
+	const closeModalMange = () => {
+		if (manageModalRef.current) {
+			manageModalRef.current.close();
+		}
+	};
 
 	return (
 		<Container>
 			<h1>Group Products</h1>
 
-			<button className="btn">
+			<button type="button" className="btn" onClick={() => resetForm()}>
 				<VscNewFolder /> New Group
 			</button>
 
 			<FormNav>
 				{isEditing ? <p>ID: {id}</p> : <p>New Group</p>}
 
-				<form action="">
+				<form onSubmit={handleSubmit}>
 					<div className="form_control">
 						<label htmlFor="">Name</label>
 						<CustomInput
@@ -88,7 +125,7 @@ function Index() {
 					</div>
 
 					<div className="flex items-center ml-[20px]">
-						<button id="AddBtn">
+						<button type="button" id="AddBtn" onClick={() => openModalAdd()}>
 							<IoAddOutline />
 						</button>
 
@@ -97,15 +134,19 @@ function Index() {
 								Add product
 							</span>
 							<span className="text-[14px] font-bold flex items-center gap-[10px]">
-								0{' '}
-								<button className="text-[var(--intro-logo)] text-[12px]">
+								{shopItems.length || 0}{' '}
+								<button
+									type="button"
+									className="text-[var(--intro-logo)] text-[12px]"
+									onClick={() => openModalMange()}
+								>
 									manage
 								</button>
 							</span>
 						</p>
 					</div>
 
-					<SaveBtn className="ml-[auto]">
+					<SaveBtn type="submit" className="ml-[auto]">
 						<div className="content">
 							<BsFillSave2Fill />
 							Save
@@ -158,7 +199,11 @@ function Index() {
 									}}
 									onClick={(e) => {
 										e.stopPropagation(); // 🔥 prevents row click
-										console.log('Manage items for:', row.original);
+										const group = row.original;
+										setFieldValue('id', group?._id);
+										setFieldValue('groupName', group?.groupName);
+										setFieldValue('shopItems', group?.shopItems || []);
+										setFieldValue('isEditing', true);
 									}}
 								>
 									<div className="flex items-center gap-[5px]">
@@ -183,6 +228,27 @@ function Index() {
 					refetch={() => {}}
 				/>
 			</div>
+
+			<ManageShopItemsModal
+				ref={manageModalRef}
+				onApply={(info) => setFieldValue('shopItems', info)}
+				closeModal={closeModalMange}
+				items={shopItems}
+			/>
+
+			<SelectShopItemsModal
+				ref={addItemRef}
+				closeModal={closeModalAdd}
+				onApply={(info) => {
+					const map = new Map();
+
+					[...shopItems, ...info].forEach((item) => {
+						map.set(item._id, item);
+					});
+
+					setFieldValue('shopItems', Array.from(map.values()));
+				}}
+			/>
 		</Container>
 	);
 }
