@@ -32,6 +32,11 @@ function Index() {
 
 	const { data: itemGroups = [], pagination } = data || {};
 
+	const flipPage = (p) => {
+		searchParams.set('page', p);
+		setSearchParams(searchParams);
+	};
+
 	const initialValues = {
 		id: '',
 		groupName: '',
@@ -214,8 +219,11 @@ function Index() {
 						},
 					]}
 					dataSource={itemGroups || []}
+					isLoading={isPending}
+					currentPage={page}
+					totalPages={pagination?.totalPages || 1}
+					changePage={flipPage}
 					useStrip
-					isLoading={false}
 					emptyIcon={
 						<NoDataIcon
 							width="150px"
@@ -225,7 +233,6 @@ function Index() {
 					}
 					emptyText="NO GROUPS YET"
 					emptySbText="You haven’t created any product groups yet."
-					refetch={() => {}}
 				/>
 			</div>
 
