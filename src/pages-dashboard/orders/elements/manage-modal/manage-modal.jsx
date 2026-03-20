@@ -1,9 +1,11 @@
 import React, { useRef } from 'react';
 import Modal from '../../../../components/modal/index_modal';
-import { FilterModalWrapper } from './manage-modal.style';
+import { FilterModalWrapper, ApplyBtn } from './manage-modal.style';
 import { IoClose } from 'react-icons/io5';
 import { useFormik } from 'formik';
 import CustomSelect from '../../../../components/form-components/select/custom-select';
+import { OrderServices } from '../../../../features/services/custom-hooks/orders';
+import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 
 const ORDER_STATUS = {
 	PENDING: 'pending',
@@ -17,7 +19,9 @@ const ORDER_STATUS = {
 	ALL: '',
 };
 
-function ManageShopItemsModal({ id }) {
+function ManageModal({ id }) {
+	const { mutate: changeStatus, isPending } = OrderServices.updateStatus();
+
 	const modalRef = useRef(null);
 	const openModal = () => {
 		if (modalRef.current) {
@@ -30,7 +34,17 @@ function ManageShopItemsModal({ id }) {
 		}
 	};
 
-	const onSubmit = async (values, { resetForm }) => {};
+	const onSubmit = async (values, { resetForm }) => {
+		changeStatus(
+			{ id, status: values },
+			{
+				onSuccess: () => {
+					resetForm();
+					closeModal?.();
+				},
+			}
+		);
+	};
 
 	const { values, errors, handleBlur, touched, handleChange } = useFormik({
 		initialValues: { status: '' },
@@ -113,9 +127,12 @@ function ManageShopItemsModal({ id }) {
 						</div>
 
 						<div className="actions">
-							<button type="submit" className="apply_btn">
-								Apply Changes
-							</button>
+							<ApplyBtn type="submit" $isLoading={isPending}>
+								<span className="content">Apply Changes</span>
+								<div className="loader">
+									<BubbleSlide color="inherit" height="20px" />
+								</div>
+							</ApplyBtn>
 						</div>
 					</form>
 				</FilterModalWrapper>
@@ -124,4 +141,4 @@ function ManageShopItemsModal({ id }) {
 	);
 }
 
-export default ManageShopItemsModal;
+export default ManageModal;
