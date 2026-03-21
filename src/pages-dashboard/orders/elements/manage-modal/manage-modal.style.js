@@ -207,8 +207,6 @@ export const ApplyBtn = styled.button`
 		position: absolute;
 		margin: auto;
 		z-index: 2;
-		color: ${({ theme }) =>
-			theme.mode === 'dark' ? '#0f0f0f' : theme.formBtn.text};
 	}
 
 	&:hover:not(:disabled) {

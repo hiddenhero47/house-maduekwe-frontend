@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import CustomSelect from '../../../../components/form-components/select/custom-select';
 import { OrderServices } from '../../../../features/services/custom-hooks/orders';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
+import { useTheme } from 'styled-components';
 
 const ORDER_STATUS = {
 	PENDING: 'pending',
@@ -16,10 +17,10 @@ const ORDER_STATUS = {
 	CANCELLED: 'cancelled',
 	RETURNED: 'returned',
 	RETURNING: 'processing-return',
-	ALL: '',
 };
 
 function ManageModal({ id }) {
+	const theme = useTheme();
 	const { mutate: changeStatus, isPending } = OrderServices.updateStatus();
 
 	const modalRef = useRef(null);
@@ -36,7 +37,7 @@ function ManageModal({ id }) {
 
 	const onSubmit = async (values, { resetForm }) => {
 		changeStatus(
-			{ id, status: values },
+			{ id, status: values.status },
 			{
 				onSuccess: () => {
 					resetForm();
@@ -46,11 +47,12 @@ function ManageModal({ id }) {
 		);
 	};
 
-	const { values, errors, handleBlur, touched, handleChange } = useFormik({
-		initialValues: { status: '' },
-		// validationSchema: ,
-		onSubmit,
-	});
+	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
+		useFormik({
+			initialValues: { status: '' },
+			// validationSchema: ,
+			onSubmit,
+		});
 
 	const { status } = values;
 
@@ -90,20 +92,16 @@ function ManageModal({ id }) {
 					<div className="modal_header">
 						<div>
 							<h3>Manage Status</h3>
-							<p>Review and change status from this order.</p>
+							<p>Review and change status for this order.</p>
 						</div>
 
 						<IoClose className="closeBtn" onClick={closeModal} />
 					</div>
 
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-						}}
-					>
+					<form onSubmit={handleSubmit}>
 						<div className="section">
 							<div className="form_control">
-								<label className="ml-[10px]">Search Products</label>
+								<label className="ml-[10px]">Status</label>
 
 								<CustomSelect
 									options={orderStatusOptions}
@@ -120,17 +118,24 @@ function ManageModal({ id }) {
 									useBackground
 								/>
 
-								<p className="form_note">
-									Search products by name or keywords.
-								</p>
+								<p className="form_note">Change the statue of an order.</p>
 							</div>
 						</div>
 
 						<div className="actions">
-							<ApplyBtn type="submit" $isLoading={isPending}>
+							<ApplyBtn
+								type="submit"
+								$isLoading={isPending}
+								disabled={isPending}
+							>
 								<span className="content">Apply Changes</span>
 								<div className="loader">
-									<BubbleSlide color="inherit" height="20px" />
+									<BubbleSlide
+										color={
+											theme.mode === 'dark' ? '#0f0f0f' : theme.formBtn.text
+										}
+										height="20px"
+									/>
 								</div>
 							</ApplyBtn>
 						</div>

@@ -189,24 +189,25 @@ export function formatPhoneNumber(phoneNumber) {
 
 export function getPeriod(period) {
 	const today = moment();
-	const startDate = today.startOf('day'); // Always start from today
-	let endDate;
+
+	let startDate;
+	let endDate = today.clone().endOf('day');
 
 	switch (period) {
 		case 'this-week':
-			endDate = today.clone().subtract(7, 'days'); // Subtract 7 days
+			startDate = today.clone().subtract(7, 'days').startOf('day');
 			break;
 		case 'this-month':
-			endDate = today.clone().subtract(1, 'months'); // Subtract 1 month
+			startDate = today.clone().subtract(1, 'months').startOf('day');
 			break;
 		case 'this-year':
-			endDate = today.clone().subtract(1, 'years'); // Subtract 1 year
+			startDate = today.clone().subtract(1, 'years').startOf('day');
 			break;
 		case 'old':
-			endDate = today.clone().subtract(10, 'years'); // Subtract 10 years
+			startDate = today.clone().subtract(10, 'years').startOf('day');
 			break;
 		default:
-			endDate = today;
+			startDate = today.clone().startOf('day');
 			break;
 	}
 

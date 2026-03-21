@@ -231,5 +231,55 @@ export const TableWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	margin-top: 5vh;
+	/* margin-top: 10px; */
+`;
+
+const statusColor = (theme, status) => {
+	switch (status) {
+		case 'pending':
+			return theme.form.yellow;
+
+		case 'initiated':
+			return theme.form.blue;
+
+		case 'success':
+			return theme.form.green;
+
+		case 'failed':
+			return theme.form.error;
+
+		case 'refunded':
+			return theme.form.purple;
+
+		default:
+			return theme.form.orange;
+	}
+};
+
+const hexToRgba = (hex, opacity) => {
+	const r = parseInt(hex.slice(1, 3), 16);
+	const g = parseInt(hex.slice(3, 5), 16);
+	const b = parseInt(hex.slice(5, 7), 16);
+	return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+export const SpanStatus = styled.span`
+	width: fit-content;
+	/* padding-block: 2px; */
+	padding-inline: 5px;
+	border-radius: 9999px;
+	font-size: 9.5px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+
+	${({ theme, $status }) => {
+		const color = statusColor(theme, $status);
+
+		return `
+			color: ${color};
+			border: 1px solid ${color};
+			background-color: ${hexToRgba(color, 0.15)};
+		`;
+	}}
 `;

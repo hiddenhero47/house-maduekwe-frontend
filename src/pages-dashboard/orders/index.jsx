@@ -14,7 +14,9 @@ import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { OrderServices } from '../../features/services/custom-hooks/orders';
-import { TbPigMoney } from "react-icons/tb";
+import { TbPigMoney } from 'react-icons/tb';
+import ManageModal from './elements/manage-modal/manage-modal';
+import DateFilter from '../../components/modal-assets/filter-modal/date-filter/date-filter';
 
 function Index() {
 	const ORDER_STATUS = {
@@ -37,6 +39,8 @@ function Index() {
 
 	const page = Number(searchParams.get('page')) || 1;
 	const paymentId = searchParams.get('paymentId') || '';
+	const startDate = searchParams.get('startDate') || '';
+	const endDate = searchParams.get('endDate') || '';
 
 	const [currentSection, setCurrentSection] = useState(currentFromUrl);
 
@@ -45,6 +49,8 @@ function Index() {
 		paymentId: paymentId,
 		page: page,
 		limit: 20,
+		startDate,
+		endDate,
 	});
 
 	const { data: orders = [], pagination } = data || {};
@@ -63,7 +69,21 @@ function Index() {
 		navigate(`${location.pathname}?${params.toString()}`, { replace: true });
 	};
 
-	console.log(orders);
+	const forward = ({ start, end }) => {
+		const params = new URLSearchParams(searchParams);
+
+		if (start && end) {
+			params.set('startDate', start);
+			params.set('endDate', end);
+		} else {
+			params.delete('startDate');
+			params.delete('endDate');
+		}
+
+		params.set('page', 1); // reset page on filter
+
+		setSearchParams(params);
+	};
 
 	return (
 		<Container>
@@ -117,6 +137,10 @@ function Index() {
 					</OptionBtn>
 				</div>
 			</TabNav>
+
+			<div className="w-full flex justify-end">
+				<DateFilter forward={(range) => forward(range)} />
+			</div>
 
 			<TableWrapper>
 				<CustomTable
@@ -174,22 +198,7 @@ function Index() {
 						{
 							Header: () => <span>Manage Status</span>,
 							accessor: 'manage',
-							Cell: ({ row }) => (
-								<button
-									className="px-[10px] py-[5px] text-xs font-semibold rounded-md transition-all ml-[10px]"
-									style={{
-										background: 'var(--mainBody-toolkitBg)',
-									}}
-									onClick={(e) => {
-										e.stopPropagation();
-										const group = row.original;
-									}}
-								>
-									<div className="flex items-center gap-[5px]">
-										Change Status
-									</div>
-								</button>
-							),
+							Cell: ({ row }) => <ManageModal id={row.original._id} />,
 						},
 					]}
 					dataSource={orders || []}
@@ -208,9 +217,7 @@ function Index() {
 					totalPages={pagination?.totalPages || 1}
 					changePage={flipPage}
 					useStrip
-					onDoubleCallRow={(data) =>
-						navigate(`/admin/orders/${data?._id}`)
-					}
+					onDoubleCallRow={(data) => navigate(`/admin/orders/${data?._id}`)}
 				/>
 			</TableWrapper>
 		</Container>

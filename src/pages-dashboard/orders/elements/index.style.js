@@ -82,7 +82,7 @@ export const TableWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	margin-top: 5vh;
+	/* margin-top: 5vh; */
 `;
 
 const hexToRgba = (hex, opacity) => {
