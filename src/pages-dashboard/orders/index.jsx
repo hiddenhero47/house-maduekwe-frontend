@@ -34,15 +34,15 @@ function Index() {
 	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const currentFromUrl =
-		searchParams.get('currentSection') || ORDER_STATUS.PAID;
+	const currentParam = searchParams.get('currentSection');
+
+	const currentSection =
+		currentParam !== null ? currentParam : ORDER_STATUS.PAID;
 
 	const page = Number(searchParams.get('page')) || 1;
 	const paymentId = searchParams.get('paymentId') || '';
 	const startDate = searchParams.get('startDate') || '';
 	const endDate = searchParams.get('endDate') || '';
-
-	const [currentSection, setCurrentSection] = useState(currentFromUrl);
 
 	const { data, isPending, isError, refetch } = OrderServices.getAll({
 		status: currentSection,
@@ -61,12 +61,12 @@ function Index() {
 	};
 
 	const navigateTo = (value) => {
-		setCurrentSection(value);
-
 		const params = new URLSearchParams();
 		params.set('currentSection', value);
-
-		navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+		params.set('page', 1);
+		params.delete('paymentId');
+		setSearchParams(params);
+		// navigate(`${location.pathname}?${params.toString()}`, { replace: true });
 	};
 
 	const forward = ({ start, end }) => {

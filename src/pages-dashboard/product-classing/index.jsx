@@ -18,6 +18,11 @@ import { useSearchParams } from 'react-router-dom';
 import CategoryServices from '../../features/services/custom-hooks/category';
 import AttributeServices from '../../features/services/custom-hooks/attribute';
 import { attributeType } from '../../utilities/app-const';
+import ToolKit from '../../components/tool-kit/index-tool-kit';
+import { OptionItem } from '../../components/tool-kit/index-tool-kit.style';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 function Index() {
 	const [section, setSection] = useState('categories');
@@ -192,6 +197,32 @@ function Index() {
 											</span>
 										),
 									},
+									{
+										Header: () => '',
+										accessor: 'type',
+										Cell: ({ row }) => (
+											<ToolKit
+												icon={<BsThreeDotsVertical className="text-sm" />}
+												menuClass={
+													attribute.length === 1 ? 'tool_kit' : 'tool_kits'
+												}
+												useCoords={attribute.length === 1 ? true : false}
+												alineRight={attribute.length === 1 ? true : false}
+											>
+												<div className="flex flex-col gap-[2px]">
+													<OptionItem className="edit" onClick={() => {}}>
+														<FiEdit2 size={16} />
+														<span>Edit</span>
+													</OptionItem>
+
+													<OptionItem className="delete" onClick={() => {}}>
+														<MdOutlineDeleteOutline size={18} />
+														<span>Delete</span>
+													</OptionItem>
+												</div>
+											</ToolKit>
+										),
+									},
 								]}
 								dataSource={attribute || []}
 								useStrip
@@ -245,6 +276,32 @@ function Index() {
 											</span>
 										),
 									},
+									{
+										Header: () => '',
+										accessor: '_id',
+										Cell: ({ row }) => (
+											<ToolKit
+												icon={<BsThreeDotsVertical className="text-sm" />}
+												menuClass={
+													category.length === 1 ? 'tool_kit' : 'tool_kits'
+												}
+												useCoords={category.length === 1 ? true : false}
+												alineRight={category.length === 1 ? true : false}
+											>
+												<div className="flex flex-col gap-[2px]">
+													<OptionItem className="edit" onClick={() => {}}>
+														<FiEdit2 size={16} />
+														<span>Edit</span>
+													</OptionItem>
+
+													<OptionItem className="delete" onClick={() => {}}>
+														<MdOutlineDeleteOutline size={18} />
+														<span>Delete</span>
+													</OptionItem>
+												</div>
+											</ToolKit>
+										),
+									},
 								]}
 								dataSource={category || []}
 								useStrip
@@ -258,7 +315,7 @@ function Index() {
 								}
 								emptyText="NO CATEGORIES"
 								emptySbText="You haven’t created any categories yet."
-								refetch={() => refetchCat}
+								refetch={() => refetchCat()}
 								currentPage={pageCat}
 								totalPages={paginationCat?.totalPages}
 								changePage={flipPageCat}

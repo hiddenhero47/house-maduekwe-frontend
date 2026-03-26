@@ -28,6 +28,8 @@ export const Container = styled.div`
 export const TabNav = styled.nav`
 	width: 100%;
 	display: flex;
+	flex-wrap: wrap;
+	row-gap: 15px;
 	justify-content: space-between;
 	padding: 16px 20px;
 	border-radius: 12px;
@@ -124,6 +126,34 @@ export const TableWrapper = styled.div`
 		align-items: center;
 		vertical-align: middle;
 		text-align: center;
+	}
+
+	.tool_kit {
+		margin-top: 5px;
+	}
+
+	.tool_kits {
+        right: 0;
+        left: auto;
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) translateY(12px) scale(0.96);
+        margin-right: 20px;
+    }
+
+	tr:last-child .tool_kits {
+		top: auto;
+		bottom: 0;
+		margin-bottom: -5px;
+		transform: translateY(0) scale(0.96);
+	}
+
+    .tool_kits[open] {
+        transform: translateY(-50%) scale(1) !important;
+    }
+
+	tr:last-child .tool_kits[open] {
+		transform: translateY(0) scale(1) !important;
 	}
 `;
 

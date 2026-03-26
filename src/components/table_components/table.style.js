@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 export const BTTableGrid = styled.div`
 	width: 100%;
 	height: auto;
-	overflow: hidden;
+	overflow: visible;
 	display: grid;
 	grid-template-rows: 1fr 50px;
 `;
@@ -13,7 +13,6 @@ export const BTWrapperOne = styled.div`
 	height: fit-content;
 	max-height: 100%;
 	border-radius: 8px;
-	overflow: hidden;
 	overflow-x: auto;
 
 	thead {
