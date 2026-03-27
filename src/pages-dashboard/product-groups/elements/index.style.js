@@ -60,6 +60,13 @@ export const Container = styled.div`
 			font-size: 18px;
 		}
 	}
+
+	#display_body {
+		flex-grow: 1;
+		flex-basis: 0;
+		width: 100%;
+		overflow-y: auto;
+	}
 `;
 
 export const FormNav = styled.nav`
@@ -151,5 +158,36 @@ export const SaveBtn = styled.button`
 			gap: 4px;
 			font-size: 12px;
 		}
+	}
+`;
+
+export const TableWrapper = styled.div`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+`;
+
+export const ActionBtn = styled.button`
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
+	color: ${({ theme }) => theme?.mainBody?.sbText};
+	transition: all 0.2s ease;
+
+	svg {
+		font-size: 14px;
+	}
+
+	&:hover {
+		color: ${({ theme }) => theme.intro.logo};
+		transform: translateY(-1px);
+	}
+
+	&.danger:hover {
+		color: #ff4d4f;
 	}
 `;

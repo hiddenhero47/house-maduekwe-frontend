@@ -1,5 +1,11 @@
-import React, { useRef } from 'react';
-import { Container, FormNav, SaveBtn } from './elements/index.style';
+import React, { useRef, useState } from 'react';
+import {
+	Container,
+	FormNav,
+	SaveBtn,
+	TableWrapper,
+	ActionBtn,
+} from './elements/index.style';
 import { VscNewFolder } from 'react-icons/vsc';
 import { BsFillSave2Fill } from 'react-icons/bs';
 import CustomInput from '../../components/form-components/input/custom-input';
@@ -12,6 +18,8 @@ import ItemGroupServices from '../../features/services/custom-hooks/item-groups'
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import SelectShopItemsModal from '../../components/modal-assets/group-item-modal/filter&product/filter&product';
 import ManageShopItemsModal from './elements/manage-modal/manage-modal';
+import DeleteModal from '../../components/modal-assets/delete-modal/delete-modal';
+import { FaTrash } from 'react-icons/fa';
 
 function Index() {
 	const navigate = useNavigate();
@@ -22,6 +30,9 @@ function Index() {
 
 	const { mutate: updateGroup, isPending: isUpdating } =
 		ItemGroupServices.update();
+
+	const { mutate: deleteGroup, isPending: isDeleting } =
+		ItemGroupServices.delete();
 
 	const page = Number(searchParams.get('page')) || 1;
 
@@ -99,6 +110,13 @@ function Index() {
 		}
 	};
 
+	const [deleteInfo, setDeleteInfo] = useState(null);
+	const modalRefDelete = useRef(null);
+	const openDelete = (info) => {
+		setDeleteInfo(info);
+		modalRefDelete.current?.open();
+	};
+
 	return (
 		<Container>
 			<h1>Group Products</h1>
@@ -160,80 +178,96 @@ function Index() {
 				</form>
 			</FormNav>
 
-			<div>
-				<CustomTable
-					fields={[
-						{
-							Header: () => <span>No</span>,
-							accessor: '_nos',
-							Cell: ({ nos }) => (
-								<span className="font-semibold opacity-70 ml-[5px]">{nos}</span>
-							),
-						},
-						{
-							Header: () => <span>Group Name</span>,
-							accessor: 'groupName',
-							Cell: ({ value }) => (
-								<span className="font-semibold ml-[5px]">{value}</span>
-							),
-						},
-						{
-							Header: () => <span className="ml-[10px]">ID</span>,
-							accessor: '_id',
-							Cell: ({ value }) => (
-								<span className="text-xs opacity-60">{value}</span>
-							),
-						},
-						{
-							Header: () => <span>Items</span>,
-							accessor: 'shopItems',
-							Cell: ({ value }) => (
-								<span className="font-semibold ml-[10px]">
-									{Array.isArray(value) ? value.length : 0}
-								</span>
-							),
-						},
-						{
-							Header: () => <span>Manage Group</span>,
-							accessor: 'manage',
-							Cell: ({ row }) => (
-								<button
-									className="px-[10px] py-[5px] text-xs font-semibold rounded-md transition-all ml-[10px]"
-									style={{
-										background: 'var(--mainBody-toolkitBg)',
-									}}
-									onClick={(e) => {
-										e.stopPropagation(); // 🔥 prevents row click
-										const group = row.original;
-										setFieldValue('id', group?._id);
-										setFieldValue('groupName', group?.groupName);
-										setFieldValue('shopItems', group?.shopItems || []);
-										setFieldValue('isEditing', true);
-									}}
-								>
-									<div className="flex items-center gap-[5px]">
-										Edit <FiEdit />
-									</div>
-								</button>
-							),
-						},
-					]}
-					dataSource={itemGroups || []}
-					isLoading={isPending}
-					currentPage={page}
-					totalPages={pagination?.totalPages || 1}
-					changePage={flipPage}
-					useStrip
-					emptyIcon={
-						<NoDataIcon
-							width="150px"
-							height="150px"
-							color="var(--mainBody-sbText)"
+			<div id="display_body" className="Y_scroll_style">
+				<div>
+					<TableWrapper>
+						<CustomTable
+							fields={[
+								{
+									Header: () => <span>No</span>,
+									accessor: '_nos',
+									Cell: ({ nos }) => (
+										<span className="font-semibold opacity-70 ml-[5px]">
+											{nos}
+										</span>
+									),
+								},
+								{
+									Header: () => <span>Group Name</span>,
+									accessor: 'groupName',
+									Cell: ({ value }) => (
+										<span className="font-semibold ml-[5px]">{value}</span>
+									),
+								},
+								{
+									Header: () => <span className="ml-[10px]">ID</span>,
+									accessor: '_id',
+									Cell: ({ value }) => (
+										<span className="text-xs opacity-60">{value}</span>
+									),
+								},
+								{
+									Header: () => <span>Items</span>,
+									accessor: 'shopItems',
+									Cell: ({ value }) => (
+										<span className="font-semibold ml-[10px]">
+											{Array.isArray(value) ? value.length : 0}
+										</span>
+									),
+								},
+								{
+									Header: () => <span>Group Actions</span>,
+									accessor: 'manage',
+									Cell: ({ row }) => (
+										<div className="flex items-center gap-[10px] ml-[20px]">
+											<ActionBtn
+												title="Edit group"
+												className=""
+												onClick={(e) => {
+													e.stopPropagation();
+													const group = row.original;
+													setFieldValue('id', group?._id);
+													setFieldValue('groupName', group?.groupName);
+													setFieldValue('shopItems', group?.shopItems || []);
+													setFieldValue('isEditing', true);
+												}}
+											>
+												<FiEdit />
+											</ActionBtn>
+
+											<ActionBtn
+												title="Delete group"
+												className="danger"
+												onClick={(e) => {
+													e.stopPropagation();
+													const group = row.original;
+													openDelete(group);
+												}}
+											>
+												<FaTrash />
+											</ActionBtn>
+										</div>
+									),
+								},
+							]}
+							dataSource={itemGroups || []}
+							isLoading={isPending}
+							currentPage={page}
+							totalPages={pagination?.totalPages || 1}
+							changePage={flipPage}
+							useStrip
+							emptyIcon={
+								<NoDataIcon
+									width="150px"
+									height="150px"
+									color="var(--mainBody-sbText)"
+								/>
+							}
+							emptyText="NO GROUPS YET"
+							emptySbText="You haven’t created any product groups yet."
 						/>
-					}
-					emptyText="NO GROUPS YET"
-					emptySbText="You haven’t created any product groups yet."
-				/>
+					</TableWrapper>
+				</div>
 			</div>
 
 			<ManageShopItemsModal
@@ -255,6 +289,15 @@ function Index() {
 
 					setFieldValue('shopItems', Array.from(map.values()));
 				}}
+			/>
+
+			<DeleteModal
+				ref={modalRefDelete}
+				action={(data) => deleteGroup(data?._id)}
+				data={deleteInfo}
+				text="Are you sure you want to remove this?"
+				subText="This group will no longer exist."
+				clean={() => setDeleteInfo(null)}
 			/>
 		</Container>
 	);
