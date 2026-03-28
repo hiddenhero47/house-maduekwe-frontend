@@ -8,7 +8,7 @@ export const colors = {
 			sbLine: '#cccccc',
 			text: '#000',
 			sbText: '#6F6F6F',
-			chipBoxBg: "#fdfdfd",
+			chipBoxBg: '#fdfdfd',
 			menuBg: '#fdfdfd',
 			menuActive: '#f2f2f2',
 			menuBorder: '#e6e6e6',
@@ -46,7 +46,7 @@ export const colors = {
 			cardLine: '#ebebeb',
 			cardSbLine: '#e6e6e6',
 			overlayLight: 'rgba(255, 255, 255, 0.04)',
-			overlayDark: 'rgba(0, 0, 0, 0.04)'
+			overlayDark: 'rgba(0, 0, 0, 0.04)',
 		},
 
 		intro: {
@@ -105,6 +105,11 @@ export const colors = {
 			hoverBg: '#d9d9d9',
 			disabledBg: '#c9c9c9',
 		},
+
+		skeleton: {
+			background1: 'rgba(102, 102, 102, 0.04)',
+			background2: 'rgba(51, 51, 51, 0.07)',
+		},
 	},
 
 	// Dark mode colors
@@ -118,7 +123,7 @@ export const colors = {
 			sbLine: '#4d4d4d',
 			text: '#d9d9d9',
 			sbText: '#989898',
-			chipBoxBg: "#1d1d1d",
+			chipBoxBg: '#1d1d1d',
 			menuBg: '#202020',
 			menuActive: '#323232',
 			menuBorder: '#313131',
@@ -215,6 +220,11 @@ export const colors = {
 			text: '#d9d9d9',
 			hoverBg: '#404040',
 			disabledBg: '#c9c9c9',
+		},
+
+		skeleton: {
+			background1: 'rgba(153, 153, 153, 0.04)',
+			background2: 'rgba(255, 255, 255, 0.07)',
 		},
 	},
 };

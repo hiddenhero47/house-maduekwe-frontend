@@ -24,6 +24,7 @@ import {
 	FooterBgD,
 	FooterBgL,
 } from '../../components/icon-components/backgrounds';
+import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 
 function Index() {
 	const { aftermath } = useOutletContext();
@@ -82,6 +83,13 @@ function Index() {
 					height="400px"
 				/>
 			</ContainerSection>
+
+			{/* <Skeleton
+				height="300px"
+				width="500px"
+				$color1="var(--skeleton-background1)"
+				$color2="var(--skeleton-background2)"
+			/> */}
 
 			<AppFooter>
 				<div id="footer_background">
