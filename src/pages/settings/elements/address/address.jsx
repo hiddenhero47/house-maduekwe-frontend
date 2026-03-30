@@ -1,32 +1,46 @@
-import React, { useRef } from 'react';
-import {
-	AddressWrapper,
-	TableWrapper,
-	AddBtn,
-} from './address.style';
+import React, { useRef, useState } from 'react';
+import { AddressWrapper, TableWrapper, AddBtn } from './address.style';
 import { IoIosAdd } from 'react-icons/io';
 import CustomTable from '../../../../components/table_components/basicTableOne';
 import { AddressIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
 import CreateModal from './create-address';
-import AddressServices from "../../../../features/services/custom-hooks/addresses";
+import AddressServices from '../../../../features/services/custom-hooks/addresses';
 import { getCountryByCode } from '../../../../utilities/city-state-country';
+import ToolKit from '../../../../components/tool-kit/index-tool-kit';
+import { OptionItem } from '../../../../components/tool-kit/index-tool-kit.style';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
+import DeleteModal from '../../../../components/modal-assets/delete-modal/delete-modal';
+import EditAddress from './edit-address';
 
 function Address() {
-	const {data, isPending, isError, refetch} = AddressServices.getAll();
+	const { data, isPending, isError, refetch } = AddressServices.getAll();
+	const { mutate: deleteAddress, isPending: isDeleting } =
+		AddressServices.delete();
 
 	const modalRef = useRef(null);
-	// Open the side menu
 	const openModal = () => {
-		if (modalRef.current) {
-			modalRef.current.open();
-		}
+		modalRef.current?.open();
 	};
-	// Close the side menu
 	const closeModal = () => {
-		if (modalRef.current) {
-			modalRef.current.close();
-		}
+		modalRef.current?.close();
+	};
+
+	const [editInfo, setEditInfo] = useState(null);
+	const [deleteInfo, setDeleteInfo] = useState(null);
+
+	const modalRefEdit = useRef(null);
+	const openEditModal = (info) => {
+		setEditInfo(info);
+		modalRefEdit.current?.open();
+	};
+
+	const modalRefDelete = useRef(null);
+	const openDeleteModal = (info) => {
+		setDeleteInfo(info);
+		modalRefDelete.current?.open();
 	};
 
 	return (
@@ -54,7 +68,9 @@ function Address() {
 						{
 							Header: () => 'Country',
 							accessor: 'country',
-							Cell: ({ value }) => <span className="nowrap">{getCountryByCode(value)?.name}</span>,
+							Cell: ({ value }) => (
+								<span className="nowrap">{getCountryByCode(value)?.name}</span>
+							),
 						},
 						{
 							Header: () => 'State',
@@ -75,6 +91,36 @@ function Address() {
 								</span>
 							),
 						},
+						{
+							Header: () => '',
+							accessor: '_id',
+							Cell: ({ row }) => (
+								<ToolKit
+									icon={<BsThreeDotsVertical className="text-sm" />}
+									menuClass={data.length === 1 ? 'tool_kit' : 'tool_kits'}
+									useCoords={data.length === 1 ? true : false}
+									alineRight={data.length === 1 ? true : false}
+								>
+									<div className="flex flex-col gap-[2px]">
+										<OptionItem
+											className="edit"
+											onClick={() => openEditModal(row.original)}
+										>
+											<FiEdit2 size={16} />
+											<span>Edit</span>
+										</OptionItem>
+
+										<OptionItem
+											className="delete"
+											onClick={() => openDeleteModal(row.original)}
+										>
+											<MdOutlineDeleteOutline size={18} />
+											<span>Delete</span>
+										</OptionItem>
+									</div>
+								</ToolKit>
+							),
+						},
 					]}
 					dataSource={data || []}
 					emptyIcon={
@@ -92,7 +138,28 @@ function Address() {
 				/>
 			</TableWrapper>
 
-			<CreateModal ref={modalRef} openModal={openModal} closeModal={closeModal} />
+			<CreateModal
+				ref={modalRef}
+				openModal={openModal}
+				closeModal={closeModal}
+			/>
+
+			<EditAddress
+				ref={modalRefEdit}
+				openModal={openModal}
+				closeModal={() => modalRefEdit.current?.close()}
+				address={editInfo}
+				clean={() => setEditInfo(null)}
+			/>
+
+			<DeleteModal
+				ref={modalRefDelete}
+				action={(data) => deleteAddress(data?._id)}
+				data={deleteInfo}
+				text="Are you sure you want to delete this?"
+				subText="This action can not be undone"
+				clean={() => setDeleteInfo(null)}
+			/>
 		</AddressWrapper>
 	);
 }
