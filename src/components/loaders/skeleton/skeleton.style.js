@@ -15,7 +15,7 @@ export const Skeleton = styled.div`
 	width: ${({ width = '100%' }) => getSize(width)};
 	height: ${({ height = '16px' }) => getSize(height)};
 
-	border-radius: ${({ borderRadius = 'inherit' }) => borderRadius};
+	border-radius: ${({ $borderRadius = 'inherit' }) => $borderRadius};
 
 	${({ $color1 = '#f6f7f8', $color2 = '#edeef1' }) => css`
 		background: linear-gradient(
