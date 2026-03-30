@@ -14,6 +14,7 @@ import {
 } from '../../../../utilities/basic-functions';
 import { useFormik } from 'formik';
 import { IoClose } from 'react-icons/io5';
+import { validationSchema } from './validation-schema';
 
 function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 	const initialValues = {
@@ -44,11 +45,12 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 		closeModal();
 	};
 
-	const { values, errors, handleBlur, touched, handleChange } = useFormik({
-		initialValues,
-		// validationSchema: ,
-		onSubmit,
-	});
+	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
+		useFormik({
+			initialValues,
+			validationSchema,
+			onSubmit,
+		});
 
 	const {
 		search,
@@ -138,11 +140,7 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 					/>
 				</div>
 
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-					}}
-				>
+				<form onSubmit={handleSubmit}>
 					<div className="filter_section">
 						<div className="form_control">
 							<label className="ml-[10px]">Search Products</label>
@@ -153,6 +151,8 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 								value={search}
 								onChange={handleChange}
 								onBlur={handleBlur}
+								isError={touched.search && errors.search}
+								errormessage={errors.search}
 								placeholder="Search by product name..."
 								paddingX="14px"
 								paddingY="9px"
@@ -178,6 +178,9 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 										id="category"
 										placeholder="Select category"
 										handleChange={handleChange}
+										onBlur={handleBlur}
+										isError={touched.category && errors.category}
+										errormessage={errors.category}
 										paddingX="14px"
 										paddingY="9px"
 										useBackground
@@ -202,6 +205,8 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 									value={subCategory}
 									onChange={handleChange}
 									onBlur={handleBlur}
+									isError={touched.subCategory && errors.subCategory}
+									errormessage={errors.subCategory}
 									placeholder="Example: sneakers"
 									paddingX="14px"
 									paddingY="9px"
@@ -283,6 +288,8 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 									value={minPrice}
 									onChange={handleChange}
 									onBlur={handleBlur}
+									isError={touched.minPrice && errors.minPrice}
+									errormessage={errors.minPrice}
 									placeholder="0"
 									paddingX="14px"
 									paddingY="9px"
@@ -300,6 +307,8 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 									value={maxPrice}
 									onChange={handleChange}
 									onBlur={handleBlur}
+									isError={touched.maxPrice && errors.maxPrice}
+									errormessage={errors.maxPrice}
 									placeholder="1000"
 									paddingX="14px"
 									paddingY="9px"
@@ -319,6 +328,8 @@ function FilterProductDisplay({ ref, filterHandler, reset, closeModal }) {
 								value={classTags}
 								onChange={handleChange}
 								onBlur={handleBlur}
+								isError={touched.classTags && errors.classTags}
+								errormessage={errors.classTags}
 								placeholder="sport*summer+premium"
 								paddingX="14px"
 								paddingY="9px"

@@ -94,12 +94,16 @@ export const FilterBtn = styled.button`
 	.content {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 4px;
 		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
-		font-size: 14.5px;
+		font-size: 14.3px;
 		font-weight: 600;
 		font-family: Inter;
 		color: ${({ theme }) => theme?.filterBtn?.text};
+
+		i {
+			font-size: 20px;
+		}
 	}
 
 	.loader {
@@ -263,5 +267,53 @@ export const MasonryItem = styled.div`
 	@media (max-width: 1051px) {
 		height: auto;
 		aspect-ratio: 3/3.8;
+	}
+`;
+
+export const EmptyState = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px 20px;
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		animation: fadeInUp 0.35s ease;
+	}
+
+	i {
+		width: clamp(120px, 20vw, 180px);
+		opacity: 0.6;
+		margin-bottom: 10px;
+	}
+
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		color: var(--mainBody-text);
+		margin-bottom: 6px;
+		letter-spacing: 0.3px;
+	}
+
+	p {
+		font-size: 14px;
+		color: var(--mainBody-sbText);
+		max-width: 360px;
+		line-height: 1.5;
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 `;

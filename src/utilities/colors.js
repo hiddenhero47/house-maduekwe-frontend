@@ -24,7 +24,7 @@ export const colors = {
 			pinkM: '#ffafcc',
 			blueL: '#bde0fe',
 			blueM: '#a2d2ff',
-			violetL: 'cdb4db',
+			violetL: '#cdb4db',
 			violetM: '#be9fd1',
 			disabledText: '',
 			disabled: '',

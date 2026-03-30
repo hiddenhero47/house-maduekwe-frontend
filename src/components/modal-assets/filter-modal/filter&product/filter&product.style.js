@@ -102,7 +102,8 @@ export const FilterModalWrapper = styled.div`
 
 	.form_note {
 		font-size: 12px;
-		color: ${({ theme }) => theme?.mainBody?.sbKitText};
+		color: ${({ theme }) =>
+			theme.mode === 'dark' ? theme?.form?.violetM : theme?.form?.blue};
 		margin-top: 6px;
 		margin-left: 8px;
 	}
@@ -144,5 +145,10 @@ export const FilterModalWrapper = styled.div`
 					theme.mode === 'dark' ? '#d9d9d9' : theme.addToCart.hoverBg};
 			}
 		}
+	}
+
+	.Form_error {
+		font-size: 12px;
+		font-family: Inter;
 	}
 `;
