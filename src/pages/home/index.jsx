@@ -2,6 +2,7 @@ import React from 'react';
 import {
 	Container,
 	IntroSection,
+	BannerWrapper,
 	ContainerSection,
 	AppFooter,
 } from './elements/index.style';
@@ -25,16 +26,29 @@ import {
 	FooterBgL,
 } from '../../components/icon-components/backgrounds';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
+import bannerImage from '../../assets/images/53c02593-30f5-4ad0-96e3-aa4d532cb995.svg';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	const theme = useTheme();
+
 	return (
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
-				<div className="w-full h-full">
+				<div className="w-full h-full relative">
 					<div className="imageHolder">
 						<img src={postImage} alt="No Image" />
+					</div>
+
+					<div id="banner_image">
+						<div className="banner_grid">
+							{[...Array(6)].map((_, i) => (
+								<div
+									key={i}
+									className={`tile t${i + 1}`}
+								/>
+							))}
+						</div>
 					</div>
 				</div>
 
@@ -83,13 +97,6 @@ function Index() {
 					height="400px"
 				/>
 			</ContainerSection>
-
-			{/* <Skeleton
-				height="300px"
-				width="500px"
-				$color1="var(--skeleton-background1)"
-				$color2="var(--skeleton-background2)"
-			/> */}
 
 			<AppFooter>
 				<div id="footer_background">

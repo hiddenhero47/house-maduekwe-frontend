@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import bannerImage from '../../../assets/images/brand-name.svg';
 
 export const Container = styled.div`
 	display: flex;
@@ -59,6 +60,79 @@ export const Container = styled.div`
 		@supports not (aspect-ratio: 1 / 1) {
 			width: 20vmin;
 			height: 20vmin;
+		}
+	}
+
+	#banner_image {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 56%;
+		aspect-ratio: 3 / 2;
+
+		.banner_grid {
+			width: 100%;
+			height: 100%;
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(2, 1fr);
+			gap: 0px;
+		}
+
+		.tile {
+			width: 100%;
+			height: 100%;
+			background-image: url(${bannerImage});
+			background-size: 300% 200%; /* 🔥 KEY */
+			background-repeat: no-repeat;
+			border-radius: 6px;
+			transition: transform 0.4s ease;
+			/* background-color: rgb(0, 0, 0, 0.8); */
+		}
+
+		/* 🎯 POSITIONING (THIS IS THE MAGIC) */
+
+		.t1 {
+			background-position: 0% 0%;
+		}
+		.t2 {
+			background-position: 50% 0%;
+		}
+		.t3 {
+			background-position: 100% 0%;
+		}
+
+		.t4 {
+			background-position: 0% 100%;
+		}
+		.t5 {
+			background-position: 50% 100%;
+		}
+		.t6 {
+			background-position: 100% 100%;
+		}
+
+		/* ✨ HOVER EFFECT */
+
+		&:hover .t1 {
+			transform: translate(-20px, -20px);
+		}
+		&:hover .t2 {
+			transform: translateY(-20px);
+		}
+		&:hover .t3 {
+			transform: translate(20px, -20px);
+		}
+
+		&:hover .t4 {
+			transform: translate(-20px, 20px);
+		}
+		&:hover .t5 {
+			transform: translateY(20px);
+		}
+		&:hover .t6 {
+			transform: translate(20px, 20px);
 		}
 	}
 `;
@@ -315,5 +389,149 @@ export const AppFooter = styled.footer`
 		font-size: 0.875rem;
 		line-height: 1.5rem;
 		color: ${({ theme }) => theme?.mainBody.kitTextDark};
+	}
+`;
+
+export const BannerWrapper = styled.section`
+	width: 100%;
+	height: 260px;
+	margin-top: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 40px;
+	padding: 0 5%;
+	overflow: hidden;
+	animation: fadeUp 0.8s ease forwards;
+
+	.left {
+		position: relative;
+		width: 50%;
+		height: 100%;
+	}
+
+	.left::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 80px;
+		background: linear-gradient(
+			to right,
+			transparent,
+			${({ theme }) => theme.mainBody.background}
+		);
+	}
+
+	.slice {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-image: ${({ $bannerImage }) => `url(${$bannerImage})`};
+		background-size: 600px 260px;
+		background-repeat: no-repeat;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+		transition: transform 0.6s ease;
+		border-radius: 3px;
+	}
+
+	/* 🎯 SLICES */
+	.s1 {
+		width: 17%;
+		height: 60%;
+		left: 0;
+		background-position: 0% center;
+		z-index: 2;
+	}
+
+	.s2 {
+		width: 22%;
+		height: 75%;
+		left: 15%;
+		background-position: 21% center;
+		z-index: 1;
+	}
+
+	.s3 {
+		width: 30%;
+		height: 100%;
+		left: 35%;
+		background-position: 56% center;
+		z-index: 3;
+	}
+
+	.s4 {
+		width: 22%;
+		height: 85%;
+		left: 65%;
+		background-position: 93% center;
+		z-index: 1;
+	}
+
+	/* ✨ HOVER EFFECT */
+	.left:hover .s1 {
+		transform: translateY(-50%) translateX(-10px);
+	}
+	.left:hover .s2 {
+		transform: translateY(-50%) translateX(-5px);
+	}
+	.left:hover .s3 {
+		transform: translateY(-50%) scale(1.03);
+	}
+	.left:hover .s4 {
+		transform: translateY(-50%) translateX(10px);
+	}
+
+	/* 📝 RIGHT SIDE */
+	.right {
+		width: 45%;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	h2 {
+		font-size: 28px;
+		color: ${({ theme }) => theme.mainBody.text};
+	}
+
+	p {
+		font-size: 14px;
+		color: ${({ theme }) => theme.mainBody.sbText};
+		line-height: 1.6;
+	}
+
+	button {
+		width: fit-content;
+		padding: 10px 18px;
+		border-radius: 6px;
+		border: 1px solid ${({ theme }) => theme.mainBody.toolkitActive};
+		background: transparent;
+		color: ${({ theme }) => theme.intro.logo};
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	button:hover {
+		background: ${({ theme }) => theme.intro.logo};
+		color: #fff;
+	}
+
+	/* 📱 MOBILE */
+	@media (max-width: 768px) {
+		flex-direction: column;
+		height: auto;
+
+		.left {
+			width: 100%;
+			height: 200px;
+		}
+
+		.right {
+			width: 100%;
+			text-align: center;
+			align-items: center;
+		}
 	}
 `;

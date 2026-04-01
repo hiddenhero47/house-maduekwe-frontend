@@ -63,6 +63,7 @@ export const colors = {
 		showcaseBox: {
 			background: '#f9f9f9',
 			container: '#ffffff',
+			card: "#f8f8fa",
 			line: '#ebebeb',
 			text: '#000',
 			sbText: '#6F6F6F',
@@ -178,7 +179,7 @@ export const colors = {
 		showcaseBox: {
 			background: '#121212',
 			container: '#1d1d1d',
-			// container: "#292a35",
+			card: "#28272c",
 			line: '#333333',
 			text: '#e4e4e4',
 			sbText: '#989898',
