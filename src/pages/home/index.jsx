@@ -3,7 +3,10 @@ import {
 	Container,
 	IntroSection,
 	BannerWrapper,
+	BannerImage,
 	ContainerSection,
+	ContainerSectionAltA,
+	ContainerSectionAltB,
 	AppFooter,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
@@ -26,11 +29,13 @@ import {
 	FooterBgL,
 } from '../../components/icon-components/backgrounds';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
-import bannerImage from '../../assets/images/53c02593-30f5-4ad0-96e3-aa4d532cb995.svg';
+import bannerImage from '../../assets/images/brand-name.svg';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	const theme = useTheme();
+
+	const image = items[0].imageCatalog;
 
 	return (
 		<Container className="Y_scroll_style">
@@ -40,16 +45,15 @@ function Index() {
 						<img src={postImage} alt="No Image" />
 					</div>
 
-					<div id="banner_image">
-						<div className="banner_grid">
-							{[...Array(6)].map((_, i) => (
-								<div
-									key={i}
-									className={`tile t${i + 1}`}
-								/>
-							))}
-						</div>
-					</div>
+					{aftermath && (
+						<BannerImage id="banner_image" $bannerImage={bannerImage}>
+							<div className="banner_grid">
+								{[...Array(6)].map((_, i) => (
+									<div key={i} className={`tile t${i + 1}`} />
+								))}
+							</div>
+						</BannerImage>
+					)}
 				</div>
 
 				{aftermath && (
@@ -89,14 +93,59 @@ function Index() {
 				</Link>
 			</IntroSection>
 
-			<ContainerSection className="intro-y mt-[15vh]">
-				<ShopItem
-					isLoading={false}
-					product={items[0]}
-					width="350px"
-					height="400px"
-				/>
+			<ContainerSection className="intro-y">
+				<div className="style_container">
+					<div className="cubicle mask_shape mask_tr">
+						<div className="imageHolder">
+							<img src={image[0].url} alt="" />
+						</div>
+					</div>
+				</div>
+
+				<div className="style_container_c">
+					<div className="cubicle mask_shape mask_bl">
+						<div className="imageHolder">
+							<img src={image[1].url} alt="" />
+						</div>
+					</div>
+
+					<div className="cubicle mask_shape mask_br">
+						<div className="imageHolder">
+							<img src={image[2].url} alt="" />
+						</div>
+					</div>
+				</div>
 			</ContainerSection>
+
+			<ContainerSectionAltA className="intro-y">
+				<div className="left">
+					<div className="cubicle mask_shape mask_tl h-full">
+						<div className="imageHolder">
+							<img src={image[2].url} alt="" />
+						</div>
+					</div>
+				</div>
+
+				<div className="right">
+					<div className="cubicle mask_shape mask_tr">
+						<div className="imageHolder">
+							<img src={image[1].url} alt="" />
+						</div>
+					</div>
+
+					<div className="cubicle">
+						<div className="imageHolder">
+							<img src={image[3].url} alt="" />
+						</div>
+					</div>
+
+					<div className="cubicle mask_shape mask_br">
+						<div className="imageHolder">
+							<img src={image[4].url} alt="" />
+						</div>
+					</div>
+				</div>
+			</ContainerSectionAltA>
 
 			<AppFooter>
 				<div id="footer_background">
