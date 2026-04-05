@@ -17,6 +17,7 @@ function CustomInput({
 	paddingX,
 	paddingY,
 	autoComplete = 'off',
+	onKeyDown,
 }) {
 	return (
 		<>
@@ -35,8 +36,9 @@ function CustomInput({
 				$paddingX={paddingX}
 				$paddingY={paddingY}
 				autoComplete={autoComplete}
+				onKeyDown={(e) => onKeyDown && onKeyDown(e)}
 			/>
-			{isError && errormessage ? <Error>{errormessage} !</Error> : ''}
+			{isError && errormessage ? <Error className='Form_error'>{errormessage} !</Error> : ''}
 		</>
 	);
 }

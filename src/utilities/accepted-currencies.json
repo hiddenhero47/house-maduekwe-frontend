@@ -2541,16 +2541,6 @@
             "withdrawal_date": ""
         },
         {
-            "id": 255,
-            "country_id": 231,
-            "country_name": "United States Of America (The)",
-            "currency": "US Dollar (Next day)",
-            "alphabetic_code": "USN",
-            "numeric_code": 997,
-            "minor_unit": "2",
-            "withdrawal_date": ""
-        },
-        {
             "id": 256,
             "country_id": 233,
             "country_name": "Uruguay",

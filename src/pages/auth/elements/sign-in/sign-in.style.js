@@ -9,6 +9,10 @@ export const Wrapper = styled.div`
 	padding-bottom: 20px;
 	padding-top: 10px;
 
+	.Form_error {
+		font-size: 10px;
+	}
+
 	.header {
 		text-align: center;
 		margin-bottom: 20px;

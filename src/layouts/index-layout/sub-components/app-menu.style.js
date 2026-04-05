@@ -43,8 +43,12 @@ export const MenuHeader = styled.div`
 				color: ${({ theme }) => theme?.intro.logo};
 			}
 
+			@media (min-width: 501px) and (max-width: 899px) {
+				font-size: clamp(8px, 58%, 9.8px);
+			}
+
 			@media (max-width: 500px) {
-				font-size: 8px;
+				font-size: clamp(8px, 55%, 9.8px);
 			}
 		}
 	}
@@ -90,7 +94,10 @@ export const UserSection = styled.div`
 		height: 35px;
 		width: 35px;
 		border-radius: 3px;
-		background-color: black;
+		background-color: ${({theme}) => theme?.basicBtn.bgActive};
+		svg path {
+			fill: ${({theme}) => theme?.basicBtn.textActive};
+		}
 	}
 
 	#client {

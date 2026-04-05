@@ -95,7 +95,7 @@ function Holding({ close }) {
 				</button>
 
 				<button onClick={moveToCart} className="btn btn_anon">
-					Anonymous Checkout{' '}
+					Continue Shopping{' '}
 					<i>
 						<FaArrowRightLong />
 					</i>

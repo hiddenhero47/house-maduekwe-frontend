@@ -19,15 +19,17 @@ import {
 } from 'react-router-dom';
 import BasicPg from '../../components/table_components/pagination/basicPg';
 import { FaSquareOdnoklassniki } from 'react-icons/fa6';
-import { items } from '../../dummyData/shopItems';
-import { getRandomInt } from '../../utilities/basicFunctions';
+import { getRandomInt } from '../../utilities/basic-functions';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
+import ShopItemServices from '../../features/services/custom-hooks/shop-items';
 
 function Index() {
 	const [display, setDisplay] = useState('grid');
+
 	const navigate = useNavigate();
 	const location = useLocation();
+
 	const { category, minPrice, maxPrice, attributes, keyWord } = useParams();
 	const page = Number(new URLSearchParams(location.search).get('page')) || 1;
 
@@ -41,16 +43,17 @@ function Index() {
 		});
 	};
 
-	const data = Array(12).fill(items[0]);
+	const { data, isPending } = ShopItemServices.get({
+		page: page,
+		limit: 100,
+		category: category || '',
+		attributes: attributes || '',
+		classTags: keyWord || '',
+		minPrice: minPrice || '',
+		maxPrice: maxPrice || '',
+	});
 
-	const getImagePosition = (image) => {
-		if (!image?.width || !image?.height) return 'center';
-		const ratio = image.width / image.height;
-		// Square-ish (0.8 to 1.25)
-		if (ratio > 0.8 && ratio < 1.25) return 'center';
-		// Tall or wide rectangle → top gives better visual
-		return 'top';
-	};
+	const { data: products = [], pagination } = data || {};
 
 	return (
 		<Container>
@@ -96,46 +99,49 @@ function Index() {
 			</div>
 
 			<div className="flex items-center mt-[20px] mx-[auto] pb-[20px] border-b border-b-[var(--mainBody-line)] w-[98%]">
-				<BasicPg currentPage={page || 1} totalPages={5} changePage={flipPage} />
+				<BasicPg
+					currentPage={page || 1}
+					totalPages={pagination?.totalPages}
+					changePage={flipPage}
+				/>
 			</div>
 
 			<div id="display_body" className="Y_scroll_style scroll_style">
-				{display === 'grid' && (
+				{display === 'grid' && !isPending && (
 					<div>
 						<MasonryGrid>
-							{data.map((item, index) => {
-								const image =
-									item?.placeHolder?.url ||
-									item.imageCatalog[getRandomInt(0, 5)]?.url;
+							{(products || []).map((item, index) => (
+								<GridItem key={index} className="grid_item">
+									<button
+										onDoubleClick={() =>
+											navigate(`/admin/products/design/${item?._id}`)
+										}
+									>
+										<div className="imageHolder rounded-[inherit]">
+											<Image
+												src={item?.placeHolder?.url || item?.imageCatalog[0]?.url}
+												alt="Error"
+												onLoad={(e) => {
+													const img = e.currentTarget;
+													const ratio = img.naturalWidth / img.naturalHeight;
+													const position = ratio < 0.66 ? 'top' : 'center';
+													img.style.objectPosition = position;
+												}}
+											/>
+										</div>
 
-								return (
-									<GridItem key={index} className="grid_item">
-										<button
-											onDoubleClick={() =>
-												navigate(`/admin/products/design/edit?id=${item?._id}`)
-											}
-										>
-											<div className="imageHolder rounded-[inherit]">
-												<Image
-													src={image}
-													alt="Error"
-													$position={getImagePosition(image)}
-												/>
-											</div>
-
-											<div className="details flex flex-col">
-												<h3>{item?.name}</h3>
-												<span>{item?._id}</span>
-											</div>
-										</button>
-									</GridItem>
-								);
-							})}
+										<div className="details flex flex-col">
+											<h3>{item?.name}</h3>
+											<span>{item?._id}</span>
+										</div>
+									</button>
+								</GridItem>
+							))}
 						</MasonryGrid>
 					</div>
 				)}
 
-				{display === 'table' && (
+				{display === 'table' && !isPending && (
 					<div>
 						<TableWrapper>
 							<CustomTable
@@ -211,7 +217,7 @@ function Index() {
 										),
 									},
 								]}
-								dataSource={data || []}
+								dataSource={products || []}
 								isLoading={false}
 								useStrip
 								emptyIcon={

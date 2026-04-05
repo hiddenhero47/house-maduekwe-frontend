@@ -118,11 +118,17 @@ const Comboboxes = ({
 		}, 100);
 	};
 
+	const handleBlur = () => {
+		if (onBlur) {
+			onBlur(name ?? id);
+		}
+	};
+
 	return (
 		<>
 			<CustomSelectContainer
 				tabIndex={0}
-				onBlur={onBlur}
+				onBlur={handleBlur}
 				id={id}
 				className="select_wrapper"
 			>
@@ -149,6 +155,7 @@ const Comboboxes = ({
 					/>
 
 					<button
+						type="button"
 						className="arrow"
 						style={{
 							transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
@@ -176,10 +183,10 @@ const Comboboxes = ({
 						>
 							<span> _ _</span>
 						</Option>
-						{filter(options).map((option) => (
+						{filter(options).map((option, index) => (
 							<Option
 								className="select_option"
-								key={option.value}
+								key={index}
 								selected={value === option.value}
 								onClick={() => handleOptionClick(option)}
 							>
@@ -197,7 +204,7 @@ const Comboboxes = ({
 				</MenuDialog>
 			</CustomSelectContainer>
 
-			{isError && <Error>{errormessage} !</Error>}
+			{isError && <Error className="Form_error">{errormessage} !</Error>}
 		</>
 	);
 };

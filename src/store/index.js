@@ -14,15 +14,19 @@ import {
 } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
+import auth from './slice/auth';
 import themes from './slice/app-theme';
 import holdings from "./slice/holding";
 import dragBoard from "./slice/drag-board";
+import twoFaHandler from "./slice/2fa-handler";
 
 // Combine all reducers
 const appReducer = combineReducers({
+	auth,
 	themes,
 	holdings,
 	dragBoard,
+	twoFaHandler,
 });
 
 // Create a no-op storage for environments without `window` (e.g., server-side rendering)
@@ -49,7 +53,7 @@ const persistConfig = {
 	key: 'root',
 	version: 1,
 	storage,
-	blacklist: ['other', 'dragBoard', 'holdings'], // Specify state slices to exclude from persistence
+	blacklist: ['other', 'dragBoard', 'holdings', "twoFaHandler"], // Specify state slices to exclude from persistence
 };
 
 // Root reducer with logout handling

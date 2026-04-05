@@ -150,18 +150,6 @@ export const DashboardNavBar = styled.div`
 		}
 	}
 
-	#toggleBtn {
-		color: ${({ theme }) => theme.mainBody.sbText};
-		font-size: 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		&:hover {
-			color: ${({ theme }) => theme.intro.logo};
-		}
-	}
-
 	.theme_logo {
 		border-radius: 9999px;
 		background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};

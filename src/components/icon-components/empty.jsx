@@ -14,3 +14,40 @@ export const NoDataIcon = ({ width, height, color }) => (
 		/>
 	</CustomSVG>
 );
+
+export const AddressIcon = ({ width, height, color }) => (
+	<CustomSVG
+		width={width}
+		height={height}
+		viewBox="0 0 24 24" // Using a standard 24x24 viewbox for cleaner scaling
+		fill="none"
+		stroke="currentColor"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+	>
+		{/* The Map Pin Shape */}
+		<path
+			fill={color}
+			d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+			stroke="none"
+		/>
+		{/* The hole in the middle of the pin */}
+		<circle
+			cx="12"
+			cy="10"
+			r="3"
+			fill="white" // This creates the "hole" effect
+			stroke="none"
+		/>
+	</CustomSVG>
+);
+
+export const OrderIcon = ({ width, height, color }) => (
+	<CustomSVG width={width} height={height} viewBox="0 0 24 24">
+		<path
+			fill={color}
+			d="M19,2L17,4L15,2L13,4L11,2L9,4L7,2L5,4L5,22L7,20L9,22L11,20L13,22L15,20L17,22L19,20L19,2M7,8H17V10H7V8M7,12H17V14H7V12M7,16H14V18H7V16Z"
+		/>
+	</CustomSVG>
+);

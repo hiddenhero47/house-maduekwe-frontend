@@ -289,7 +289,6 @@ export const GridItem = styled.div`
 `;
 
 export const Image = styled.img`
-	object-position: ${({ $position }) => $position || 'center'};
 	transition: object-position 0.3s ease;
 `;
 

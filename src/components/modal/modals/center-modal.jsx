@@ -40,17 +40,11 @@ function ModalCenter(
 	function closeModal() {
 		onClose();
 		setIsOpen(false);
-		// (() => {
-		// 	modalRef.current.close();
-		// })();
 	}
 
 	function openModal() {
 		onOpen();
 		setIsOpen(true);
-		// (() => {
-		// 	modalRef.current.showModal();
-		// })();
 	}
 
 	function handelClose(event) {
@@ -65,7 +59,9 @@ function ModalCenter(
 			open={isOpen}
 			onClick={handelClose}
 			ref={modalRef}
-			onClose={closeModal}
+			onClose={(e) => {
+				if (e.target === modalRef.current) closeModal;
+			}}
 		>
 			<CenterShell
 				open={isOpen}

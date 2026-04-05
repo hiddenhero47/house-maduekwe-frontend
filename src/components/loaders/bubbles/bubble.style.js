@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
 export const BubbleSlideWrapper = styled.div`
-    width: 30px;
-    height: 20px;
+    max-width: 30px;
+    max-height: 20px;
+    height: ${(props) =>
+		typeof props.height === 'number' ? `${props.height}px` : props.height};
+    aspect-ratio: 3 / 2;
 
     .loader {
         width: 100%;
@@ -46,8 +49,11 @@ export const BubbleSlideWrapper = styled.div`
 `;
 
 export const BubbleBounceWrapper = styled.div`
-    width: 40px;
-    height: 20px;
+    max-width: 30px;
+    max-height: 20px;
+     height: ${(props) =>
+		typeof props.height === 'number' ? `${props.height}px` : props.height};
+    aspect-ratio: 3 / 2;
 
     .loader {
         width: 100%;

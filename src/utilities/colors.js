@@ -8,6 +8,7 @@ export const colors = {
 			sbLine: '#cccccc',
 			text: '#000',
 			sbText: '#6F6F6F',
+			chipBoxBg: '#fdfdfd',
 			menuBg: '#fdfdfd',
 			menuActive: '#f2f2f2',
 			menuBorder: '#e6e6e6',
@@ -18,6 +19,13 @@ export const colors = {
 			yellow: '#FFA416',
 			green: '#308242',
 			orange: '#FFA416',
+			purple: '#6141ab',
+			pinkL: '#ffc8dd',
+			pinkM: '#ffafcc',
+			blueL: '#bde0fe',
+			blueM: '#a2d2ff',
+			violetL: '#cdb4db',
+			violetM: '#be9fd1',
 			disabledText: '',
 			disabled: '',
 		},
@@ -37,7 +45,8 @@ export const colors = {
 			line: '#ebebeb',
 			cardLine: '#ebebeb',
 			cardSbLine: '#e6e6e6',
-			overlayLight: 'rgba(255, 255, 255, 0.04)'
+			overlayLight: 'rgba(255, 255, 255, 0.04)',
+			overlayDark: 'rgba(0, 0, 0, 0.04)',
 		},
 
 		intro: {
@@ -54,6 +63,7 @@ export const colors = {
 		showcaseBox: {
 			background: '#f9f9f9',
 			container: '#ffffff',
+			card: "#f8f8fa",
 			line: '#ebebeb',
 			text: '#000',
 			sbText: '#6F6F6F',
@@ -70,7 +80,7 @@ export const colors = {
 			background: '#000000',
 			text: '#ffffff',
 			hoverBg: '#383838',
-			disabledBg: '',
+			disabledBg: '#000000',
 		},
 
 		basicBtn: {
@@ -96,6 +106,11 @@ export const colors = {
 			hoverBg: '#d9d9d9',
 			disabledBg: '#c9c9c9',
 		},
+
+		skeleton: {
+			background1: 'rgba(102, 102, 102, 0.04)',
+			background2: 'rgba(51, 51, 51, 0.07)',
+		},
 	},
 
 	// Dark mode colors
@@ -109,6 +124,7 @@ export const colors = {
 			sbLine: '#4d4d4d',
 			text: '#d9d9d9',
 			sbText: '#989898',
+			chipBoxBg: '#1d1d1d',
 			menuBg: '#202020',
 			menuActive: '#323232',
 			menuBorder: '#313131',
@@ -119,6 +135,13 @@ export const colors = {
 			yellow: '#FFA416',
 			green: '#308242',
 			orange: '#FFA416',
+			purple: '#6141ab',
+			pinkL: '#ffc8dd',
+			pinkM: '#ffafcc',
+			blueL: '#bde0fe',
+			blueM: '#a2d2ff',
+			violetL: 'cdb4db',
+			violetM: '#be9fd1',
 			disabledText: '',
 			disabled: '',
 		},
@@ -138,7 +161,8 @@ export const colors = {
 			line: '#333333',
 			cardLine: '#262626',
 			cardSbLine: '#333333',
-			overlayDark: 'rgba(0, 0, 0, 0.04)'
+			overlayLight: 'rgba(255, 255, 255, 0.04)',
+			overlayDark: 'rgba(0, 0, 0, 0.04)',
 		},
 
 		intro: {
@@ -155,7 +179,7 @@ export const colors = {
 		showcaseBox: {
 			background: '#121212',
 			container: '#1d1d1d',
-			// container: "#292a35",
+			card: "#28272c",
 			line: '#333333',
 			text: '#e4e4e4',
 			sbText: '#989898',
@@ -172,7 +196,7 @@ export const colors = {
 			background: '#333333',
 			text: '#e4e4e4',
 			hoverBg: '#4d4d4d',
-			disabledBg: '',
+			disabledBg: '#333333',
 		},
 
 		basicBtn: {
@@ -197,6 +221,11 @@ export const colors = {
 			text: '#d9d9d9',
 			hoverBg: '#404040',
 			disabledBg: '#c9c9c9',
+		},
+
+		skeleton: {
+			background1: 'rgba(153, 153, 153, 0.04)',
+			background2: 'rgba(255, 255, 255, 0.07)',
 		},
 	},
 };

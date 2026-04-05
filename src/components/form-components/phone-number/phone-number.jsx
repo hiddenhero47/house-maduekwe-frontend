@@ -79,14 +79,11 @@ const PhoneInput = ({
 				handleChange(name || id)(fullPhoneNumber);
 			}
 			if (customChange) {
-				const codeObject = PhoneCodeData.find(
-					(option) => option.code === codes.country
-				);
 				customChange({
 					code: codes.phone,
 					number,
+					fullPhoneNumber,
 					country: codes.country,
-					codeObject,
 				});
 			}
 		} else {
@@ -135,7 +132,7 @@ const PhoneInput = ({
 				/>
 			</MyInput>
 
-			{isError && <Error>{errormessage}!</Error>}
+			{isError && <Error className='Form_error'>{errormessage}!</Error>}
 		</>
 	);
 };
