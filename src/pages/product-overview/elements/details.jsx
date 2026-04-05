@@ -17,9 +17,21 @@ import { useDispatch } from 'react-redux';
 import { addToHoldings } from '../../../store/slice/holding';
 import { IoIosAdd } from 'react-icons/io';
 import { RiSubtractLine } from 'react-icons/ri';
+import { ensureUser } from '../../../store/slice/auth';
+import CartServices from '../../../features/services/custom-hooks/cart';
+import { toast } from 'react-toastify';
+import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 
-function Details({ product, attribute, configAttribute, setIndex }) {
+function Details({
+	product,
+	attribute,
+	configAttribute,
+	setIndex,
+	quantity,
+	setQuantity,
+}) {
 	const dispatch = useDispatch();
+	const { mutate: addToCart, isPending } = CartServices.add();
 
 	const { colors, sizes } = useMemo(() => {
 		if (!product?.attributes) return { colors: [], sizes: [] };
@@ -65,6 +77,34 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 
 		console.log('📦 Add to holding', selectedItem);
 		dispatch(addToHoldings(selectedItem));
+	};
+
+	const increaseQuantity = (value = 1) => {
+		setQuantity((prev) => prev + value);
+	};
+
+	const decreaseQuantity = (value = 1) => {
+		setQuantity((prev) => Math.max(prev - value, 1));
+	};
+
+	const cartServer = () => {
+		const selectedItem = {
+			shopItem: product?._id,
+			quantity: quantity,
+			selectedAttributes: [
+				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(attribute.currentSize ? [attribute.currentSize] : []),
+			],
+		};
+
+		const isValidData =
+			selectedItem &&
+			typeof selectedItem === 'object' &&
+			Object.keys(selectedItem).length > 0;
+
+		if (isValidData) {
+			addToCart({ itemList: [selectedItem] });
+		}
 	};
 
 	return (
@@ -161,22 +201,45 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 				</HoldBtn>
 
 				<Increment>
-					<button className="qty-btn">
+					<button
+						className="qty-btn"
+						type="button"
+						onClick={() => decreaseQuantity()}
+					>
 						<RiSubtractLine />
 					</button>
 
-					<span className="qty-value">1</span>
+					<span className="qty-value">{quantity}</span>
 
-					<button className="qty-btn">
+					<button
+						className="qty-btn"
+						type="button"
+						onClick={() => increaseQuantity()}
+					>
 						<IoIosAdd />
 					</button>
 				</Increment>
 			</div>
-			<AddToCartBtn>
-				Add To Cart
-				<i className="ml-1">
-					<FaCartShopping />
-				</i>
+			<AddToCartBtn
+				$isLoading={isPending}
+				onClick={() =>
+					dispatch(
+						ensureUser(
+							() => cartServer(),
+							() => toast.warning('Can not add to cart, User not logged in 🛒')
+						)
+					)
+				}
+			>
+				<div className="content">
+					Add To Cart
+					<i className="ml-1">
+						<FaCartShopping />
+					</i>
+				</div>
+				<div className="loader">
+					<BubbleSlide color="var(--addToCart-text)" height="20px" />
+				</div>
 			</AddToCartBtn>
 
 			<div className="mt-8 pb-[35px] border-b-[var(--mainBody-line)] border-b-[1.2px]">
@@ -188,13 +251,13 @@ function Details({ product, attribute, configAttribute, setIndex }) {
 				</p>
 			</div>
 
-			{product?.futures && (
+			{product?.highlights && (
 				<div className="mt-8">
 					<h3 className="text-sm font-semibold text-[var(--mainBody-text)]">
 						Highlights
 					</h3>
 					<ul className="list-disc pl-5 mt-3 text-sm space-y-2">
-						{product?.futures?.map((h, i) => (
+						{product?.highlights?.map((h, i) => (
 							<li key={i} className="text-[var(--mainBody-sbText)]">
 								{h}
 							</li>

@@ -29,7 +29,7 @@ const useAddToCartMutation = () => {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
-			toast.success('Item added to cart');
+			toast.success('🛒 Item added to cart');
 		},
 	});
 };

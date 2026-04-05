@@ -4,6 +4,11 @@ export const PageWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+
+	.countian {
+		margin: auto;
+		margin-top: 70px;
+	}
 `;
 
 export const Header = styled.header`
@@ -77,43 +82,57 @@ export const Section = styled.section`
 	}
 `;
 
+const hexToRgba = (hex, opacity) => {
+	const r = parseInt(hex.slice(1, 3), 16);
+	const g = parseInt(hex.slice(3, 5), 16);
+	const b = parseInt(hex.slice(5, 7), 16);
+	return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
 const statusStyles = {
 	pending: css`
-		background: ${({ theme }) => theme?.form?.background};
-		color: ${({ theme }) => theme?.form?.text};
+		background: ${({ theme }) => theme.form.background};
+		color: ${({ theme }) => theme.form.text};
 	`,
+
 	paid: css`
-		background: rgba(48, 130, 66, 0.15);
-		color: ${({ theme }) => theme?.form?.green};
+		background: ${({ theme }) => hexToRgba(theme.form.green, 0.15)};
+		color: ${({ theme }) => theme.form.green};
 	`,
+
 	processing: css`
-		background: rgba(0, 136, 232, 0.15);
-		color: ${({ theme }) => theme?.form?.blue};
+		background: ${({ theme }) => hexToRgba(theme.form.blue, 0.15)};
+		color: ${({ theme }) => theme.form.blue};
 	`,
+
 	shipped: css`
-		background: rgba(0, 136, 232, 0.2);
-		color: ${({ theme }) => theme?.form?.blue};
+		background: ${({ theme }) => hexToRgba(theme.form.yellow, 0.2)};
+		color: ${({ theme }) => theme.form.yellow};
 	`,
+
 	delivered: css`
-		background: rgba(48, 130, 66, 0.2);
-		color: ${({ theme }) => theme?.form?.green};
+		background: ${({ theme }) => hexToRgba(theme.form.green, 0.2)};
+		color: ${({ theme }) => theme.form.green};
 	`,
+
 	cancelled: css`
-		background: rgba(255, 0, 0, 0.15);
-		color: ${({ theme }) => theme?.form?.error};
+		background: ${({ theme }) => hexToRgba(theme.form.error, 0.15)};
+		color: ${({ theme }) => theme.form.error};
 	`,
+
 	returned: css`
-		background: rgba(255, 164, 22, 0.2);
-		color: ${({ theme }) => theme?.form?.orange};
+		background: ${({ theme }) => hexToRgba(theme.form.orange, 0.2)};
+		color: ${({ theme }) => theme.form.orange};
 	`,
+
 	'processing-return': css`
-		background: rgba(255, 164, 22, 0.15);
-		color: ${({ theme }) => theme?.form?.orange};
+		background: ${({ theme }) => hexToRgba(theme.form.violetL, 0.15)};
+		color: ${({ theme }) => theme.form.violetL};
 	`,
 };
 
 export const StatusPill = styled.span`
-    width: fit-content;
+	width: fit-content;
 	padding: 0.35rem 0.75rem;
 	border-radius: 999px;
 	font-size: 12.5px;
@@ -122,11 +141,55 @@ export const StatusPill = styled.span`
 	${({ $status }) => statusStyles[$status]};
 `;
 
+const statusColor = (theme, status) => {
+	switch (status) {
+		case 'pending':
+			return theme.form.yellow;
+
+		case 'initiated':
+			return theme.form.blue;
+
+		case 'success':
+			return theme.form.green;
+
+		case 'failed':
+			return theme.form.error;
+
+		case 'refunded':
+			return theme.form.purple;
+
+		default:
+			return theme.form.orange;
+	}
+};
+
+export const SpanStatus = styled.span`
+	width: fit-content;
+	padding-block: 2px;
+	padding-inline: 4px;
+	border-radius: 5px;
+	font-size: 9.5px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+
+	${({ theme, $status }) => {
+		const color = statusColor(theme, $status);
+
+		return `
+			color: ${color};
+			border: 1px solid ${color};
+			background-color: ${hexToRgba(color, 0.15)};
+		`;
+	}}
+`;
+
 export const ShopItem = styled.div`
 	width: 100%;
 	display: flex;
 	align-items: center;
 	padding: 10px;
+	padding-right: 15px;
 	border-radius: 12px;
 	background-color: ${({ theme }) => theme?.mainBody.toolkitBg};
 	border: 1px solid ${({ theme }) => theme?.mainBody.line};
@@ -255,8 +318,8 @@ const lighten = (hex, percent = 10) => {
 };
 
 export const Color = styled.div`
-	width: 15px;
-	height: 15px;
+	width: 10px;
+	height: 10px;
 	border-radius: 9999px;
 	outline: 1px solid
 		${({ theme }) =>
@@ -290,7 +353,7 @@ export const Color = styled.div`
 
 export const Size = styled.span`
 	display: flex;
-	font-size: 11.5px;
+	font-size: 12px;
 	font-family: Inter;
 	font-weight: 600;
 	color: ${({ theme }) => theme?.mainBody.text};

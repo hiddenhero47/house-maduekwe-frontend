@@ -18,8 +18,21 @@ import { useSearchParams } from 'react-router-dom';
 import CategoryServices from '../../features/services/custom-hooks/category';
 import AttributeServices from '../../features/services/custom-hooks/attribute';
 import { attributeType } from '../../utilities/app-const';
+import ToolKit from '../../components/tool-kit/index-tool-kit';
+import { OptionItem } from '../../components/tool-kit/index-tool-kit.style';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
+import DeleteModal from '../../components/modal-assets/delete-modal/delete-modal';
+import EditAttribute from '../../components/modal-assets/classing-modal/edit-attribute';
+import EditCategory from '../../components/modal-assets/classing-modal/edit-category';
 
 function Index() {
+	const { mutate: deleteCategory, isPending: isDeletingCategory } =
+		CategoryServices.delete();
+	const { mutate: deleteAttribute, isPending: isDeletingAttribute } =
+		AttributeServices.delete();
+
 	const [section, setSection] = useState('categories');
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -61,28 +74,43 @@ function Index() {
 		setSearchParams(searchParams);
 	};
 
+	const [editCategory, setEditCategory] = useState(null);
+	const [editAttribute, setEditAttribute] = useState(null);
+	const [deleteCategoryInfo, setDeleteCategoryInfo] = useState(null);
+	const [deleteAttributeInfo, setDeleteAttributeInfo] = useState(null);
+
 	const modalRefAttr = useRef(null);
 	const openModal = () => {
-		if (modalRefAttr.current) {
-			modalRefAttr.current.open();
-		}
-	};
-	const closeModal = () => {
-		if (modalRefAttr.current) {
-			modalRefAttr.current.close();
-		}
+		modalRefAttr.current?.open();
 	};
 
 	const modalRefCat = useRef(null);
 	const openModalCat = () => {
-		if (modalRefCat.current) {
-			modalRefCat.current.open();
-		}
+		modalRefCat.current?.open();
 	};
-	const closeModalCat = () => {
-		if (modalRefCat.current) {
-			modalRefCat.current.close();
-		}
+
+	const modalRefCatDelete = useRef(null);
+	const openDeleteCat = (info) => {
+		setDeleteCategoryInfo(info);
+		modalRefCatDelete.current?.open();
+	};
+
+	const modalRefAttrDelete = useRef(null);
+	const openDeleteAttr = (info) => {
+		setDeleteAttributeInfo(info);
+		modalRefAttrDelete.current?.open();
+	};
+
+	const modalRefCatEdit = useRef(null);
+	const openCatEdit = (info) => {
+		setEditCategory(info);
+		modalRefCatEdit.current?.open();
+	};
+
+	const modalRefAttrEdit = useRef(null);
+	const openAttrEdit = (info) => {
+		setEditAttribute(info);
+		modalRefAttrEdit.current?.open();
 	};
 
 	const ensureArray = (value) => {
@@ -90,6 +118,7 @@ function Index() {
 		if (value == null) return [];
 		return [value];
 	};
+
 	return (
 		<Container>
 			<h1>Product Classification</h1>
@@ -192,6 +221,38 @@ function Index() {
 											</span>
 										),
 									},
+									{
+										Header: () => '',
+										accessor: 'type',
+										Cell: ({ row }) => (
+											<ToolKit
+												icon={<BsThreeDotsVertical className="text-sm" />}
+												menuClass={
+													attribute.length === 1 ? 'tool_kit' : 'tool_kits'
+												}
+												useCoords={attribute.length === 1 ? true : false}
+												alineRight={attribute.length === 1 ? true : false}
+											>
+												<div className="flex flex-col gap-[2px]">
+													<OptionItem
+														className="edit"
+														onClick={() => openAttrEdit(row.original)}
+													>
+														<FiEdit2 size={16} />
+														<span>Edit</span>
+													</OptionItem>
+
+													<OptionItem
+														className="delete"
+														onClick={() => openDeleteAttr(row.original)}
+													>
+														<MdOutlineDeleteOutline size={18} />
+														<span>Delete</span>
+													</OptionItem>
+												</div>
+											</ToolKit>
+										),
+									},
 								]}
 								dataSource={attribute || []}
 								useStrip
@@ -245,6 +306,38 @@ function Index() {
 											</span>
 										),
 									},
+									{
+										Header: () => '',
+										accessor: '_id',
+										Cell: ({ row }) => (
+											<ToolKit
+												icon={<BsThreeDotsVertical className="text-sm" />}
+												menuClass={
+													category.length === 1 ? 'tool_kit' : 'tool_kits'
+												}
+												useCoords={category.length === 1 ? true : false}
+												alineRight={category.length === 1 ? true : false}
+											>
+												<div className="flex flex-col gap-[2px]">
+													<OptionItem
+														className="edit"
+														onClick={() => openCatEdit(row.original)}
+													>
+														<FiEdit2 size={16} />
+														<span>Edit</span>
+													</OptionItem>
+
+													<OptionItem
+														className="delete"
+														onClick={() => openDeleteCat(row.original)}
+													>
+														<MdOutlineDeleteOutline size={18} />
+														<span>Delete</span>
+													</OptionItem>
+												</div>
+											</ToolKit>
+										),
+									},
 								]}
 								dataSource={category || []}
 								useStrip
@@ -258,7 +351,7 @@ function Index() {
 								}
 								emptyText="NO CATEGORIES"
 								emptySbText="You haven’t created any categories yet."
-								refetch={() => refetchCat}
+								refetch={() => refetchCat()}
 								currentPage={pageCat}
 								totalPages={paginationCat?.totalPages}
 								changePage={flipPageCat}
@@ -269,14 +362,46 @@ function Index() {
 			</div>
 			<CreateAttribute
 				ref={modalRefAttr}
-				closeModal={closeModal}
+				closeModal={() => modalRefAttr.current.close()}
 				openModal={openModal}
 			/>
 
 			<CreateCategory
 				ref={modalRefCat}
-				closeModal={closeModalCat}
+				closeModal={() => modalRefCat.current.close()}
 				openModal={openModalCat}
+			/>
+
+			<DeleteModal
+				ref={modalRefCatDelete}
+				action={(data) => deleteCategory(data?._id)}
+				data={deleteCategoryInfo}
+				text="Are you sure you want to delete this?"
+				subText="Make sure it's removed from products first."
+				clean={() => setDeleteCategoryInfo(null)}
+			/>
+
+			<DeleteModal
+				ref={modalRefAttrDelete}
+				action={(data) => deleteAttribute(data?._id)}
+				data={deleteAttributeInfo}
+				text="Are you sure you want to delete this?"
+				subText="Make sure it's removed from products first."
+				clean={() => setDeleteAttributeInfo(null)}
+			/>
+
+			<EditCategory
+				ref={modalRefCatEdit}
+				category={editCategory}
+				closeModal={() => modalRefCatEdit.current.close()}
+				clear={() => setEditCategory(null)}
+			/>
+
+			<EditAttribute
+				ref={modalRefAttrEdit}
+				attribute={editAttribute}
+				closeModal={() => modalRefAttrEdit.current.close()}
+				clear={() => setEditAttribute(null)}
 			/>
 		</Container>
 	);

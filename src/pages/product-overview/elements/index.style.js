@@ -17,7 +17,7 @@ export const List = styled.ol`
 	max-width: 1440px;
 `;
 
-export const CrumbLink = styled.span`
+export const CrumbLink = styled.button`
 	margin-right: 6px;
 	font-size: 14px;
 	font-weight: 500;
@@ -190,7 +190,7 @@ export const SliderWrapper = styled.div`
 `;
 
 export const Image = styled.img`
-	object-position: ${({ $position }) => $position || 'center'};
+	/* object-position: ${({ $position }) => $position || 'center'}; */
 	transition: object-position 0.3s ease;
 `;
 
@@ -393,20 +393,51 @@ export const SizeButton = styled.button`
 
 export const AddToCartBtn = styled.button`
 	width: 100%;
-	/* margin-top: 2rem; */
-	padding: 0.75rem 0; /* py-3 */
-	border-radius: 0.375rem; /* rounded-md */
-	font-weight: 500;
+	padding-block: 13px;
 	padding-inline: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: ${({ theme }) => theme?.addToCart.background};
-	color: ${({ theme }) => theme?.addToCart.text};
-	transition: background-color 0.2s ease;
+	border-radius: 6px;
+	position: relative;
+
+	background-color: ${({ theme }) => theme?.addToCart?.background};
+	color: ${({ theme }) => theme?.addToCart?.text};
+
+	cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+	transition: all 0.2s ease-in-out;
 
 	&:hover {
-		background-color: ${({ theme }) => theme?.addToCart.hoverBg};
+		transform: translateY(-1px);
+		background-color: ${({ theme }) => theme?.addToCart?.hoverBg};
+	}
+
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 14px;
+		font-weight: 600;
+		font-family: Inter;
+
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+	}
+
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+		margin: auto;
+		z-index: 2;
+	}
+
+	@media (max-width: 500px) {
+		padding-inline: 8px;
+
+		.content {
+			gap: 4px;
+			font-size: 13px;
+		}
 	}
 `;
 

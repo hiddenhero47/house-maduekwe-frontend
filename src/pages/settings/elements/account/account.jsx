@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SecurityWrapper, AccountNav, OptionBtn } from './account.style';
 import UserDetails from './user-details/user-details';
 import TwoFAauthentication from './2fa-authentication/2fa-authentication';
+import ChangePassword from './change-password/change-password';
 
 function AccountSettings() {
 	const profile = {
@@ -48,6 +49,8 @@ function AccountSettings() {
 				{option === profile.DETAILS && <UserDetails />}
 
 				{option === profile.TWO_FA && <TwoFAauthentication />}
+
+				{option === profile.PASSWORD && <ChangePassword />}
 			</div>
 		</SecurityWrapper>
 	);

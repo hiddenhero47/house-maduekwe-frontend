@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Container } from './elements/index.style';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
-import ImageSelector from '../../components/form-components/image-selector/selector';
-import { items } from '../../dummyData/shopItems';
-import ChipsInput from '../../components/form-components/chips-input/chips-input';
+import FilterProductDisplay from '../../components/modal-assets/filter-modal/filter&product/filter&product';
+import SelectShopItemsModal from '../../components/modal-assets/group-item-modal/filter&product/filter&product';
+import SelectItemGroupModal from '../../components/modal-assets/group-item-modal/filter&group/filter&group';
+import ToolKit from '../../components/tool-kit/index-tool-kit';
+import { OptionItem } from '../../components/tool-kit/index-tool-kit.style';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 function Index() {
-	const [tag, setTags] = useState([]);
 	const data = [
 		{
 			firstName: 'Okonkwo',
@@ -27,8 +31,6 @@ function Index() {
 			email: 'maduekwe@gmail.com',
 		},
 	];
-
-	const ImageCatalog = items[0].imageCatalog;
 	return (
 		<Container className="text-mainBody-yellow">
 			<p>Index home</p>
@@ -72,26 +74,23 @@ function Index() {
 				useStrip
 			/>
 
-			<ImageSelector options={ImageCatalog}>
-				<span className="ml-[50px]">open</span>
-			</ImageSelector>
+			<ToolKit
+				icon={<BsThreeDotsVertical className="" />}
+				warperClass=""
+				useCoords={true}
+			>
+				<div className="flex flex-col gap-[2px]">
+					<OptionItem className="edit" onClick={() => {}}>
+						<FiEdit2 size={16} />
+						<span>Edit</span>
+					</OptionItem>
 
-			<div className="w-[350px] flex flex-col mt-[50px]">
-				<ChipsInput
-					id="tag"
-					name="tag"
-					value={tag}
-					onChange={(v) => setTags(v)}
-					max={10}
-					// onBlur={handleBlur}
-					isError={false}
-					errormessage="error"
-					placeholder="Add tag and press Enter"
-					paddingX="14px"
-					paddingY="9px"
-					useBackground
-				/>
-			</div>
+					<OptionItem className="delete" onClick={() => {}}>
+						<MdOutlineDeleteOutline size={18} />
+						<span>Delete</span>
+					</OptionItem>
+				</div>
+			</ToolKit>
 		</Container>
 	);
 }

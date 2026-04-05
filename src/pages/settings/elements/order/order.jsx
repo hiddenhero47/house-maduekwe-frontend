@@ -1,13 +1,14 @@
 import React from 'react';
-import { AddressWrapper, TableWrapper } from './order.style';
+import { AddressWrapper, TableWrapper, SpanStatus } from './order.style';
 import CustomTable from '../../../../components/table_components/basicTableOne';
 import { OrderIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
 import { BsBoxSeam } from 'react-icons/bs';
 import { OrderServices } from '../../../../features/services/custom-hooks/orders';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function Order() {
+	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const page = Number(searchParams.get('page')) || 1;
@@ -39,7 +40,7 @@ function Order() {
 						{
 							Header: () => 'Nos',
 							accessor: '__nos',
-							Cell: ({ nos }) => <span className="nowrap">{nos}</span>,
+							Cell: ({ nos }) => <span className="nowrap ml-[5px]">{nos}</span>,
 						},
 						{
 							Header: () => 'Order ID',
@@ -52,7 +53,7 @@ function Order() {
 							Header: () => 'Items',
 							accessor: 'items',
 							Cell: ({ value }) => (
-								<span className="nowrap">
+								<span className="nowrap ml-[10px]">
 									{Array.isArray(value) ? value.length : 0}
 								</span>
 							),
@@ -61,7 +62,7 @@ function Order() {
 							Header: () => 'Total Amount',
 							accessor: 'totalAmount',
 							Cell: ({ value, row }) => (
-								<span className="nowrap font-medium">
+								<span className="nowrap font-medium ml-[10px]">
 									{row?.original?.currency
 										? `${row.original.currency} ${value.toLocaleString()}`
 										: value.toLocaleString()}
@@ -72,7 +73,9 @@ function Order() {
 							Header: () => 'Status',
 							accessor: 'status',
 							Cell: ({ value }) => (
-								<span className="nowrap capitalize">{value}</span>
+								<SpanStatus $status={value} className="nowrap capitalize">
+									{value}
+								</SpanStatus>
 							),
 						},
 						{
@@ -101,6 +104,9 @@ function Order() {
 					currentPage={page}
 					totalPages={pagination?.totalPages || 1}
 					changePage={flipPage}
+					onCallRow={(data) =>
+						navigate(`/settings?currentSettings=orders&orderId=${data?._id}`)
+					}
 				/>
 			</TableWrapper>
 		</AddressWrapper>
