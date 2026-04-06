@@ -17,6 +17,8 @@ const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(' ') || [
 	'PATCH',
 ];
 
+console.log(BASE_URL);
+
 const successResponseHandler = (res) => {
 	return res;
 };
