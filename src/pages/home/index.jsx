@@ -117,7 +117,7 @@ function Index() {
 				</div>
 			</ContainerSection>
 
-			{/* <ContainerSectionAltA className="intro-y">
+			<ContainerSectionAltA className="intro-y">
 				<div className="left">
 					<div className="cubicle mask_shape mask_tl h-full">
 						<div className="imageHolder">
@@ -145,7 +145,7 @@ function Index() {
 						</div>
 					</div>
 				</div>
-			</ContainerSectionAltA> */}
+			</ContainerSectionAltA>
 
 			<AppFooter>
 				<div id="footer_background">
