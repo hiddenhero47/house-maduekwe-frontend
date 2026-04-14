@@ -2,11 +2,7 @@ import React from 'react';
 import {
 	Container,
 	IntroSection,
-	BannerWrapper,
 	BannerImage,
-	ContainerSection,
-	ContainerSectionAltA,
-	ContainerSectionAltB,
 	AppFooter,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
@@ -30,13 +26,108 @@ import {
 } from '../../components/icon-components/backgrounds';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import bannerImage from '../../assets/images/brand-name.svg';
+import GroupDisplay from './elements/group-display/group-display';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	const theme = useTheme();
 
-	const image = items[0].imageCatalog;
+	const group1 = {
+		groupName: 'Luxury High-End',
+		shopItems: [items[0], items[0], items[0]],
+	};
 
+	const group2 = {
+		groupName: 'Vintage Retro',
+		shopItems: [items[0], items[0], items[0], items[0]],
+	};
+
+	const itemGroup = [group1, group2, group1];
+
+	const normalizeItems = (items) => {
+		const count = items.length;
+
+		let target;
+
+		if (count <= 2) target = 2;
+		else if (count <= 5) target = count <= 3 ? 2 : 5;
+		else target = count <= 7 ? 5 : 8;
+
+		let result = [...items];
+
+		// trim
+		if (result.length > target) {
+			return result.slice(0, target);
+		}
+
+		// duplicate smartly using imageCatalog
+		while (result.length < target) {
+			const base = result[result.length % items.length];
+			const nextImage =
+				base.imageCatalog?.length > 0
+					? base.imageCatalog[0] // take a new image
+					: base.image; // fallback
+
+			base.imageCatalog = base.imageCatalog?.slice(1); // remove used image from catalog
+			result.push({
+				...base,
+				image: nextImage,
+			});
+		}
+
+		return result;
+	};
+
+	const formatItemGroups = (itemGroups = []) => {
+		if (!Array.isArray(itemGroups)) return [];
+
+		const cleanedGroups = itemGroups
+			.map((group) => {
+				if (!group?.shopItems?.length) return null;
+
+				const items = group.shopItems
+					.map((item) => {
+						if (!item) return null;
+
+						// pick primary image
+						const primaryImage = item?.placeHolder?.url
+							? {
+									url: item.placeHolder.url,
+								}
+							: item?.imageCatalog?.[0];
+
+						if (!primaryImage?.url) return null;
+
+						// remove selected image from catalog
+						const filteredCatalog = (item.imageCatalog || []).filter(
+							(img) => img.url !== primaryImage.url
+						);
+
+						return {
+							_id: item._id,
+							name: item.name,
+							price: item.price,
+							image: primaryImage,
+							imageCatalog: filteredCatalog,
+						};
+					})
+					.filter(Boolean);
+
+				if (!items.length) return null;
+
+				return {
+					groupName: group.groupName,
+					shopItems: normalizeItems(items),
+				};
+			})
+			.filter(Boolean);
+
+		return cleanedGroups.slice(0, 2);
+	};
+
+	console.log(formatItemGroups(itemGroup));
+	
+	
 	return (
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
@@ -93,59 +184,9 @@ function Index() {
 				</Link>
 			</IntroSection>
 
-			<ContainerSection className="intro-y">
-				<div className="style_container">
-					<div className="cubicle mask_shape mask_tr">
-						<div className="imageHolder">
-							<img src={image[0].url} alt="" />
-						</div>
-					</div>
-				</div>
-
-				<div className="style_container_c">
-					<div className="cubicle mask_shape mask_bl">
-						<div className="imageHolder">
-							<img src={image[1].url} alt="" />
-						</div>
-					</div>
-
-					<div className="cubicle mask_shape mask_br">
-						<div className="imageHolder">
-							<img src={image[2].url} alt="" />
-						</div>
-					</div>
-				</div>
-			</ContainerSection>
-
-			<ContainerSectionAltA className="intro-y">
-				<div className="left">
-					<div className="cubicle mask_shape mask_tl h-full">
-						<div className="imageHolder">
-							<img src={image[2].url} alt="" />
-						</div>
-					</div>
-				</div>
-
-				<div className="right">
-					<div className="cubicle mask_shape mask_tr">
-						<div className="imageHolder">
-							<img src={image[1].url} alt="" />
-						</div>
-					</div>
-
-					<div className="cubicle">
-						<div className="imageHolder">
-							<img src={image[3].url} alt="" />
-						</div>
-					</div>
-
-					<div className="cubicle mask_shape mask_br">
-						<div className="imageHolder">
-							<img src={image[4].url} alt="" />
-						</div>
-					</div>
-				</div>
-			</ContainerSectionAltA>
+			{formatItemGroups(itemGroup).map((group, index) => (
+				<GroupDisplay key={index} group={group} className="mt-[70px]" />
+			))}
 
 			<AppFooter>
 				<div id="footer_background">
