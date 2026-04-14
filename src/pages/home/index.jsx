@@ -3,6 +3,7 @@ import {
 	Container,
 	IntroSection,
 	BannerImage,
+	Promotion,
 	AppFooter,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
@@ -27,10 +28,12 @@ import {
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import bannerImage from '../../assets/images/brand-name.svg';
 import GroupDisplay from './elements/group-display/group-display';
+import { useNavigate } from 'react-router-dom';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	const theme = useTheme();
+	const navigate = useNavigate();
 
 	const group1 = {
 		groupName: 'Luxury High-End',
@@ -126,8 +129,7 @@ function Index() {
 	};
 
 	console.log(formatItemGroups(itemGroup));
-	
-	
+
 	return (
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
@@ -185,8 +187,16 @@ function Index() {
 			</IntroSection>
 
 			{formatItemGroups(itemGroup).map((group, index) => (
-				<GroupDisplay key={index} group={group} className="mt-[70px]" />
+				<GroupDisplay index={index} group={group} className="mt-[70px]" />
 			))}
+
+			<Promotion onClick={() => navigate('/products/')}>
+				<div className="w-full h-full relative rounded-[inherit]">
+					<div className="imageHolder rounded-[inherit]">
+						<img src={postImage} alt="No Image" />
+					</div>
+				</div>
+			</Promotion>
 
 			<AppFooter>
 				<div id="footer_background">

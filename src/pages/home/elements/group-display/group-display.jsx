@@ -8,10 +8,10 @@ import {
 } from './group-display.style';
 import { useNavigate } from 'react-router-dom';
 
-function GroupDisplay({key, group, className = '' }) {
+function GroupDisplay({index, group, className = '' }) {
 	const navigate = useNavigate();
 	return (
-		<GroupSection key={key} className={className}>
+		<GroupSection key={index} className={className}>
 			<h1>{group?.groupName}</h1>
 
 			{group?.shopItems?.length === 8 && (

@@ -231,7 +231,7 @@ export const AppFooter = styled.footer`
 	width: 99%;
 	border-radius: 8px;
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
-	margin-top: 15vh;
+	margin-top: 13vh;
 	margin-inline: auto;
 	color: ${({ theme }) => theme?.mainBody.sbText};
 	background-color: ${({ theme }) => theme?.mainBody.container};
@@ -301,6 +301,7 @@ export const AppFooter = styled.footer`
 		font-size: 0.875rem;
 		line-height: 1.5rem;
 		color: ${({ theme }) => theme?.mainBody.kitTextDark};
+		text-align: center;
 	}
 `;
 
@@ -311,6 +312,20 @@ export const BannerImage = styled.div`
 	transform: translate(-50%, -50%);
 	width: 56%;
 	aspect-ratio: 3 / 2;
+	animation: bannerIntro 0.6s ease forwards;
+	opacity: 0;
+	transform: translate(-50%, -50%) scale(0.95);
+
+	@keyframes bannerIntro {
+		from {
+			opacity: 0;
+			transform: translate(-50%, -50%) scale(0.95);
+		}
+		to {
+			opacity: 1;
+			transform: translate(-50%, -50%) scale(1);
+		}
+	}
 
 	.banner_grid {
 		width: 100%;
@@ -373,5 +388,28 @@ export const BannerImage = styled.div`
 	}
 	&:hover .t6 {
 		transform: translate(20px, 20px);
+	}
+`;
+
+export const Promotion = styled.section`
+	width: 90%;
+	aspect-ratio: 1.8/1;
+	display: flex;
+	gap: 10px;
+	margin-inline: auto;
+	margin-top: 100px;
+	border-radius: 8px;
+	cursor: pointer;
+
+	@media (min-width: 920px) and (max-width: 1100px) {
+		width: 95%;
+	}
+
+	@media (min-width: 742px) and (max-width: 910px) {
+		width: 98.5%;
+	}
+
+	@media (max-width: 500px) {
+		aspect-ratio: 1.8;
 	}
 `;
