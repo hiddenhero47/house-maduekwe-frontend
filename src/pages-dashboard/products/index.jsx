@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
 	Container,
 	Search,
@@ -7,6 +7,8 @@ import {
 	GridItem,
 	Image,
 	TableWrapper,
+	EmptyState,
+	ActionBtn,
 } from './elements/index.style';
 import { CiSearch } from 'react-icons/ci';
 import { CiGrid42 } from 'react-icons/ci';
@@ -16,6 +18,7 @@ import {
 	useMatch,
 	useNavigate,
 	useLocation,
+	useSearchParams,
 } from 'react-router-dom';
 import BasicPg from '../../components/table_components/pagination/basicPg';
 import { FaSquareOdnoklassniki } from 'react-icons/fa6';
@@ -23,37 +26,115 @@ import { getRandomInt } from '../../utilities/basic-functions';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import ShopItemServices from '../../features/services/custom-hooks/shop-items';
+import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
+import FilterProductDisplay from '../../components/modal-assets/filter-modal/filter&product/filter&product';
+import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
+import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
+import { EmptyCartIcon } from '../../components/icon-components/empty-cart-icon';
+import DeleteModal from '../../components/modal-assets/delete-modal/delete-modal';
 
 function Index() {
-	const [display, setDisplay] = useState('grid');
-
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [searchParams, setSearchParams] = useSearchParams();
 
-	const { category, minPrice, maxPrice, attributes, keyWord } = useParams();
-	const page = Number(new URLSearchParams(location.search).get('page')) || 1;
+	const [display, setDisplay] = useState('grid');
+	const [deleteInfo, setDeleteInfo] = useState(null);
 
-	const flipPage = (p) => {
-		const params = new URLSearchParams(location.search);
-		params.set('page', p);
+	const category = searchParams.get('category') || '';
+	const minPrice = searchParams.get('minPrice') || '';
+	const maxPrice = searchParams.get('maxPrice') || '';
+	const rawAttributes = searchParams.get('attributes') || '';
+	const classTags = searchParams.get('classTags') || '';
+	const search = searchParams.get('search') || '';
+	const page = Number(searchParams.get('page')) || 1;
 
-		navigate({
-			pathname: location.pathname,
-			search: params.toString(),
-		});
-	};
+	const formattedAttributes = useMemo(() => {
+		if (!rawAttributes) return '';
+		const ids = rawAttributes.split(',');
+		return JSON.stringify(
+			ids.map((id) => ({
+				Attribute: id,
+			}))
+		);
+	}, [rawAttributes]);
+
+	const { mutate: deleteProduct, isPending: isDeleting } =
+		ShopItemServices.delete();
 
 	const { data, isPending } = ShopItemServices.get({
-		page: page,
+		page,
 		limit: 100,
-		category: category || '',
-		attributes: attributes || '',
-		classTags: keyWord || '',
-		minPrice: minPrice || '',
-		maxPrice: maxPrice || '',
+		category,
+		attributes: formattedAttributes,
+		classTags,
+		minPrice,
+		maxPrice,
+		search,
 	});
 
 	const { data: products = [], pagination } = data || {};
+
+	const resetFilter = () => {
+		setSearchParams({ page: 1 });
+	};
+
+	const flipPage = (p) => {
+		const params = Object.fromEntries([...searchParams]);
+		params.page = p;
+		setSearchParams(params);
+	};
+
+	const modalRef = useRef(null);
+	const openModal = () => {
+		modalRef.current?.open();
+	};
+
+	const modalRefDelete = useRef(null);
+	const openDelete = (info) => {
+		setDeleteInfo(info);
+		modalRefDelete.current?.open();
+	};
+
+	const handleFilter = (filters) => {
+		const params = new URLSearchParams(searchParams);
+
+		if (filters.search) params.set('search', filters.search);
+		else params.delete('search');
+
+		if (filters.category) params.set('category', filters.category);
+		else params.delete('category');
+
+		if (filters.subCategory) params.set('subCategory', filters.subCategory);
+		else params.delete('subCategory');
+
+		if (filters.minPrice) params.set('minPrice', filters.minPrice);
+		else params.delete('minPrice');
+
+		if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
+		else params.delete('maxPrice');
+
+		if (filters.classTags) params.set('classTags', filters.classTags);
+		else params.delete('classTags');
+
+		// ✅ attributes (FIXED)
+		const attrIds = [];
+		if (filters.colorAttributes) {
+			attrIds.push(filters.colorAttributes);
+		}
+		if (filters.sizeAttributes) {
+			attrIds.push(filters.sizeAttributes);
+		}
+		if (attrIds.length > 0) {
+			params.set('attributes', attrIds.join(',')); // ✅ CLEAN
+		} else {
+			params.delete('attributes');
+		}
+		// ✅ reset page
+		params.set('page', 1);
+
+		setSearchParams(params);
+	};
 
 	return (
 		<Container>
@@ -91,9 +172,16 @@ function Index() {
 						<LuTableOfContents />
 					</button>
 
-					<FilterBtn>
-						<div className="content">Filter</div>
-						<div className="loader"></div>
+					<FilterBtn onClick={openModal} $isLoading={isPending}>
+						<div className="content">
+							<i>
+								<HiOutlineAdjustmentsHorizontal />
+							</i>
+							Filter
+						</div>
+						<div className="loader">
+							<BubbleSlide color="var(--filterBtn-text)" height="20px" />
+						</div>
 					</FilterBtn>
 				</div>
 			</div>
@@ -107,41 +195,89 @@ function Index() {
 			</div>
 
 			<div id="display_body" className="Y_scroll_style scroll_style">
-				{display === 'grid' && !isPending && (
+				{display === 'grid' && (
 					<div>
-						<MasonryGrid>
-							{(products || []).map((item, index) => (
-								<GridItem key={index} className="grid_item">
-									<button
-										onDoubleClick={() =>
-											navigate(`/admin/products/design/${item?._id}`)
-										}
-									>
-										<div className="imageHolder rounded-[inherit]">
-											<Image
-												src={item?.placeHolder?.url || item?.imageCatalog[0]?.url}
-												alt="Error"
-												onLoad={(e) => {
-													const img = e.currentTarget;
-													const ratio = img.naturalWidth / img.naturalHeight;
-													const position = ratio < 0.66 ? 'top' : 'center';
-													img.style.objectPosition = position;
-												}}
-											/>
-										</div>
+						{isPending && (
+							<MasonryGrid>
+								{Array.from({ length: 6 }).map((_, i) => (
+									<GridItem key={i}>
+										<Skeleton
+											height="100%"
+											width="100%"
+											$color1="var(--skeleton-background1)"
+											$color2="var(--skeleton-background2)"
+										/>
+									</GridItem>
+								))}
+							</MasonryGrid>
+						)}
 
-										<div className="details flex flex-col">
-											<h3>{item?.name}</h3>
-											<span>{item?._id}</span>
-										</div>
-									</button>
-								</GridItem>
-							))}
-						</MasonryGrid>
+						{Array.isArray(products) && products.length === 0 && !isPending && (
+							<EmptyState>
+								<div className="content">
+									<i>
+										<EmptyCartIcon width="100%" height="100%" />
+									</i>
+
+									<h3>No Products Found</h3>
+
+									<p>
+										There is no available data to show. Please try something
+										else.
+									</p>
+								</div>
+							</EmptyState>
+						)}
+
+						{!isPending && products.length >= 1 && (
+							<MasonryGrid>
+								{(products || []).map((item, index) => (
+									<GridItem key={index} className="grid_item">
+										<button
+											onDoubleClick={() =>
+												navigate(`/admin/products/design/${item?._id}`)
+											}
+										>
+											<div className="imageHolder rounded-[inherit]">
+												<Image
+													src={
+														item?.placeHolder?.url || item?.imageCatalog[0]?.url
+													}
+													alt="Error"
+													onLoad={(e) => {
+														const img = e.currentTarget;
+														const ratio = img.naturalWidth / img.naturalHeight;
+														const position = ratio < 0.66 ? 'top' : 'center';
+														img.style.objectPosition = position;
+													}}
+												/>
+											</div>
+
+											<div className="details flex flex-col">
+												<h3>{item?.name}</h3>
+												<span>{item?._id}</span>
+											</div>
+
+											<div className="delete">
+												<ActionBtn
+													title="Delete group"
+													className="danger"
+													onClick={() => {
+														openDelete(item);
+													}}
+												>
+													<FaTrash />
+												</ActionBtn>
+											</div>
+										</button>
+									</GridItem>
+								))}
+							</MasonryGrid>
+						)}
 					</div>
 				)}
 
-				{display === 'table' && !isPending && (
+				{display === 'table' && (
 					<div>
 						<TableWrapper>
 							<CustomTable
@@ -216,9 +352,28 @@ function Index() {
 											</span>
 										),
 									},
+									{
+										Header: () => 'Action',
+										accessor: '_id',
+										Cell: ({ value, row }) => (
+											<div className="flex items-center gap-[10px] ml-[20px]">
+												<ActionBtn
+													title="Delete group"
+													className="danger"
+													onClick={(e) => {
+														e.stopPropagation();
+														const group = row.original;
+														openDelete(group);
+													}}
+												>
+													<FaTrash />
+												</ActionBtn>
+											</div>
+										),
+									},
 								]}
 								dataSource={products || []}
-								isLoading={false}
+								isLoading={isPending}
 								useStrip
 								emptyIcon={
 									<NoDataIcon
@@ -227,7 +382,7 @@ function Index() {
 										color="var(--mainBody-sbText)"
 									/>
 								}
-								emptyText="NO ITEMS YET"
+								emptyText="No Products Found"
 								emptySbText="There is no available data to show. Please try something else"
 								onDoubleCallRow={(item) =>
 									navigate(`/admin/products/design/edit?id=${item?._id}`)
@@ -237,6 +392,22 @@ function Index() {
 					</div>
 				)}
 			</div>
+
+			<FilterProductDisplay
+				ref={modalRef}
+				filterHandler={handleFilter}
+				reset={resetFilter}
+				closeModal={() => modalRef.current?.close()}
+			/>
+
+			<DeleteModal
+				ref={modalRefDelete}
+				action={(data) => deleteProduct(data?._id)}
+				data={deleteInfo}
+				text="Are you sure you want to delete this?"
+				subText="Make sure it's removed from products first."
+				clean={() => setDeleteInfo(null)}
+			/>
 		</Container>
 	);
 }
