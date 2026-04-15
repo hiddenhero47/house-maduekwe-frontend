@@ -32,6 +32,7 @@ import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import { EmptyCartIcon } from '../../components/icon-components/empty-cart-icon';
 import DeleteModal from '../../components/modal-assets/delete-modal/delete-modal';
+import { FaTrash } from 'react-icons/fa';
 
 function Index() {
 	const navigate = useNavigate();
@@ -385,7 +386,7 @@ function Index() {
 								emptyText="No Products Found"
 								emptySbText="There is no available data to show. Please try something else"
 								onDoubleCallRow={(item) =>
-									navigate(`/admin/products/design/edit?id=${item?._id}`)
+									navigate(`/admin/products/design/${item?._id}`)
 								}
 							/>
 						</TableWrapper>

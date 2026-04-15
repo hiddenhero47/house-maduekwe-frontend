@@ -355,14 +355,15 @@ export const EmptyState = styled.div`
 
 export const ActionBtn = styled.button`
 	width: 28px;
-	height: 28px;
+	/* height: 28px; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 6px;
+	border-radius: 5px !important;
 	background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
 	color: ${({ theme }) => theme?.mainBody?.sbText};
 	transition: all 0.2s ease;
+	padding: 5px;
 
 	svg {
 		font-size: 14px;

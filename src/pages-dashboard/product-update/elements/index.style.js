@@ -372,6 +372,34 @@ export const AttributeBox = styled.div`
 		.delete:hover::after {
 			width: 100%;
 		}
+
+		.none {
+			position: relative;
+			font-size: 18px;
+			text-transform: capitalize;
+			color: ${({ theme }) => theme.form.blueL};
+			display: flex;
+			gap: 5px;
+			align-items: center;
+		}
+
+		.none::after {
+			content: '';
+			height: 2px;
+			width: 0;
+			position: absolute;
+			bottom: -4px;
+			/* left: 0; */
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: ${({ theme }) => theme.form.blueL};
+			border-radius: 9999px;
+			transition: width 0.25s ease;
+		}
+
+		.none:hover::after {
+			width: 100%;
+		}
 	}
 `;
 
