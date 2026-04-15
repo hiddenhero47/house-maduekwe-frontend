@@ -295,6 +295,8 @@ export const buildShopItemFormData = (values) => {
 		imageFiles,
 		imageCatalog, // discard
 		categorySearchValue, // discard
+		colorSearchValue, // discard
+		sizeSearchValue, // discard
 		attributes,
 		...others
 	} = values;

@@ -36,7 +36,7 @@ function Index() {
 		limit: 100,
 	});
 
-	const {mutate: createProduct, isPending} = ShopItemServices.create();
+	const { mutate: createProduct, isPending } = ShopItemServices.create();
 
 	const initialValues = {
 		name: '',
@@ -59,12 +59,14 @@ function Index() {
 		imageFiles: [],
 	};
 
-	const onSubmit = async (values, {resetForm}) => {
+	const onSubmit = async (values, { resetForm }) => {
 		const formData = buildShopItemFormData(values);
 		createProduct(formData, {
-				onSuccess: (data) => {
+			onSuccess: (data) => {
+				console.log(data);
+
 				resetForm();
-				navigate(`/admin/products/design/${data?.item?._id}`);
+				navigate(`/admin/products/design/${data?._id}`);
 			},
 		});
 	};
@@ -146,7 +148,7 @@ function Index() {
 							<BsFillSave2Fill />
 							Save
 						</div>
-						<div className='loader'>
+						<div className="loader">
 							<BubbleSlide color="var(--mainBody-text)" height="20px" />
 						</div>
 					</SaveBtn>
