@@ -46,6 +46,9 @@ import { shopItemValidationSchema } from '../../features/validations/shopItem-va
 import { useParams } from 'react-router-dom';
 import ShopItemServices from '../../features/services/custom-hooks/shop-items';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
+import { PiCoinsFill } from 'react-icons/pi';
+import { FaTshirt } from 'react-icons/fa';
+import { RiFileCloseFill } from 'react-icons/ri';
 
 const logFormData = (formData) => {
 	const obj = {};
@@ -69,21 +72,6 @@ function Index() {
 	const { mutate: updataProduct, isPending: isLoading } =
 		ShopItemServices.update();
 
-	const { data: dataColor, isPending: isPendingColor } =
-		AttributeServices.getAll({
-			limit: 100,
-			type: attributeType.COLOR,
-			search: '',
-		});
-
-	const { data: dataSize, isPending: isPendingSize } = AttributeServices.getAll(
-		{
-			limit: 100,
-			type: attributeType.SIZE,
-			search: '',
-		}
-	);
-
 	const initialValues = useMemo(
 		() => ({
 			name: product?.name || '',
@@ -106,12 +94,15 @@ function Index() {
 			highlights: product?.highlights || [],
 			removeImages: [],
 			imageFiles: [],
+			colorSearchValue: '',
+			sizeSearchValue: '',
 		}),
 		[product]
 	);
 
 	const onSubmit = async (values) => {
 		const formData = buildShopItemFormData(values);
+		logFormData(formData);
 		updataProduct(
 			{ data: formData, id: id },
 			{
@@ -156,7 +147,24 @@ function Index() {
 		highlights,
 		removeImages,
 		imageFiles,
+		colorSearchValue,
+		sizeSearchValue,
 	} = values;
+
+	const { data: dataColor, isPending: isPendingColor } =
+		AttributeServices.getAll({
+			limit: 100,
+			type: attributeType.COLOR,
+			search: colorSearchValue,
+		});
+
+	const { data: dataSize, isPending: isPendingSize } = AttributeServices.getAll(
+		{
+			limit: 100,
+			type: attributeType.SIZE,
+			search: sizeSearchValue,
+		}
+	);
 
 	const statusOptions = Object.values(ItemStatusType).map((value) => ({
 		label: value,
@@ -278,7 +286,7 @@ function Index() {
 							<BsFillSave2Fill />
 							Save
 						</div>
-						<div className='loader'>
+						<div className="loader">
 							<BubbleSlide color="var(--mainBody-text)" height="20px" />
 						</div>
 					</SaveBtn>
@@ -654,7 +662,7 @@ function Index() {
 								</h3>
 
 								<div className="form_control mb-[20px]">
-									<CustomSelect
+									<SearchSelect
 										id="attributes"
 										name="attributes"
 										value={''}
@@ -673,6 +681,14 @@ function Index() {
 										scrollToTop
 										useBackground
 										options={sizeOptions || []}
+										setSearchString={(val) =>
+											handleChange({
+												target: {
+													name: 'sizeSearchValue',
+													value: val,
+												},
+											})
+										}
 									/>
 								</div>
 
@@ -682,9 +698,12 @@ function Index() {
 									).map((att, index) => (
 										<div className="attribute_control" key={index}>
 											<Size className="ml-[5px] [word-spacing:7px]">
-												{att?.Attribute?.display} {att?.Attribute?.name}
+												{att?.Attribute?.display}-{att?.Attribute?.name}
 											</Size>
-											<div className="w-full">
+											<div className="w-full flex items-center gap-[2px]">
+												<i>
+													<PiCoinsFill size="14px" />
+												</i>
 												<CustomInput
 													type="number"
 													id={att?.Attribute?._id}
@@ -709,13 +728,45 @@ function Index() {
 													useBackground
 												/>
 											</div>
-											<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+											<div className="w-full flex items-center gap-[2px]">
+												<i>
+													<FaTshirt size="14px" />
+												</i>
+												<CustomInput
+													type="number"
+													id={att?.Attribute?._id}
+													name={att?.Attribute?._id}
+													value={getAttrValue({
+														AttributeId: att?.Attribute?._id,
+														key: 'quantity',
+													})}
+													onChange={(e) =>
+														onAttrChange({
+															AttributeId: att?.Attribute?._id,
+															key: 'quantity',
+															value: e.target.value,
+														})
+													}
+													onBlur={handleBlur}
+													isError={false}
+													errormessage={errors.attributes}
+													placeholder="quantity"
+													paddingX="10px"
+													paddingY="4px"
+													useBackground
+												/>
+											</div>
+											<div className="flex ml-[20px] gap-[10%] mt-[3px]">
 												<button
 													type="button"
 													className="delete"
 													onClick={() => removeAttr(att?.Attribute?._id)}
 												>
 													<MdDelete />
+												</button>
+
+												<button type="button" className="none">
+													<RiFileCloseFill />
 												</button>
 											</div>
 										</div>
@@ -729,7 +780,7 @@ function Index() {
 								</h3>
 
 								<div className="form_control mb-[20px]">
-									<CustomSelect
+									<SearchSelect
 										id="attributes"
 										name="attributes"
 										value={''}
@@ -748,6 +799,14 @@ function Index() {
 										scrollToTop
 										useBackground
 										options={colorOptions || []}
+										setSearchString={(val) =>
+											handleChange({
+												target: {
+													name: 'colorSearchValue',
+													value: val,
+												},
+											})
+										}
 									/>
 								</div>
 
@@ -763,7 +822,10 @@ function Index() {
 												/>
 												<span className="name">{att?.Attribute?.name}</span>
 											</div>
-											<div className="w-full">
+											<div className="w-full flex items-center gap-[2px]">
+												<i>
+													<PiCoinsFill size="14px" />
+												</i>
 												<CustomInput
 													type="number"
 													id={att?.Attribute?._id}
@@ -788,7 +850,35 @@ function Index() {
 													useBackground
 												/>
 											</div>
-											<div className="flex ml-[5px] gap-[10%] mt-[3px]">
+											<div className="w-full flex items-center gap-[2px]">
+												<i>
+													<FaTshirt size="14px" />
+												</i>
+												<CustomInput
+													type="number"
+													id={att?.Attribute?._id}
+													name="additionalAmount"
+													value={getAttrValue({
+														AttributeId: att?.Attribute?._id,
+														key: 'quantity',
+													})}
+													onChange={(e) =>
+														onAttrChange({
+															AttributeId: att?.Attribute?._id,
+															key: 'quantity',
+															value: e.target.value,
+														})
+													}
+													onBlur={handleBlur}
+													isError={false}
+													errormessage={errors.attributes}
+													placeholder="quantity"
+													paddingX="10px"
+													paddingY="4px"
+													useBackground
+												/>
+											</div>
+											<div className="flex ml-[20px] gap-[10%] mt-[3px]">
 												<button
 													type="button"
 													className="delete"
@@ -815,6 +905,10 @@ function Index() {
 														<BiSolidCategory />
 													</button>
 												</ImageSelector>
+
+												<button type="button" className="none">
+													<RiFileCloseFill />
+												</button>
 											</div>
 										</div>
 									))}

@@ -286,6 +286,14 @@ export const GridItem = styled.div`
 			font-weight: 400;
 		}
 	}
+
+	.delete {
+		position: absolute;
+		top: 0;
+		right: 0;
+		margin: 10px;
+		z-index: 1;
+	}
 `;
 
 export const Image = styled.img`
@@ -295,4 +303,78 @@ export const Image = styled.img`
 export const TableWrapper = styled.div`
 	width: 100%;
 	height: auto;
+`;
+
+export const EmptyState = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px 20px;
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		animation: fadeInUp 0.35s ease;
+	}
+
+	i {
+		width: clamp(120px, 20vw, 180px);
+		opacity: 0.6;
+		margin-bottom: 10px;
+	}
+
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		color: var(--mainBody-text);
+		margin-bottom: 6px;
+		letter-spacing: 0.3px;
+	}
+
+	p {
+		font-size: 14px;
+		color: var(--mainBody-sbText);
+		max-width: 360px;
+		line-height: 1.5;
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+`;
+
+export const ActionBtn = styled.button`
+	width: 28px;
+	/* height: 28px; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px !important;
+	background-color: ${({ theme }) => theme?.mainBody?.toolkitBg};
+	color: ${({ theme }) => theme?.mainBody?.sbText};
+	transition: all 0.2s ease;
+	padding: 5px;
+
+	svg {
+		font-size: 14px;
+	}
+
+	&:hover {
+		color: ${({ theme }) => theme.intro.logo};
+		transform: translateY(-1px);
+	}
+
+	&.danger:hover {
+		color: #ff4d4f;
+	}
 `;
