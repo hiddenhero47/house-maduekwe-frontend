@@ -250,6 +250,7 @@ function Index() {
 
 		const newAttribute = {
 			Attribute,
+			type: Attribute?.type || type,
 			isDefault: false,
 			quantity: 1,
 			additionalAmount: '',
@@ -764,10 +765,6 @@ function Index() {
 												>
 													<MdDelete />
 												</button>
-
-												<button type="button" className="none">
-													<RiFileCloseFill />
-												</button>
 											</div>
 										</div>
 									))}
@@ -905,10 +902,6 @@ function Index() {
 														<BiSolidCategory />
 													</button>
 												</ImageSelector>
-
-												<button type="button" className="none">
-													<RiFileCloseFill />
-												</button>
 											</div>
 										</div>
 									))}
