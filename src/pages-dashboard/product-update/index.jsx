@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import {
 	Container,
 	SaveBtn,
@@ -49,6 +49,8 @@ import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 import { PiCoinsFill } from 'react-icons/pi';
 import { FaTshirt } from 'react-icons/fa';
 import { RiFileCloseFill } from 'react-icons/ri';
+import GroupedVariantsModal from './elements/variants/variants-modal';
+import { PiGitBranchBold } from "react-icons/pi";
 
 const logFormData = (formData) => {
 	const obj = {};
@@ -90,6 +92,7 @@ function Index() {
 			placeHolder: product?.placeHolder || {},
 			imageCatalog: product?.imageCatalog || [],
 			attributes: product?.attributes || [],
+			groupedVariants: product?.groupedVariants || [],
 			classTags: product?.classTags || [],
 			highlights: product?.highlights || [],
 			removeImages: [],
@@ -143,6 +146,7 @@ function Index() {
 		placeHolder,
 		imageCatalog,
 		attributes,
+		groupedVariants,
 		classTags,
 		highlights,
 		removeImages,
@@ -265,6 +269,11 @@ function Index() {
 			'attributes',
 			attributes.filter((attr) => getAttributeId(attr) !== AttributeId)
 		);
+	};
+
+	const modalRef = useRef(null);
+	const openModal = () => {
+		modalRef.current?.open();
 	};
 
 	return (
@@ -909,7 +918,26 @@ function Index() {
 							</div>
 						</AttributeBody>
 					</div>
+
+					<div className="w-full pb-[20px]">
+						<AttributeBody>
+							<div className="main_wrapper">
+								<h3 className="mb-[18px]">
+									GROUPED VARIANT <PiGitBranchBold />
+								</h3>
+								<AddBtn type="button" onClick={openModal}>
+									Add to Group
+								</AddBtn>
+							</div>
+						</AttributeBody>
+					</div>
 				</div>
+				<GroupedVariantsModal
+					modalRef={modalRef}
+					attributes={attributes}
+					groupedVariants={groupedVariants || []}
+					setFieldValue={setFieldValue}
+				/>
 			</form>
 		</Container>
 	);

@@ -1,11 +1,27 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-	width: 100%;
-	background: var(--mainBody-container);
-	border-radius: 12px;
-	padding: 20px;
-	border: 1px solid var(--mainBody-line);
+	width: clamp(320px, 92vw, 470px);
+	background-color: ${({ theme }) => theme?.mainBody?.container};
+	border-radius: 14px;
+	display: flex;
+	flex-direction: column;
+	padding: 28px;
+	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+	animation: fadeIn 0.18s ease-out;
+	color: ${({ theme }) => theme?.mainBody?.text};
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(6px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 `;
 
 export const Header = styled.div`
@@ -14,12 +30,12 @@ export const Header = styled.div`
 	h3 {
 		font-size: 18px;
 		font-weight: 700;
-		color: var(--mainBody-text);
+		color: ${({ theme }) => theme?.mainBody?.text};
 	}
 
 	p {
 		font-size: 13px;
-		color: var(--mainBody-sbText);
+		color: ${({ theme }) => theme?.mainBody?.sbText};
 	}
 `;
 
@@ -31,14 +47,14 @@ export const AddRow = styled.div`
 	select {
 		flex: 1;
 		padding: 8px;
-		border: 1px solid var(--mainBody-line);
-		background: var(--mainBody-card);
-		color: var(--mainBody-text);
+		border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+		background: ${({ theme }) => theme?.mainBody?.card};
+		color: ${({ theme }) => theme?.mainBody?.text};
 	}
 
 	button {
 		padding: 8px 14px;
-		background: var(--mainBody-toolkitBg);
+		background: ${({ theme }) => theme?.mainBody?.toolkitBg};
 		border-radius: 6px;
 	}
 `;
@@ -54,7 +70,7 @@ export const Row = styled.div`
 	align-items: center;
 	gap: 12px;
 	padding: 10px;
-	border: 1px solid var(--mainBody-line);
+	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
 	border-radius: 8px;
 `;
 

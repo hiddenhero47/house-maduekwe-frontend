@@ -14,7 +14,7 @@ import {
 	DeleteBtn,
 	Footer,
 } from './variants-modal.style';
-import { attributeType } from '../../utilities/app-const';
+import { attributeType } from '../../../../utilities/app-const';
 import { MdDelete } from 'react-icons/md';
 
 const getOppositeType = (type) => {
@@ -124,7 +124,14 @@ function GroupedVariantsModal({
 	const getAttr = (id) => attributes.find((a) => getId(a) === id);
 
 	return (
-		<Modal.Center ref={modalRef} width="fit-content" maxWidth="900px" animation>
+		<Modal.Center
+			width="fit-content"
+			maxWidth="900px"
+			onClose={() => {}}
+			onOpen={() => {}}
+			refName={modalRef}
+			animation={true}
+		>
 			<Wrapper>
 				<Header>
 					<h3>Grouped Variants</h3>
