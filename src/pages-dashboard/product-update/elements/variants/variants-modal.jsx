@@ -13,9 +13,15 @@ import {
 	Option,
 	DeleteBtn,
 	Footer,
+	Color,
 } from './variants-modal.style';
 import { attributeType } from '../../../../utilities/app-const';
 import { MdDelete } from 'react-icons/md';
+import {
+	groupAttributesByType,
+	buildShopItemFormData,
+	generateColorImage,
+} from '../../../../utilities/basic-functions';
 
 const getOppositeType = (type) => {
 	if (type === attributeType.COLOR) return attributeType.SIZE;
@@ -49,26 +55,41 @@ function GroupedVariantsModal({
 	}, [groupedVariants, attributes]);
 
 	// 🎯 Build select options
-	const primaryOptions = useMemo(() => {
+	const combinedOptions = useMemo(() => {
 		if (!attributes) return [];
 
 		return attributes
-			.filter((attr) => {
+			.map((attr) => {
 				const id = getId(attr);
 
-				// lock type
-				if (lockedType && attr.type !== lockedType) return false;
+				// 🔒 lock type
+				if (lockedType && attr.type !== lockedType) return null;
 
-				// prevent duplicates
-				if (groupedVariants.some((g) => g.primaryAttribute === id))
-					return false;
+				// 🚫 prevent duplicates
+				if (groupedVariants.some((g) => g.primaryAttribute === id)) return null;
 
-				return true;
+				// 🎨 COLOR
+				if (attr.type === attributeType.COLOR) {
+					return {
+						label: attr?.Attribute?.name || attr?.name,
+						value: id,
+						image: generateColorImage(
+							attr?.Attribute?.display || attr?.display || '#000000'
+						),
+					};
+				}
+
+				// 📏 SIZE
+				if (attr.type === attributeType.SIZE) {
+					return {
+						label: `${attr?.Attribute?.name}, ${attr?.Attribute?.display}, ${attr?.Attribute?.value}`,
+						value: id,
+					};
+				}
+
+				return null;
 			})
-			.map((attr) => ({
-				label: attr?.Attribute?.name || attr?.name,
-				value: getId(attr),
-			}));
+			.filter(Boolean);
 	}, [attributes, groupedVariants, lockedType]);
 
 	// 🧠 Create group
@@ -123,6 +144,62 @@ function GroupedVariantsModal({
 
 	const getAttr = (id) => attributes.find((a) => getId(a) === id);
 
+	const syncGroupedVariants = () => {
+		if (!groupedVariants.length) return;
+
+		const updatedGroups = groupedVariants.map((group) => {
+			const primary = attributes.find(
+				(a) => getId(a) === group.primaryAttribute
+			);
+
+			if (!primary) return group;
+
+			const secondaryType = getOppositeType(primary.type);
+
+			const latestSecondary = attributes.filter(
+				(a) => a.type === secondaryType
+			);
+
+			const existingMap = new Map(
+				group.options.map((opt) => [opt.attribute, opt])
+			);
+
+			const newOptions = latestSecondary.map((attr) => {
+				const id = getId(attr);
+
+				// keep existing quantity
+				if (existingMap.has(id)) {
+					return existingMap.get(id);
+				}
+
+				// add new
+				return {
+					attribute: id,
+					quantity: 0,
+				};
+			});
+
+			return {
+				...group,
+				options: newOptions,
+			};
+		});
+
+		setFieldValue('groupedVariants', updatedGroups);
+	};
+
+	const needsRefresh = groupedVariants.some((group) => {
+		const primary = attributes.find((a) => getId(a) === group.primaryAttribute);
+
+		if (!primary) return false;
+
+		const secondaryType = getOppositeType(primary.type);
+
+		const latestSecondary = attributes.filter((a) => a.type === secondaryType);
+
+		return latestSecondary.length !== group.options.length;
+	});
+
 	return (
 		<Modal.Center
 			width="fit-content"
@@ -143,7 +220,7 @@ function GroupedVariantsModal({
 					<CustomSelect
 						value={selectedPrimary}
 						onChange={(val) => setSelectedPrimary(val)}
-						options={primaryOptions}
+						options={combinedOptions}
 						placeholder={
 							lockedType ? `Select ${lockedType}` : 'Select attribute'
 						}
@@ -165,10 +242,36 @@ function GroupedVariantsModal({
 
 					{groupedVariants.map((group, gIndex) => {
 						const primary = getAttr(group.primaryAttribute);
+						const primaryQty = getAttr(group.primaryAttribute)?.quantity || 0;
+						const totalQty = group.options.reduce(
+							(sum, opt) => sum + (Number(opt.quantity) || 0),
+							0
+						);
+						const isOver = totalQty > primaryQty;
 
 						return (
 							<Row key={group.primaryAttribute}>
-								<Primary>{primary?.Attribute?.name || primary?.name}</Primary>
+								<div className='flex items-center w-full'>
+									<Primary>
+										{primary?.Attribute?.name || primary?.name}
+										<span className="flex gap-[5px]">
+											{primary?.type === attributeType.COLOR ? (
+												<Color $color={primary?.Attribute?.display} />
+											) : (
+												primary?.Attribute?.display
+											)}
+										</span>
+									</Primary>
+									<div className={`total ${isOver ? 'error' : ''} mr-[20px]`}>
+										Total: {totalQty} / {primaryQty}
+									</div>
+
+									<DeleteBtn
+										onClick={() => removeGroup(group.primaryAttribute)}
+									>
+										<MdDelete />
+									</DeleteBtn>
+								</div>
 
 								<Options>
 									{group.options.map((opt, oIndex) => {
@@ -176,7 +279,23 @@ function GroupedVariantsModal({
 
 										return (
 											<Option key={opt.attribute}>
-												<span>{attr?.Attribute?.name || attr?.name}</span>
+												<div className="left">
+													{attr?.type === attributeType.COLOR && (
+														<Color $color={attr?.Attribute?.display} />
+													)}
+
+													<div className="text">
+														<span className="name">
+															{attr?.Attribute?.name || attr?.name}
+														</span>
+
+														{attr?.type === attributeType.SIZE && (
+															<span className="meta">
+																{attr?.Attribute?.display}
+															</span>
+														)}
+													</div>
+												</div>
 
 												<input
 													type="number"
@@ -189,10 +308,6 @@ function GroupedVariantsModal({
 										);
 									})}
 								</Options>
-
-								<DeleteBtn onClick={() => removeGroup(group.primaryAttribute)}>
-									<MdDelete />
-								</DeleteBtn>
 							</Row>
 						);
 					})}
@@ -200,6 +315,14 @@ function GroupedVariantsModal({
 
 				{/* 🔥 FOOTER */}
 				<Footer>
+					<button
+						type="button"
+						onClick={syncGroupedVariants}
+						disabled={!needsRefresh}
+					>
+						Refresh
+					</button>
+
 					<button onClick={clearAll} disabled={!groupedVariants.length}>
 						Clear All
 					</button>
