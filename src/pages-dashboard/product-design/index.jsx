@@ -63,10 +63,9 @@ function Index() {
 		const formData = buildShopItemFormData(values);
 		createProduct(formData, {
 			onSuccess: (data) => {
-				console.log(data);
-
+				console.log(data?.data);
 				resetForm();
-				navigate(`/admin/products/design/${data?._id}`);
+				navigate(`/admin/products/design/${data?.data._id}`);
 			},
 		});
 	};
