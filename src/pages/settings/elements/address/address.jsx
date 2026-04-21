@@ -83,6 +83,16 @@ function Address() {
 							Cell: ({ value }) => <span className="nowrap">{value}</span>,
 						},
 						{
+							Header: () => 'Zip Code',
+							accessor: 'zipCode',
+							Cell: ({ value }) => <span className="nowrap">{value}</span>,
+						},
+						{
+							Header: () => 'State Line',
+							accessor: 'stateLine',
+							Cell: ({ value }) => <span className="nowrap">{value}</span>,
+						},
+						{
 							Header: () => 'Full Address',
 							accessor: 'fullAddress',
 							Cell: ({ value }) => (

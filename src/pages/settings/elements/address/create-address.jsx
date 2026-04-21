@@ -10,6 +10,7 @@ import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useFormik } from 'formik';
 import CustomTextarea from '../../../../components/form-components/input/custom-textarea';
 import SearchSelect from '../../../../components/form-components/select/search-select';
+import CustomInput from '../../../../components/form-components/input/custom-input';
 import { addressValidationSchema } from '../../../../features/validations/address-validation';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { HiViewGridAdd } from 'react-icons/hi';
@@ -25,6 +26,8 @@ function CreateModal({ ref, openModal, closeModal }) {
 		country: '',
 		state: '',
 		city: '',
+		zipCode: '',
+		stateLine: '',
 		fullAddress: '',
 		description: '',
 		isDefault: false,
@@ -55,7 +58,16 @@ function CreateModal({ ref, openModal, closeModal }) {
 		onSubmit,
 	});
 
-	const { country, state, city, fullAddress, description, isDefault } = values;
+	const {
+		country,
+		state,
+		city,
+		fullAddress,
+		description,
+		isDefault,
+		zipCode,
+		stateLine,
+	} = values;
 	return (
 		<Modal.Center
 			width="fit-content"
@@ -71,7 +83,7 @@ function CreateModal({ ref, openModal, closeModal }) {
 					<div>
 						<h3>Add New Address</h3>
 						<p>
-							Add a delivery or billing address. You can set one address as your
+							Add a delivery address. You can set one address as your
 							default for faster checkout.
 						</p>
 					</div>
@@ -129,18 +141,54 @@ function CreateModal({ ref, openModal, closeModal }) {
 							</div>
 						</div>
 
+						<div className="grid-2 mb-[5px]">
+							<div className="form_control">
+								<label>City</label>
+								<SearchSelect
+									id="city"
+									name="city"
+									value={city}
+									handleChange={handleChange}
+									onBlur={handleBlur}
+									isError={touched.city && errors.city}
+									errormessage={errors.city}
+									placeholder="Select city"
+									options={getCitiesOptions(country, state) || []}
+									paddingX="14px"
+									paddingY="9px"
+									useBackground
+								/>
+							</div>
+
+							<div className="form_control">
+								<label>Zip Code</label>
+								<CustomInput
+									id="zipCode"
+									name="zipCode"
+									value={zipCode}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									isError={touched.zipCode && errors.zipCode}
+									errormessage={errors.zipCode}
+									placeholder="code"
+									paddingX="14px"
+									paddingY="9px"
+									useBackground
+								/>
+							</div>
+						</div>
+
 						<div className="form_control">
-							<label>City</label>
-							<SearchSelect
-								id="city"
-								name="city"
-								value={city}
-								handleChange={handleChange}
+							<label>State Line</label>
+							<CustomInput
+								id="stateLine"
+								name="stateLine"
+								value={stateLine}
+								onChange={handleChange}
 								onBlur={handleBlur}
-								isError={touched.city && errors.city}
-								errormessage={errors.city}
-								placeholder="Select city"
-								options={getCitiesOptions(country, state) || []}
+								isError={touched.stateLine && errors.stateLine}
+								errormessage={errors.stateLine}
+								placeholder="State Line (e.g. Mason-Dixon line)"
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
@@ -170,7 +218,7 @@ function CreateModal({ ref, openModal, closeModal }) {
 
 						<div className="form_control">
 							<label>Description (Optional)</label>
-							<CustomTextarea
+							<CustomInput
 								id="description"
 								name="description"
 								value={description}
@@ -180,7 +228,6 @@ function CreateModal({ ref, openModal, closeModal }) {
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
-								minHeight="70px"
 							/>
 						</div>
 					</div>

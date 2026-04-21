@@ -42,6 +42,9 @@ function ShopItem({
 	});
 
 	const holding = () => {
+		if (!attribute.currentSize && !attribute.currentColor) {
+			console.log();
+		}
 		const selectedItem = {
 			shopItem: product,
 			quantity: 1,
@@ -57,6 +60,9 @@ function ShopItem({
 	};
 
 	const cartServer = () => {
+		if (!attribute.currentSize && !attribute.currentColor) {
+			console.log();
+		}
 		const selectedItem = {
 			shopItem: product?._id,
 			quantity: 1,
