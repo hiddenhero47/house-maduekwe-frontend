@@ -19,6 +19,8 @@ import { attributeType } from '../../utilities/app-const';
 import { useDispatch } from 'react-redux';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 import { addToHoldings } from '../../store/slice/holding';
+import { groupAttributesByType } from '../../utilities/basic-functions';
+import { toast } from 'react-toastify';
 
 function ShopItem({
 	useBackground = true,
@@ -42,14 +44,22 @@ function ShopItem({
 	});
 
 	const holding = () => {
-		if (!attribute.currentSize && !attribute.currentColor) {
-			console.log();
+		const attributeGroup = groupAttributesByType(product?.attributes);
+		if (!attribute.currentSize) {
+			toast.warning('size not selected');
+			return;
 		}
+
+		if (!attribute.currentColor && attributeGroup.color.length > 1) {
+			toast.warning('color not selected');
+			return;
+		}
+		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
 		const selectedItem = {
 			shopItem: product,
 			quantity: 1,
 			selectedAttributes: [
-				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(selectedColor ? [selectedColor] : []),
 				...(attribute.currentSize ? [attribute.currentSize] : []),
 			],
 		};
@@ -60,14 +70,22 @@ function ShopItem({
 	};
 
 	const cartServer = () => {
-		if (!attribute.currentSize && !attribute.currentColor) {
-			console.log();
+		const attributeGroup = groupAttributesByType(product?.attributes);
+		if (!attribute.currentSize) {
+			toast.warning('size not selected');
+			return;
 		}
+
+		if (!attribute.currentColor && attributeGroup.color.length > 1) {
+			toast.warning('color not selected');
+			return;
+		}
+		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
 		const selectedItem = {
 			shopItem: product?._id,
 			quantity: 1,
 			selectedAttributes: [
-				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(selectedColor ? [selectedColor] : []),
 				...(attribute.currentSize ? [attribute.currentSize] : []),
 			],
 		};

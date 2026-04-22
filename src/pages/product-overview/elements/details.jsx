@@ -21,6 +21,7 @@ import { ensureUser } from '../../../store/slice/auth';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import { toast } from 'react-toastify';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
+import { groupAttributesByType } from '../../../utilities/basic-functions';
 
 function Details({
 	product,
@@ -66,11 +67,22 @@ function Details({
 	const rating = product?.rating || 4;
 
 	const holding = () => {
+		const attributeGroup = groupAttributesByType(product?.attributes);
+		if (!attribute.currentSize) {
+			toast.warning('size not selected');
+			return;
+		}
+
+		if (!attribute.currentColor && attributeGroup.color.length > 1) {
+			toast.warning('color not selected');
+			return;
+		}
+		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
 		const selectedItem = {
 			shopItem: product,
 			quantity: 1,
 			selectedAttributes: [
-				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(selectedColor ? [selectedColor] : []),
 				...(attribute.currentSize ? [attribute.currentSize] : []),
 			],
 		};
@@ -88,11 +100,22 @@ function Details({
 	};
 
 	const cartServer = () => {
+		const attributeGroup = groupAttributesByType(product?.attributes);
+		if (!attribute.currentSize) {
+			toast.warning('size not selected');
+			return;
+		}
+
+		if (!attribute.currentColor && attributeGroup.color.length > 1) {
+			toast.warning('color not selected');
+			return;
+		}
+		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
 		const selectedItem = {
 			shopItem: product?._id,
 			quantity: quantity,
 			selectedAttributes: [
-				...(attribute.currentColor ? [attribute.currentColor] : []),
+				...(selectedColor ? [selectedColor] : []),
 				...(attribute.currentSize ? [attribute.currentSize] : []),
 			],
 		};

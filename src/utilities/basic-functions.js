@@ -245,7 +245,7 @@ export const getCurrencySymbol = (currencyCode = 'USD') => {
 export const groupAttributesByType = (attributes = []) => {
 	if (!attributes) return [];
 	return attributes.reduce((acc, item) => {
-		const type = item?.Attribute?.type;
+		const type = item?.Attribute?.type ?? item?.type;
 
 		if (!type) return acc;
 
@@ -337,4 +337,35 @@ export const buildShopItemFormData = (values) => {
 	}
 
 	return formData;
+};
+
+const getAttrKey = (a) => {
+	if (!a?.Attribute) return null;
+
+	return typeof a.Attribute === 'object'
+		? a.Attribute._id?.toString()
+		: a.Attribute?.toString();
+};
+
+export const groupedVariantsChecker = ({
+	selectedAttributes,
+	quantity,
+	shopItem,
+}) => {
+	if (shopItem?.groupedVariants.length === 0) {
+		return shopItem.quantity >= quantity;
+	}
+	const selectedIds = selectedAttributes.map(getAttrKey).filter(Boolean);
+	const primarySet = new Set(
+		shopItem?.groupedVariants.map((g) => g.primaryAttribute?.toString())
+	);
+	const primary = selectedIds.find((id) => primarySet.has(id));
+	const group = shopItem.groupedVariants.find(
+		(g) => g.primaryAttribute?.toString() === primary
+	);
+	const option = group.options.find((opt) =>
+		selectedIds.includes(opt.attribute?.toString())
+	);
+
+	return option ? option.quantity >= quantity : false;
 };
