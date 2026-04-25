@@ -339,7 +339,21 @@ export const buildShopItemFormData = (values) => {
 	return formData;
 };
 
-const getAttrKey = (a) => {
+export const preloadVideo = (src) => {
+	return new Promise((resolve, reject) => {
+		const video = document.createElement('video');
+
+		video.src = src;
+		video.preload = 'auto';
+
+		video.oncanplaythrough = () => resolve(true);
+		video.onerror = reject;
+
+		video.load();
+	});
+};
+
+export const getAttrKey = (a) => {
 	if (!a?.Attribute) return null;
 
 	return typeof a.Attribute === 'object'
@@ -352,20 +366,55 @@ export const groupedVariantsChecker = ({
 	quantity,
 	shopItem,
 }) => {
-	if (shopItem?.groupedVariants.length === 0) {
-		return shopItem.quantity >= quantity;
-	}
-	const selectedIds = selectedAttributes.map(getAttrKey).filter(Boolean);
+	if (shopItem?.groupedVariants.length === 0) return true;
+
+	if (selectedAttributes?.length === 0) return false;
+
+	const selectedIds = selectedAttributes?.map(getAttrKey)?.filter(Boolean);
 	const primarySet = new Set(
-		shopItem?.groupedVariants.map((g) => g.primaryAttribute?.toString())
+		shopItem?.groupedVariants.map((g) => g?.primaryAttribute?.toString())
 	);
-	const primary = selectedIds.find((id) => primarySet.has(id));
+	const primary = selectedIds.find((id) => primarySet?.has(id));
+	if (!primary) return false;
+
 	const group = shopItem.groupedVariants.find(
-		(g) => g.primaryAttribute?.toString() === primary
+		(g) => g?.primaryAttribute?.toString() === primary
 	);
-	const option = group.options.find((opt) =>
-		selectedIds.includes(opt.attribute?.toString())
+	const option = group?.options?.find((opt) =>
+		selectedIds.includes(opt?.attribute?.toString())
 	);
 
-	return option ? option.quantity >= quantity : false;
+	return option ? option?.quantity >= quantity : false;
+};
+
+export const attributesError = ({
+	currentAttr,
+	otherAttr,
+	shopItem,
+	quantity,
+}) => {
+	if (shopItem?.groupedVariants.length === 0) {
+		const attr = shopItem?.attributes?.find(
+			(a) => getAttrKey(a?.Attribute) === getAttrKey(currentAttr)
+		);
+		return attr ? attr?.quantity >= quantity : false;
+	}
+
+	const otherPrimary = shopItem?.groupedVariants?.find(
+		(g) => g?.primaryAttribute?.toString() === getAttrKey(otherAttr)
+	);
+	const currentPrimary = shopItem?.groupedVariants?.find(
+		(g) => g?.primaryAttribute?.toString() === getAttrKey(currentAttr)
+	);
+	const option = otherPrimary
+		? otherPrimary?.options?.find(
+				(opt) => opt?.attribute?.toString() === getAttrKey(currentAttr)
+			)
+		: currentPrimary
+			? currentPrimary?.options?.find(
+					(opt) => opt?.attribute?.toString() === getAttrKey(otherAttr)
+				)
+			: null;
+
+	return option ? option?.quantity >= quantity : false;
 };

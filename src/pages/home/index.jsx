@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Container,
 	IntroSection,
@@ -29,11 +29,25 @@ import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import bannerImage from '../../assets/images/brand-name.svg';
 import GroupDisplay from './elements/group-display/group-display';
 import { useNavigate } from 'react-router-dom';
+import MyVideo from './elements/video-display/video';
+import { preloadVideo } from '../../utilities/basic-functions';
 
 function Index() {
 	const { aftermath } = useOutletContext();
 	const theme = useTheme();
 	const navigate = useNavigate();
+	const [isVideoReady, setIsVideoReady] = useState(false);
+	const [isVideoReadyB, setIsVideoReadyB] = useState(false);
+
+	const videoOne = 'https://vjs.zencdn.net/v/oceans.mp4';
+	const videoTwo = 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4';
+
+	useEffect(() => {
+		Promise.all([preloadVideo(videoOne), preloadVideo(videoTwo)]).then(() => {
+			setIsVideoReady(true);
+			setIsVideoReadyB(true);
+		});
+	}, []);
 
 	const group1 = {
 		groupName: 'Luxury High-End',
@@ -128,15 +142,28 @@ function Index() {
 		return cleanedGroups.slice(0, 2);
 	};
 
-	console.log(formatItemGroups(itemGroup));
-
 	return (
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
 				<div className="w-full h-full relative">
-					<div className="imageHolder">
-						<img src={postImage} alt="No Image" />
-					</div>
+					{isVideoReady && (
+						<MyVideo
+							videoSrc={videoOne}
+							isPreloaded
+							autoPlay
+							onStartNoSound
+							autoReplay
+							scrubberDisplay={false}
+							timeDisplay={false}
+							useMuteOnly
+						/>
+					)}
+
+					{!isVideoReady && (
+						<div className="imageHolder">
+							<img src={postImage} alt="No Image" />
+						</div>
+					)}
 
 					{aftermath && (
 						<BannerImage id="banner_image" $bannerImage={bannerImage}>
@@ -187,14 +214,31 @@ function Index() {
 			</IntroSection>
 
 			{formatItemGroups(itemGroup).map((group, index) => (
-				<GroupDisplay index={index} group={group} className="mt-[70px]" />
+				<GroupDisplay
+					key={index}
+					index={index}
+					group={group}
+					className="mt-[70px]"
+				/>
 			))}
 
 			<Promotion onClick={() => navigate('/products/')}>
 				<div className="w-full h-full relative rounded-[inherit]">
-					<div className="imageHolder rounded-[inherit]">
+					{/* <div className="imageHolder rounded-[inherit]">
 						<img src={postImage} alt="No Image" />
-					</div>
+					</div> */}
+
+					<MyVideo
+						videoSrc={videoTwo}
+						isPreloaded
+						autoPlay
+						onStartNoSound
+						autoReplay
+						scrubberDisplay={false}
+						timeDisplay={false}
+						useMuteOnly
+						isLoading={!isVideoReadyB}
+					/>
 				</div>
 			</Promotion>
 

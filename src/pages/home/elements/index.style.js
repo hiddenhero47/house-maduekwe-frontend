@@ -394,12 +394,21 @@ export const BannerImage = styled.div`
 export const Promotion = styled.section`
 	width: 90%;
 	aspect-ratio: 1.8/1;
+	max-height: 60vh;
 	display: flex;
 	gap: 10px;
 	margin-inline: auto;
 	margin-top: 100px;
 	border-radius: 8px;
 	cursor: pointer;
+
+	.video-el, .video_loader {
+		border-radius: 8px;
+	}
+
+	.video_loader {
+		border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	}
 
 	@media (min-width: 920px) and (max-width: 1100px) {
 		width: 95%;
