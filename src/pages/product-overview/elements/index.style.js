@@ -66,6 +66,7 @@ export const SideImage = styled.div`
 		background-color: ${({ theme }) => theme?.mainBody?.container};
 		border: 1px solid ${({ theme }) => theme?.mainBody?.line};
 		border-radius: 8px;
+		position: relative;
 	}
 `;
 
@@ -375,10 +376,12 @@ export const SizeButton = styled.button`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	border: ${({ theme, $active, $isError }) => {
+		if ($isError) return `1px solid ${theme?.form.error}`;
+		if ($active) return `1px solid ${theme?.mainBody.text}`;
+		return `1px solid ${theme?.mainBody.line}`;
+	}};
 
-	border: 1px solid
-		${({ theme, $active }) =>
-			$active ? theme?.mainBody.text : theme?.mainBody.line};
 	background-color: ${({ theme, $active }) =>
 		$active ? theme?.mainBody.toolkitBg : theme?.mainBody.container};
 	color: ${({ theme, $active }) =>
@@ -539,5 +542,28 @@ export const Increment = styled.div`
 			transform: scale(0.92);
 			box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.15);
 		}
+	}
+`;
+
+export const SoldOut = styled.div`
+	position: absolute;
+	inset: 0;
+	display: ${({ $isSoldOut }) => ($isSoldOut ? 'flex' : 'none')};
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.55);
+	backdrop-filter: blur(2px);
+	z-index: 6;
+	border-radius: inherit;
+
+	span {
+		color: white;
+		font-weight: 700;
+		font-size: clamp(12px, 1.2vw, 16px);
+		padding: 6px 12px;
+		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		letter-spacing: 0.5px;
 	}
 `;

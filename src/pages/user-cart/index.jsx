@@ -24,6 +24,8 @@ import { useNavigate } from 'react-router-dom';
 import AddressServices from '../../features/services/custom-hooks/addresses';
 import { CheckoutServices } from '../../features/services/custom-hooks/orders';
 import { getCurrencySymbol } from '../../utilities/basic-functions';
+import { CgRadioChecked } from "react-icons/cg";
+import { CgRadioCheck } from "react-icons/cg";
 
 function Index() {
 	const navigate = useNavigate();
@@ -208,14 +210,17 @@ function Index() {
 											<div className="flex justify-between w-full items-center">
 												<p className="flex items-center gap-[10px]">
 													Qty {item?.quantity}{' '}
+
+													<div className='w-[2px] rounded-full h-[25px] bg-[var(--mainBody-line)]'></div>
+
 													<ToggleBtn
 														onClick={() => toggleExclude(item?._id)}
 														$isExcluded={excludedItems.includes(item?._id)}
 													>
 														{excludedItems.includes(item?._id) ? (
-															<MdOutlineToggleOff />
+															<i><CgRadioCheck /></i>
 														) : (
-															<MdOutlineToggleOn />
+															<i><CgRadioChecked /></i>
 														)}
 													</ToggleBtn>
 												</p>

@@ -344,9 +344,11 @@ export const Size = styled.button`
 	font-weight: 600;
 	line-height: 0px;
 	color: ${({ theme }) => theme?.mainBody.sbText};
-	border: 1px solid
-		${({ theme, $active }) =>
-			$active ? theme?.mainBody.text : theme?.mainBody.sbKitText};
+	border: ${({ theme, $active, $isError }) => {
+		if ($isError) return `1px solid ${theme?.form.error}`;
+		if ($active) return `1px solid ${theme?.mainBody.text}`;
+		return `1px solid ${theme?.mainBody.sbKitText}`;
+	}};
 
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 2.33vmin;
@@ -362,4 +364,27 @@ export const Size = styled.button`
 export const Image = styled.img`
 	/* object-position: ${({ $position }) => $position || 'center'}; */
 	transition: object-position 0.3s ease;
+`;
+
+export const SoldOut = styled.div`
+	position: absolute;
+	inset: 0;
+	display: ${({ $isSoldOut }) => ($isSoldOut ? 'flex' : 'none')};
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.55);
+	backdrop-filter: blur(2px);
+	z-index: 6;
+	border-radius: inherit;
+
+	span {
+		color: white;
+		font-weight: 700;
+		font-size: clamp(12px, 1.2vw, 16px);
+		padding: 6px 12px;
+		border-radius: 6px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		letter-spacing: 0.5px;
+	}
 `;

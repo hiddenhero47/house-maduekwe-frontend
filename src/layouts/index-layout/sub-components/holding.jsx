@@ -5,26 +5,23 @@ import {
 	removeFromHoldings,
 	clearHoldings,
 } from '../../../store/slice/holding';
-import { HoldingWrapper, Footer, ShopItem } from './holding.style';
+import {
+	HoldingWrapper,
+	Footer,
+	ShopItem,
+	AddToCartBtn,
+} from './holding.style';
 import { attributeType } from '../../../utilities/app-const';
+import CartServices from '../../../features/services/custom-hooks/cart';
+import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 
 function Holding({ close }) {
 	const dispatch = useDispatch();
+	const { mutate: addToCart, isPending } = CartServices.add();
 	const { holdings } = useSelector((state) => state.holdings);
 
 	const removeItem = (tempId) => {
 		dispatch(removeFromHoldings({ tempId }));
-	};
-
-	const moveToCart = () => {
-		// you can dispatch move-to-cart logic here
-		console.log('Move to cart clicked');
-		close();
-	};
-
-	const anonymousCheckout = () => {
-		console.log('Anonymous checkout clicked');
-		close();
 	};
 
 	const selectPlaceholder = (data) => {
@@ -41,6 +38,37 @@ function Holding({ close }) {
 		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
 
 		return attrImage || placeHolder || firstImage || '';
+	};
+
+	const cartServer = () => {
+		const payload = holdings.map((item) => ({
+			shopItem: item?.shopItem._id,
+			quantity: item?.quantity,
+			selectedAttributes: item?.selectedAttributes,
+		}));
+
+		const isValidData =
+			payload &&
+			Array.isArray(payload) &&
+			payload.length > 0 &&
+			payload.every(
+				(item) =>
+					item.shopItem &&
+					typeof item.quantity === 'number' &&
+					item.quantity > 0
+			);
+
+		if (isValidData) {
+			addToCart(
+				{ itemList: [...payload] },
+				{
+					onSuccess: () => {
+						dispatch(clearHoldings());
+						close();
+					},
+				}
+			);
+		}
 	};
 
 	return (
@@ -90,11 +118,19 @@ function Holding({ close }) {
 
 			{/* Footer Buttons */}
 			<Footer>
-				<button onClick={anonymousCheckout} className="btn btn_move">
-					Move to Cart
-				</button>
+				<AddToCartBtn
+					$isLoading={isPending}
+					type="button"
+					onClick={() => cartServer()}
+				>
+					<div className="content">Move to Cart</div>
 
-				<button onClick={moveToCart} className="btn btn_anon">
+					<div className="loader">
+						<BubbleSlide color="var(--addToCart-text)" height="20px" />
+					</div>
+				</AddToCartBtn>
+
+				<button type="button" onClick={() => close()} className="btn btn_anon">
 					Continue Shopping{' '}
 					<i>
 						<FaArrowRightLong />

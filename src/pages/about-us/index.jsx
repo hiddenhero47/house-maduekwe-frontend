@@ -6,7 +6,7 @@ import { FiBox, FiAlertCircle, FiUser, FiSlash } from 'react-icons/fi';
 import { FiLock, FiCreditCard, FiEye } from 'react-icons/fi';
 import { MdContentPaste } from 'react-icons/md';
 import { IoMdAttach } from 'react-icons/io';
-import brandImage from '../../assets/images/53c02593-30f5-4ad0-96e3-aa4d532cb995.svg'
+import brandImage from '../../assets/images/53c02593-30f5-4ad0-96e3-aa4d532cb995.svg';
 
 const dummyImage = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=
 eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80`;
@@ -30,10 +30,7 @@ function Index() {
 					</div>
 
 					<div className="hero-image imageHolder">
-						<img
-							src={brandImage}
-							alt="Luxury streetwear"
-						/>
+						<img src={brandImage} alt="Luxury streetwear" />
 					</div>
 				</Hero>
 
@@ -79,14 +76,26 @@ function Index() {
 						<h2>Chinedu Maduekwe</h2>
 
 						<p>
-							House Maduekwe was built on a vision of confidence, culture, and
-							elevated streetwear — designed for modern men who value identity.
+							House Maduekwe is a study in identity, heritage, and refined
+							expression—where fashion transcends the garment and becomes a
+							cultural narrative.
 						</p>
 
 						<p>
-							Blending creativity with structure, Chinedu brings together
-							fashion, technology, and user experience to create a brand that
-							feels as premium as it looks.
+							Founded on the principle of intentional design, the House draws
+							from the depth and enduring influence of the African
+							continent—shaping modern menswear through culture and connection.
+						</p>
+
+						<p>
+							At the heart of House Maduekwe is a commitment to individuality.
+							We create for those who move with quiet confidence—who understand
+							that true style is not followed, but defined.
+						</p>
+
+						<p>
+							Every piece is an assertion of self, rooted in heritage yet
+							unbound by expectation.
 						</p>
 					</div>
 				</Founder>
@@ -182,6 +191,32 @@ function Index() {
 
 					<p className="consent">
 						By using our platform, you agree to these practices.
+					</p>
+				</Section>
+
+				<Section className="intro-y">
+					<h2>Craft & Exclusivity</h2>
+
+					<p>
+						Our garments are produced in limited quantities, each one conceived
+						as a distinct work—crafted with precision, elevated in detail, and
+						designed to exist beyond seasons.
+					</p>
+
+					<p>
+						This deliberate scarcity ensures that every creation remains as
+						unique as the individual who wears it.
+					</p>
+				</Section>
+
+				<Section className="intro-y">
+					<h2>The Experience</h2>
+
+					<p>House Maduekwe is not simply worn—it is experienced.</p>
+
+					<p>
+						A reflection of origin, a statement of presence, and a testament to
+						those who stand firmly in who they are.
 					</p>
 				</Section>
 
