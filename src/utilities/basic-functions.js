@@ -366,25 +366,40 @@ export const groupedVariantsChecker = ({
 	quantity,
 	shopItem,
 }) => {
-	if (shopItem?.groupedVariants.length === 0) return true;
+	if (!shopItem?.groupedVariants?.length) return { ok: true };
 
-	if (selectedAttributes?.length === 0) return false;
+	if (!selectedAttributes?.length) return { ok: false };
 
-	const selectedIds = selectedAttributes?.map(getAttrKey)?.filter(Boolean);
+	const selectedIds = selectedAttributes.map(getAttrKey).filter(Boolean);
+
 	const primarySet = new Set(
-		shopItem?.groupedVariants.map((g) => g?.primaryAttribute?.toString())
+		shopItem.groupedVariants.map((g) =>
+			g.primaryAttribute?.toString()
+		)
 	);
-	const primary = selectedIds.find((id) => primarySet?.has(id));
-	if (!primary) return false;
+
+	const primary = selectedIds.find((id) => primarySet.has(id));
+	if (!primary) return { ok: false };
 
 	const group = shopItem.groupedVariants.find(
-		(g) => g?.primaryAttribute?.toString() === primary
-	);
-	const option = group?.options?.find((opt) =>
-		selectedIds.includes(opt?.attribute?.toString())
+		(g) => g.primaryAttribute?.toString() === primary
 	);
 
-	return option ? option?.quantity >= quantity : false;
+	const option = group?.options?.find((opt) =>
+		selectedIds.includes(opt.attribute?.toString())
+	);
+
+	if (!option) return { ok: false, reason: 'invalid_combination' };
+
+	if (option.quantity < quantity) {
+		return {
+			ok: false,
+			reason: 'insufficient_stock',
+			available: option.quantity,
+		};
+	}
+
+	return { ok: true };
 };
 
 export const attributesError = ({
@@ -393,28 +408,45 @@ export const attributesError = ({
 	shopItem,
 	quantity,
 }) => {
-	if (shopItem?.groupedVariants.length === 0) {
+	const grouped = shopItem?.groupedVariants || [];
+
+	// 🟢 1. No grouped variants → fallback Only one selected → check its own quantity
+	if (grouped.length === 0 || !otherAttr) {
 		const attr = shopItem?.attributes?.find(
-			(a) => getAttrKey(a?.Attribute) === getAttrKey(currentAttr)
+			(a) => getAttrKey(a) === getAttrKey(currentAttr)
 		);
-		return attr ? attr?.quantity >= quantity : false;
+
+		return attr ? attr.quantity >= quantity : true;
 	}
 
-	const otherPrimary = shopItem?.groupedVariants?.find(
-		(g) => g?.primaryAttribute?.toString() === getAttrKey(otherAttr)
-	);
-	const currentPrimary = shopItem?.groupedVariants?.find(
-		(g) => g?.primaryAttribute?.toString() === getAttrKey(currentAttr)
-	);
-	const option = otherPrimary
-		? otherPrimary?.options?.find(
-				(opt) => opt?.attribute?.toString() === getAttrKey(currentAttr)
-			)
-		: currentPrimary
-			? currentPrimary?.options?.find(
-					(opt) => opt?.attribute?.toString() === getAttrKey(otherAttr)
-				)
-			: null;
+	// 🟢 2. Both selected → find relationship
+	const currentId = getAttrKey(currentAttr);
+	const otherId = getAttrKey(otherAttr);
 
-	return option ? option?.quantity >= quantity : false;
+	// try: other is primary
+	const group = grouped.find((g) => g.primaryAttribute?.toString() === otherId);
+
+	if (group) {
+		const option = group.options.find(
+			(opt) => opt.attribute?.toString() === currentId
+		);
+
+		return option ? option.quantity >= quantity : false;
+	}
+
+	// try: current is primary
+	const reverseGroup = grouped.find(
+		(g) => g.primaryAttribute?.toString() === currentId
+	);
+
+	if (reverseGroup) {
+		const option = reverseGroup.options.find(
+			(opt) => opt.attribute?.toString() === otherId
+		);
+
+		return option ? option.quantity >= quantity : false;
+	}
+
+	// 🟡 fallback safety
+	return true;
 };

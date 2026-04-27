@@ -9,17 +9,22 @@ import {
 	Color,
 	Size,
 	Image,
+	SoldOut,
 } from './index.style';
 import { MdOutlineError } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import ModalSlider from '../sliders/modal-slider/index';
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
 import { FaBasketShopping } from 'react-icons/fa6';
-import { attributeType } from '../../utilities/app-const';
+import { attributeType, ItemStatusType } from '../../utilities/app-const';
 import { useDispatch } from 'react-redux';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 import { addToHoldings } from '../../store/slice/holding';
-import { groupAttributesByType } from '../../utilities/basic-functions';
+import {
+	groupAttributesByType,
+	groupedVariantsChecker,
+	attributesError,
+} from '../../utilities/basic-functions';
 import { toast } from 'react-toastify';
 
 function ShopItem({
@@ -55,13 +60,32 @@ function ShopItem({
 			return;
 		}
 		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
+		const selectedAttributes = [
+			...(selectedColor ? [selectedColor] : []),
+			...(attribute.currentSize ? [attribute.currentSize] : []),
+		];
+
+		const check = groupedVariantsChecker({
+			selectedAttributes,
+			shopItem: product,
+			quantity: 1,
+		});
+
+		if (!check.ok) {
+			if (check.reason === 'invalid_combination') {
+				toast.warning('This combination is not available');
+			} else if (check.reason === 'insufficient_stock') {
+				toast.warning(`Only ${check.available} left in stock`);
+			} else {
+				toast.warning('Out of stock');
+			}
+			return;
+		}
+
 		const selectedItem = {
 			shopItem: product,
 			quantity: 1,
-			selectedAttributes: [
-				...(selectedColor ? [selectedColor] : []),
-				...(attribute.currentSize ? [attribute.currentSize] : []),
-			],
+			selectedAttributes: selectedAttributes,
 		};
 
 		console.log('📦 Add to holding', selectedItem);
@@ -80,14 +104,34 @@ function ShopItem({
 			toast.warning('color not selected');
 			return;
 		}
+
 		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
+		const selectedAttributes = [
+			...(selectedColor ? [selectedColor] : []),
+			...(attribute.currentSize ? [attribute.currentSize] : []),
+		];
+
+		const check = groupedVariantsChecker({
+			selectedAttributes,
+			shopItem: product,
+			quantity: 1,
+		});
+
+		if (!check.ok) {
+			if (check.reason === 'invalid_combination') {
+				toast.warning('This combination is not available');
+			} else if (check.reason === 'insufficient_stock') {
+				toast.warning(`Only ${check.available} left in stock`);
+			} else {
+				toast.warning('Out of stock');
+			}
+			return;
+		}
+
 		const selectedItem = {
 			shopItem: product?._id,
 			quantity: 1,
-			selectedAttributes: [
-				...(selectedColor ? [selectedColor] : []),
-				...(attribute.currentSize ? [attribute.currentSize] : []),
-			],
+			selectedAttributes: selectedAttributes,
 		};
 
 		console.log('🛒 Add to cart', selectedItem);
@@ -355,6 +399,15 @@ function ShopItem({
 							</i>
 						</button>
 
+						<SoldOut
+							$isSoldOut={
+								product?.status === ItemStatusType.SOLD_OUT ||
+								product?.quantity <= 0
+							}
+						>
+							<span>SOLD OUT</span>
+						</SoldOut>
+
 						<div className="display_container_screen">
 							<ModalSlider currentIndex={index}>
 								{productDisplay.map((image, i) => (
@@ -428,23 +481,34 @@ function ShopItem({
 									))}
 								</div>
 								<div className="size">
-									{attributesDisplay.size.map((attr, i) => (
-										<Size
-											onClick={() => {
-												configAttribute({
-													...attribute,
-													currentSize: attr,
-												});
-											}}
-											key={i}
-											$active={
-												attr?.Attribute?.display ===
-												attribute?.currentSize?.Attribute?.display
-											}
-										>
-											<span>{attr?.Attribute?.display}</span>
-										</Size>
-									))}
+									{attributesDisplay.size.map((attr, i) => {
+										const sizeValue = attr?.Attribute?.display;
+										const isActive =
+											attr?.Attribute?.display ===
+											attribute?.currentSize?.Attribute?.display;
+										const isValid = attributesError({
+											currentAttr: attr,
+											otherAttr: attribute.currentColor,
+											shopItem: product,
+											quantity: 1,
+										});
+										return (
+											<Size
+												onClick={() => {
+													configAttribute({
+														...attribute,
+														currentSize: attr,
+													});
+												}}
+												key={i}
+												$active={isActive}
+												disabled={!isValid}
+												$isError={!isValid}
+											>
+												<span>{sizeValue}</span>
+											</Size>
+										);
+									})}
 								</div>
 							</div>
 						</div>

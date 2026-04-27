@@ -21,7 +21,11 @@ import { ensureUser } from '../../../store/slice/auth';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import { toast } from 'react-toastify';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
-import { groupAttributesByType } from '../../../utilities/basic-functions';
+import {
+	groupAttributesByType,
+	groupedVariantsChecker,
+	attributesError,
+} from '../../../utilities/basic-functions';
 
 function Details({
 	product,
@@ -77,14 +81,34 @@ function Details({
 			toast.warning('color not selected');
 			return;
 		}
+
 		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
+		const selectedAttributes = [
+			...(selectedColor ? [selectedColor] : []),
+			...(attribute.currentSize ? [attribute.currentSize] : []),
+		];
+
+		const check = groupedVariantsChecker({
+			selectedAttributes,
+			shopItem: product,
+			quantity,
+		});
+
+		if (!check.ok) {
+			if (check.reason === 'invalid_combination') {
+				toast.warning('This combination is not available');
+			} else if (check.reason === 'insufficient_stock') {
+				toast.warning(`Only ${check.available} left in stock`);
+			} else {
+				toast.warning('Out of stock');
+			}
+			return;
+		}
+
 		const selectedItem = {
 			shopItem: product,
 			quantity: 1,
-			selectedAttributes: [
-				...(selectedColor ? [selectedColor] : []),
-				...(attribute.currentSize ? [attribute.currentSize] : []),
-			],
+			selectedAttributes,
 		};
 
 		console.log('📦 Add to holding', selectedItem);
@@ -110,14 +134,34 @@ function Details({
 			toast.warning('color not selected');
 			return;
 		}
+
 		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
+		const selectedAttributes = [
+			...(selectedColor ? [selectedColor] : []),
+			...(attribute.currentSize ? [attribute.currentSize] : []),
+		];
+
+		const check = groupedVariantsChecker({
+			selectedAttributes,
+			shopItem: product,
+			quantity,
+		});
+
+		if (!check.ok) {
+			if (check.reason === 'invalid_combination') {
+				toast.warning('This combination is not available');
+			} else if (check.reason === 'insufficient_stock') {
+				toast.warning(`Only ${check.available} left in stock`);
+			} else {
+				toast.warning('Out of stock');
+			}
+			return;
+		}
+
 		const selectedItem = {
 			shopItem: product?._id,
 			quantity: quantity,
-			selectedAttributes: [
-				...(selectedColor ? [selectedColor] : []),
-				...(attribute.currentSize ? [attribute.currentSize] : []),
-			],
+			selectedAttributes: selectedAttributes,
 		};
 
 		const isValidData =
@@ -198,12 +242,19 @@ function Details({
 						const sizeValue = attr?.Attribute?.display;
 						const isActive =
 							attribute.currentSize?.Attribute?.display === sizeValue;
-
+						const isValid = attributesError({
+							currentAttr: attr,
+							otherAttr: attribute.currentColor,
+							shopItem: product,
+							quantity,
+						});
 						return (
 							<SizeButton
 								key={i}
 								$active={isActive}
 								onClick={() => setSize(attr)}
+								disabled={!isValid}
+								$isError={!isValid}
 							>
 								{sizeValue}
 							</SizeButton>

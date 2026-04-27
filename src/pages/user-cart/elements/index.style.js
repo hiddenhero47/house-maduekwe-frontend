@@ -448,7 +448,7 @@ export const ColorCircle = styled.div`
 `;
 
 export const CheckoutBtn = styled.button`
-    width: 100%;
+	width: 100%;
 	padding-block: 14px;
 	padding-inline: 12px;
 	display: flex;
