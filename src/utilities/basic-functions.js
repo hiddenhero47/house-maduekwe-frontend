@@ -245,7 +245,7 @@ export const getCurrencySymbol = (currencyCode = 'USD') => {
 export const groupAttributesByType = (attributes = []) => {
 	if (!attributes) return [];
 	return attributes.reduce((acc, item) => {
-		const type = item?.Attribute?.type;
+		const type = item?.Attribute?.type ?? item?.type;
 
 		if (!type) return acc;
 
@@ -337,4 +337,116 @@ export const buildShopItemFormData = (values) => {
 	}
 
 	return formData;
+};
+
+export const preloadVideo = (src) => {
+	return new Promise((resolve, reject) => {
+		const video = document.createElement('video');
+
+		video.src = src;
+		video.preload = 'auto';
+
+		video.oncanplaythrough = () => resolve(true);
+		video.onerror = reject;
+
+		video.load();
+	});
+};
+
+export const getAttrKey = (a) => {
+	if (!a?.Attribute) return null;
+
+	return typeof a.Attribute === 'object'
+		? a.Attribute._id?.toString()
+		: a.Attribute?.toString();
+};
+
+export const groupedVariantsChecker = ({
+	selectedAttributes,
+	quantity,
+	shopItem,
+}) => {
+	if (!shopItem?.groupedVariants?.length) return { ok: true };
+
+	if (!selectedAttributes?.length) return { ok: false };
+
+	const selectedIds = selectedAttributes.map(getAttrKey).filter(Boolean);
+
+	const primarySet = new Set(
+		shopItem.groupedVariants.map((g) =>
+			g.primaryAttribute?.toString()
+		)
+	);
+
+	const primary = selectedIds.find((id) => primarySet.has(id));
+	if (!primary) return { ok: false };
+
+	const group = shopItem.groupedVariants.find(
+		(g) => g.primaryAttribute?.toString() === primary
+	);
+
+	const option = group?.options?.find((opt) =>
+		selectedIds.includes(opt.attribute?.toString())
+	);
+
+	if (!option) return { ok: false, reason: 'invalid_combination' };
+
+	if (option.quantity < quantity) {
+		return {
+			ok: false,
+			reason: 'insufficient_stock',
+			available: option.quantity,
+		};
+	}
+
+	return { ok: true };
+};
+
+export const attributesError = ({
+	currentAttr,
+	otherAttr,
+	shopItem,
+	quantity,
+}) => {
+	const grouped = shopItem?.groupedVariants || [];
+
+	// 🟢 1. No grouped variants → fallback Only one selected → check its own quantity
+	if (grouped.length === 0 || !otherAttr) {
+		const attr = shopItem?.attributes?.find(
+			(a) => getAttrKey(a) === getAttrKey(currentAttr)
+		);
+
+		return attr ? attr.quantity >= quantity : true;
+	}
+
+	// 🟢 2. Both selected → find relationship
+	const currentId = getAttrKey(currentAttr);
+	const otherId = getAttrKey(otherAttr);
+
+	// try: other is primary
+	const group = grouped.find((g) => g.primaryAttribute?.toString() === otherId);
+
+	if (group) {
+		const option = group.options.find(
+			(opt) => opt.attribute?.toString() === currentId
+		);
+
+		return option ? option.quantity >= quantity : false;
+	}
+
+	// try: current is primary
+	const reverseGroup = grouped.find(
+		(g) => g.primaryAttribute?.toString() === currentId
+	);
+
+	if (reverseGroup) {
+		const option = reverseGroup.options.find(
+			(opt) => opt.attribute?.toString() === otherId
+		);
+
+		return option ? option.quantity >= quantity : false;
+	}
+
+	// 🟡 fallback safety
+	return true;
 };

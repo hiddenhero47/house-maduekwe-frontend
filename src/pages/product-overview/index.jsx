@@ -9,6 +9,7 @@ import {
 	SideImage,
 	Image,
 	AlsoLike,
+	SoldOut,
 } from './elements/index.style';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -22,6 +23,7 @@ import LoaderNoData from './elements/loader-on-data/loader-no-data';
 import { EmptyState } from './elements/loader-on-data/loader-no-data.style';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import { NoDataIcon } from '../../components/icon-components/empty';
+import { ItemStatusType } from '../../utilities/app-const';
 
 function Index() {
 	const navigate = useNavigate();
@@ -80,7 +82,9 @@ function Index() {
 								<li className=" flex items-center text-[14px]">
 									<CrumbLink
 										type="button"
-										onClick={() => navigate(`/products?category=${product?.category?._id}`)}
+										onClick={() =>
+											navigate(`/products?category=${product?.category?._id}`)
+										}
 									>
 										{product?.category?.name}
 									</CrumbLink>
@@ -94,7 +98,9 @@ function Index() {
 								<li className=" flex items-center text-[14px]">
 									<CrumbLink
 										type="button"
-										onClick={() => navigate(`/products?subCategory=${product?.subCategory}`)}
+										onClick={() =>
+											navigate(`/products?subCategory=${product?.subCategory}`)
+										}
 									>
 										{product?.subCategory}
 									</CrumbLink>
@@ -109,7 +115,9 @@ function Index() {
 									<CrumbLink
 										type="button"
 										className="inactive"
-										onClick={() => navigate(`/products?search=${product?.name}`)}
+										onClick={() =>
+											navigate(`/products?search=${product?.name}`)
+										}
 									>
 										{product?.name}
 									</CrumbLink>
@@ -141,6 +149,15 @@ function Index() {
 										<HiMiniArrowSmallRight />
 									</i>
 								</button>
+
+								<SoldOut
+									$isSoldOut={
+										product?.status === ItemStatusType.SOLD_OUT ||
+										product?.quantity <= 0
+									}
+								>
+									<span>SOLD OUT</span>
+								</SoldOut>
 
 								<ModalSlider currentIndex={index}>
 									{productDisplay.map((image, i) => (
@@ -188,6 +205,14 @@ function Index() {
 												}}
 											/>
 										</div>
+										<SoldOut
+											$isSoldOut={
+												product?.status === ItemStatusType.SOLD_OUT ||
+												product?.quantity <= 0
+											}
+										>
+											<span>SOLD OUT</span>
+										</SoldOut>
 									</div>
 								)}
 
@@ -206,6 +231,14 @@ function Index() {
 												}}
 											/>
 										</div>
+										<SoldOut
+											$isSoldOut={
+												product?.status === ItemStatusType.SOLD_OUT ||
+												product?.quantity <= 0
+											}
+										>
+											<span>SOLD OUT</span>
+										</SoldOut>
 									</div>
 								)}
 							</SideImage>

@@ -121,7 +121,7 @@ export const HoldingWrapper = styled.div`
 
 	@media (max-width: 500px) {
 		width: 90vw;
-		max-width: 500px
+		max-width: 500px;
 	}
 `;
 
@@ -144,6 +144,7 @@ export const Footer = styled.div`
 
 		&:hover {
 			opacity: 0.9;
+			transform: translateY(-1px);
 		}
 	}
 
@@ -160,6 +161,43 @@ export const Footer = styled.div`
 		&:hover {
 			background-color: ${({ theme }) => theme?.addToCart.hoverBg};
 		}
+	}
+`;
+
+export const AddToCartBtn = styled.button`
+	width: 100%;
+	padding-block: 12px;
+	/* padding-inline: 10px; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	position: relative;
+	background-color: ${({ theme }) => theme?.addToCart.background};
+	color: ${({ theme }) => theme?.addToCart.text};
+	cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		opacity: 0.9;
+		transform: translateY(-1px);
+		background-color: ${({ theme }) => theme?.addToCart.hoverBg};
+	}
+
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+	}
+
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+		margin: auto;
+		z-index: 2;
 	}
 `;
 

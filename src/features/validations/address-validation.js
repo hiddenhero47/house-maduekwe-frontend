@@ -13,6 +13,9 @@ export const addressValidationSchema = Yup.object().shape({
 			'Country must be a valid 2-letter country code (e.g. NG, US)'
 		),
 
+	zipCode: Yup.string().optional(),
+	stateLine: Yup.string().optional(),
+
 	fullAddress: Yup.string()
 		.trim()
 		.required('Please add your full address description'),

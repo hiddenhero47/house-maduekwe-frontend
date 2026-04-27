@@ -112,7 +112,7 @@ export const MyForm = styled.form`
 	flex-direction: column;
 	gap: 8px;
 	padding-bottom: 20px;
-	margin-top: 18px;
+	margin-top: 10px;
 
 	.Form_error {
 		font-size: 10px;
