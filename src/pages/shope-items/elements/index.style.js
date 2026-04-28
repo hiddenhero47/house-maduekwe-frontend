@@ -33,7 +33,15 @@ export const Container = styled.div`
 			letter-spacing: 10px;
 		}
 
-		@media (max-width: 600px) {
+		@media (min-width: 371px) and (max-width: 600px) {
+			font-size: 17px;
+			letter-spacing: 8px;
+			padding-bottom: 5px;
+			margin-bottom: 5px;
+			margin-top: 9vh;
+		}
+
+		@media (max-width: 370px) {
 			font-size: 14px;
 			letter-spacing: 8px;
 			padding-bottom: 5px;
@@ -55,8 +63,15 @@ export const Container = styled.div`
 			line-height: 7px;
 		}
 
-		@media (max-width: 600px) {
-			font-size: 8px;
+		@media (min-width: 371px) and (max-width: 600px) {
+			font-size: 9px;
+			letter-spacing: 3.5px;
+			line-height: 5px;
+			margin-bottom: 5vh;
+		}
+
+		@media (max-width: 370px) {
+			font-size: 7px;
 			letter-spacing: 3.5px;
 			line-height: 5px;
 			margin-bottom: 5vh;
@@ -191,7 +206,20 @@ export const NewArrivalsBtn = styled.button`
 		}
 	}
 
-	@media (max-width: 600px) {
+	@media (min-width: 371px) and (max-width: 600px) {
+		padding-block: 8px;
+		padding-inline: 11px;
+		.content {
+			gap: 4px;
+			font-size: 9px;
+
+			i {
+				font-size: 8px;
+			}
+		}
+	}
+
+	@media (max-width: 370px) {
 		padding-block: 8px;
 		padding-inline: 11px;
 		.content {
@@ -231,7 +259,7 @@ export const MasonryGrid = styled.div`
 		row-gap: 16px;
 	}
 
-	@media (min-width: 361px) and (max-width: 650px) {
+	@media (min-width: 391px) and (max-width: 650px) {
 		width: 99%;
 		justify-content: center;
 		grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
@@ -240,7 +268,7 @@ export const MasonryGrid = styled.div`
 		row-gap: 16px;
 	}
 
-	@media (max-width: 360px) {
+	@media (max-width: 390px) {
 		width: 100%;
 		justify-content: center;
 		display: flex;

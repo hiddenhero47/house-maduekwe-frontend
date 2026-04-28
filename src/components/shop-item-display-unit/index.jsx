@@ -455,60 +455,64 @@ function ShopItem({
 						</div>
 
 						<div className="attributes_display">
-							<h3>
-								{product?.name} <span>${product?.price}</span>
-							</h3>
+							<div className="mt-[4px] overflow-x-auto scroll_style">
+								<h3>
+									{product?.name} <span>${product?.price}</span>
+								</h3>
+							</div>
 
-							<div className="select_attributes">
-								<div className="color">
-									{attributesDisplay.color.map((attr, i) => (
-										<Color
-											$value={attr?.Attribute?.display}
-											onClick={() => {
-												configAttribute({
-													...attribute,
-													currentColor: attr,
-													currentDisplay: attr?.images,
-												});
-												setIndex(0);
-											}}
-											key={i}
-											$active={
-												attr?.Attribute?.display ===
-												attribute?.currentColor?.Attribute?.display
-											}
-										/>
-									))}
-								</div>
-								<div className="size">
-									{attributesDisplay.size.map((attr, i) => {
-										const sizeValue = attr?.Attribute?.display;
-										const isActive =
-											attr?.Attribute?.display ===
-											attribute?.currentSize?.Attribute?.display;
-										const isValid = attributesError({
-											currentAttr: attr,
-											otherAttr: attribute.currentColor,
-											shopItem: product,
-											quantity: 1,
-										});
-										return (
-											<Size
+							<div className="mt-[10px] overflow-x-auto scroll_style">
+								<div className="select_attributes">
+									<div className="color">
+										{attributesDisplay.color.map((attr, i) => (
+											<Color
+												$value={attr?.Attribute?.display}
 												onClick={() => {
 													configAttribute({
 														...attribute,
-														currentSize: attr,
+														currentColor: attr,
+														currentDisplay: attr?.images,
 													});
+													setIndex(0);
 												}}
 												key={i}
-												$active={isActive}
-												disabled={!isValid}
-												$isError={!isValid}
-											>
-												<span>{sizeValue}</span>
-											</Size>
-										);
-									})}
+												$active={
+													attr?.Attribute?.display ===
+													attribute?.currentColor?.Attribute?.display
+												}
+											/>
+										))}
+									</div>
+									<div className="size">
+										{attributesDisplay.size.map((attr, i) => {
+											const sizeValue = attr?.Attribute?.display;
+											const isActive =
+												attr?.Attribute?.display ===
+												attribute?.currentSize?.Attribute?.display;
+											const isValid = attributesError({
+												currentAttr: attr,
+												otherAttr: attribute.currentColor,
+												shopItem: product,
+												quantity: 1,
+											});
+											return (
+												<Size
+													onClick={() => {
+														configAttribute({
+															...attribute,
+															currentSize: attr,
+														});
+													}}
+													key={i}
+													$active={isActive}
+													disabled={!isValid}
+													$isError={!isValid}
+												>
+													<span>{sizeValue}</span>
+												</Size>
+											);
+										})}
+									</div>
 								</div>
 							</div>
 						</div>

@@ -50,7 +50,8 @@ export const MenuSide = styled.aside`
 
 export const MenuModal = styled.aside`
 	width: 100%;
-	height: 100%;
+	height: calc(100vh - 30px);
+	min-height: 780px;
 	border-radius: 15px;
 	background-color: ${({ theme }) => theme?.mainBody?.container};
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};

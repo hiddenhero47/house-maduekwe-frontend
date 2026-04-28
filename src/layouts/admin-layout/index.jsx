@@ -151,7 +151,7 @@ function DashboardLayout() {
 				</Wrapper>
 			</LayoutWrapper>
 			<Modal.Left
-				height="calc(100vh - 30px)"
+				height="fit-content"
 				width="clamp(260px, 31vw, 280px)"
 				minWidth="clamp(270px, 35%, 280px)"
 				marginOffset="15px"
