@@ -174,6 +174,8 @@ export const ShopItemContent = styled.div`
 export const Controller = styled.div`
 	height: clamp(25px, 33%, 80px);
 	width: 100%;
+	display: flex;
+	flex-direction: column;
 
 	.display_navigator {
 		width: 100%;
@@ -210,14 +212,16 @@ export const Controller = styled.div`
 		padding-inline: clamp(10px, 5%, 19px);
 		display: flex;
 		flex-direction: column;
+		flex: 1;
 
 		h3 {
 			font-size: 0.8rem;
 			font-family: Inter;
 			font-weight: 700;
-			margin-top: 4px;
 			display: flex;
+			white-space: nowrap;
 			align-items: center;
+			gap: 15px;
 
 			span {
 				font-size: 0.7rem;
@@ -230,7 +234,7 @@ export const Controller = styled.div`
 			justify-content: space-between;
 			align-items: center;
 			width: 100%;
-			margin-top: 15px;
+			gap: 30px;
 		}
 
 		.color,
@@ -310,11 +314,11 @@ const lighten = (hex, percent = 10) => {
 };
 
 export const Color = styled.button`
-	width: clamp(9px, 5vw, 14px);
+	width: clamp(9px, 5vw, 16px);
 	aspect-ratio: 1 / 1;
 	border-radius: 9999px;
 	background-color: ${({ $value }) => $value};
-	border: 1px solid
+	border: 1.5px solid
 		${({ theme, $value }) =>
 			theme.mode === 'dark' ? lighten($value, 20) : darken($value, 20)};
 	transform: scale(${({ $active }) => ($active ? 0.9 : 1)});
@@ -328,12 +332,13 @@ export const Color = styled.button`
 	}
 
 	@container (max-width: 250px) {
-		width: 10px;
+		width: 13px;
 	}
 `;
 
 export const Size = styled.button`
-	width: clamp(15px, 5vw, 22px);
+	width: clamp(15px, 5vw, 23px);
+	padding-inline: 10px;
 	aspect-ratio: 1 / 1;
 	display: flex;
 	align-items: center;
@@ -341,7 +346,7 @@ export const Size = styled.button`
 	border-radius: 5px;
 	font-size: clamp(9px, 0.5vw, 0.6rem);
 	font-family: Inter;
-	font-weight: 600;
+	font-weight: 900;
 	line-height: 0px;
 	color: ${({ theme }) => theme?.mainBody.sbText};
 	border: ${({ theme, $active, $isError }) => {
@@ -358,6 +363,7 @@ export const Size = styled.button`
 	@container (max-width: 250px) {
 		width: 17px;
 		font-size: 0.5rem;
+		padding-inline: 9px;
 	}
 `;
 

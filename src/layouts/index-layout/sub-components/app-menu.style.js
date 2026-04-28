@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const MenuWrapper = styled.aside`
 	width: 100%;
-	height: 100%;
+	height: 97vh;
+	min-height: 780px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

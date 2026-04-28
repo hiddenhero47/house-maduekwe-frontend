@@ -168,7 +168,7 @@ function IndexLayout() {
 			</LayoutWrapper>
 
 			<Modal.Left
-				height="97vh"
+				height="fit-content"
 				width="clamp(270px, 31vw, 280px)"
 				minWidth="clamp(270px, 35%, 280px)"
 				marginOffset="clamp(3px, 2%, 15px)"
