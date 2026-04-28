@@ -272,6 +272,10 @@ export const AppFooter = styled.footer`
 			position: relative;
 			color: ${({ theme }) => theme?.mainBody.sbText};
 			transition: color 0.25s ease;
+
+			@media (max-width: 460px) {
+				font-size: 0.78rem;
+			}
 		}
 
 		a::after {
@@ -302,6 +306,10 @@ export const AppFooter = styled.footer`
 		line-height: 1.5rem;
 		color: ${({ theme }) => theme?.mainBody.kitTextDark};
 		text-align: center;
+
+		@media (max-width: 460px) {
+			font-size: 0.78rem;
+		}
 	}
 `;
 
@@ -402,7 +410,8 @@ export const Promotion = styled.section`
 	border-radius: 8px;
 	cursor: pointer;
 
-	.video-el, .video_loader {
+	.video-el,
+	.video_loader {
 		border-radius: 8px;
 	}
 
