@@ -66,6 +66,10 @@ export const Item = styled.div`
 	padding: 10px;
 	border-radius: 8px;
 	position: relative;
+	/* border: ${({ theme, $unavailable }) => {
+		if ($unavailable) return `1px solid ${theme?.intro?.boxBorder}`;
+		return '';
+	}}; */
 
 	&:hover {
 		background-color: ${({ theme }) =>
@@ -129,7 +133,7 @@ export const ItemLoader = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 2;
+	z-index: 5;
 	border-radius: 8px;
 `;
 
@@ -502,5 +506,108 @@ export const CheckoutBtn = styled.button`
 			gap: 4px;
 			font-size: 12px;
 		}
+	}
+`;
+
+export const Unavailable = styled.div`
+	position: absolute;
+	z-index: 3;
+	top: 0;
+	left: 20px;
+	display: ${({ $unavailable }) => ($unavailable ? 'flex' : 'none')};
+
+	&:hover {
+		.icon {
+			transform: scale(1.1);
+		}
+	}
+
+	/* --- ICON --- */
+	.icon {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 9999px;
+		background: ${({ theme }) => theme.intro.logo};
+		color: white;
+		font-size: 20px;
+		cursor: pointer;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+		transition: transform 0.25s ease;
+
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+
+	/* --- CONTENT PANEL --- */
+	.content {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(10px, -50%) scale(0.85);
+		/* margin-left: 5px; */
+		opacity: 0;
+		pointer-events: none;
+		transform-origin: left center;
+		background: ${({ theme }) =>
+			theme.mode === 'dark' ? 'rgba(30,30,30,0.85)' : 'rgba(255,255,255,0.85)'};
+		backdrop-filter: blur(10px);
+		border-radius: 12px;
+		padding: 10px 12px;
+		width: 220px;
+		border: 1px solid ${({ theme }) => theme.mainBody.line};
+		box-shadow:
+			0 10px 30px rgba(0, 0, 0, 0.2),
+			0 0 0 1px rgba(255, 255, 255, 0.05);
+		transition:
+			transform 0.25s ease,
+			opacity 0.2s ease;
+	}
+
+	.content::before {
+		content: '';
+		position: absolute;
+		left: -6px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 10px;
+		height: 10px;
+		background: inherit;
+		border-left: 1px solid ${({ theme }) => theme.mainBody.line};
+		border-bottom: 1px solid ${({ theme }) => theme.mainBody.line};
+		transform: translateY(-50%) rotate(45deg);
+	}
+
+	/* --- EXPAND --- */
+	.icon:hover + .content,
+	.content:hover {
+		opacity: 1;
+		transform: translate(10px, -50%) scale(1);
+		pointer-events: auto;
+	}
+
+	/* --- TEXT --- */
+	h3 {
+		font-size: 13px;
+		font-weight: 600;
+		margin-bottom: 4px;
+		color: ${({ theme }) => theme.intro.logo};
+	}
+
+	p {
+		font-size: 12px;
+		line-height: 1.4;
+		margin-bottom: 4px;
+		color: ${({ theme }) => theme.mainBody.text};
+	}
+
+	span {
+		font-size: 11px;
+		color: ${({ theme }) => theme.mainBody.sbText};
 	}
 `;
