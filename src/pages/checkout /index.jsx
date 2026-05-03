@@ -19,10 +19,12 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useParams } from 'react-router-dom';
 import StripePaymentForm from './elements/stripe/strip-form';
 import { getCurrencySymbol } from '../../utilities/basic-functions';
+import { useSelector, useDispatch } from 'react-redux';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function Index() {
+	const { theme } = useSelector((state) => state.themes);
 	const { orderId } = useParams();
 
 	const { data, isPending } = OrderServices.getOne(orderId);
@@ -120,7 +122,10 @@ function Index() {
 						{clientData?.clientSecret && (
 							<Elements
 								stripe={stripePromise}
-								options={{ clientSecret: clientData?.clientSecret }}
+								options={{
+									clientSecret: clientData?.clientSecret,
+									appearance: { theme: theme === 'dark' ? 'night' : 'stripe' },
+								}}
 							>
 								<PaymentArea>
 									<StripePaymentForm

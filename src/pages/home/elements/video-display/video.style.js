@@ -4,10 +4,10 @@ export const VideoContainer = styled.div`
 	width: 100%;
 	height: 100%;
 	margin: 0 auto;
-	background-color: rgba(0, 0, 0, 0.1);
+	/* background-color: rgba(0, 0, 0, 0.1); */
 	position: relative;
 
-	.video-el {
+	.video_el {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -24,6 +24,10 @@ export const VideoContainer = styled.div`
 			margin: 15px;
 			margin-left: auto;
 		}
+	}
+
+	media-controller {
+		border-radius: inherit;
 	}
 
 	/* 🎛 Control bar base */
