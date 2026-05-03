@@ -410,8 +410,9 @@ export const Promotion = styled.section`
 	border-radius: 8px;
 	cursor: pointer;
 
-	.video-el,
-	.video_loader {
+	.video_el,
+	.video_loader,
+	.video_wrapper {
 		border-radius: 8px;
 	}
 

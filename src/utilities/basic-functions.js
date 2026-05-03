@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import moment from 'moment';
+import { ItemStatusType } from './app-const';
 
 export const getRandomInt = (min, max) =>
 	Math.floor(Math.random() * (max - min + 1)) + min;
@@ -373,9 +374,7 @@ export const groupedVariantsChecker = ({
 	const selectedIds = selectedAttributes.map(getAttrKey).filter(Boolean);
 
 	const primarySet = new Set(
-		shopItem.groupedVariants.map((g) =>
-			g.primaryAttribute?.toString()
-		)
+		shopItem.groupedVariants.map((g) => g.primaryAttribute?.toString())
 	);
 
 	const primary = selectedIds.find((id) => primarySet.has(id));
@@ -449,4 +448,72 @@ export const attributesError = ({
 
 	// 🟡 fallback safety
 	return true;
+};
+
+export const getUnavailableInfo = ({
+	shopItem,
+	selectedAttributes,
+	quantity,
+	stockInfo = [],
+}) => {
+	const isSoldOut =
+		shopItem?.status === ItemStatusType.SOLD_OUT || shopItem?.quantity <= 0;
+
+	const check = groupedVariantsChecker({
+		selectedAttributes,
+		shopItem,
+		quantity,
+	});
+
+	// optimized lookup
+	const stockMatch = stockInfo.find(
+		(s) => s.productId === shopItem?._id && !s.isAvailable
+	);
+
+	const isStockUnavailable = !!stockMatch;
+	const stockMessage = stockMatch?.message;
+
+	// 🔴 1. SOLD OUT (highest priority)
+	if (isSoldOut) {
+		return {
+			status: true,
+			type: 'SOLD_OUT',
+			title: 'Sold out',
+			message: 'This item is no longer available.',
+			recommendation: 'Please remove or deselect this item to continue.',
+		};
+	}
+
+	// 🟡 2. INVALID SELECTION (local issue)
+	if (!check.ok) {
+		return {
+			status: true,
+			type: 'INVALID_SELECTION',
+			title: 'Selection not available',
+			message: 'The selected size or quantity is not available for this item.',
+			recommendation: 'Please adjust your selection or remove this item.',
+		};
+	}
+
+	// 🟠 3. STOCK CONFLICT (global issue)
+	if (isStockUnavailable && check.ok) {
+		return {
+			status: true,
+			type: 'STOCK_CONFLICT',
+			title: 'Cart conflict',
+			message:
+				'This item is available individually, but conflicts with another item in your cart.',
+			recommendation:
+				'Remove or deselect one of the conflicting items to proceed.',
+		};
+	}
+
+	// ✅ ALL GOOD
+	return {
+		status: false,
+		type: null,
+		title: '',
+		message: '',
+		recommendation: '',
+	};
 };

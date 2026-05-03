@@ -227,7 +227,6 @@ function Index() {
 					{/* <div className="imageHolder rounded-[inherit]">
 						<img src={postImage} alt="No Image" />
 					</div> */}
-
 					<MyVideo
 						videoSrc={videoTwo}
 						isPreloaded

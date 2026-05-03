@@ -10,22 +10,30 @@ import {
 	AddressSelect,
 	AddressBox,
 	CheckoutBtn,
+	Unavailable,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import { MdOutlineToggleOff } from 'react-icons/md';
 import { MdOutlineToggleOn } from 'react-icons/md';
 import CartServices from '../../features/services/custom-hooks/cart';
 import CartLoader from './elements/cart-loader/cart-loader';
-import { groupAttributesByType } from '../../utilities/basic-functions';
-import { attributeType } from '../../utilities/app-const';
+import {
+	groupAttributesByType,
+	groupedVariantsChecker,
+	attributesError,
+	getUnavailableInfo,
+} from '../../utilities/basic-functions';
+import { attributeType, ItemStatusType } from '../../utilities/app-const';
 import Spinner from '../../components/loaders/spinners/Spinner';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 import { useNavigate } from 'react-router-dom';
 import AddressServices from '../../features/services/custom-hooks/addresses';
 import { CheckoutServices } from '../../features/services/custom-hooks/orders';
 import { getCurrencySymbol } from '../../utilities/basic-functions';
-import { CgRadioChecked } from "react-icons/cg";
-import { CgRadioCheck } from "react-icons/cg";
+import { CgRadioChecked } from 'react-icons/cg';
+import { CgRadioCheck } from 'react-icons/cg';
+import { IoIosInformationCircle } from 'react-icons/io';
+import { toast } from 'react-toastify';
 
 function Index() {
 	const navigate = useNavigate();
@@ -126,6 +134,15 @@ function Index() {
 		const allItemIds = data.itemList.map((item) => item._id);
 		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
 
+		const stockIssues = (checkoutData?.stock || [])
+			.map((s, index) => ({ ...s, index }))
+			.filter((s) => !s.isAvailable);
+
+		if (stockIssues.length > 0) {
+			toast.warning(`${stockIssues[0].message}`);
+			return;
+		}
+
 		if (finalItemIds.length > 0) {
 			checkout(
 				{
@@ -155,94 +172,119 @@ function Index() {
 						{cartItems &&
 							!isPending &&
 							cartItems?.length > 0 &&
-							cartItems?.map((item, index) => (
-								<li
-									key={item?._id || index}
-									className="py-[30px] border-b border-b-[var(--mainBody-line)]"
-								>
-									<Item>
-										<button
-											className="image_button"
-											onClick={() =>
-												navigate(`/overview/${item?.shopItem?._id}`)
-											}
-										>
-											<div className="imageHolder">
-												<img
-													src={getImage(item)}
-													alt="Error"
-													onLoad={(e) => {
-														const img = e.currentTarget;
-														const ratio = img.naturalWidth / img.naturalHeight;
-														const position = ratio < 0.79 ? 'top' : 'center';
-														img.style.objectPosition = position;
-													}}
-												/>
-											</div>
-										</button>
+							cartItems?.map((item, index) => {
+								const stockDetails = getUnavailableInfo({
+									shopItem: item?.shopItem,
+									selectedAttributes: item?.selectedAttributes,
+									quantity: item?.quantity,
+									stockInfo: checkoutData?.stock || [],
+								});
 
-										<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between py-[8px] pr-[8px]">
-											<div className="flex justify-between w-full">
-												<div>
-													<h3>{item?.shopItem?.name}</h3>
-													<div className="flex gap-[10px] flex-wrap">
-														<p>
-															<span>size :</span>{' '}
-															<span>
-																{getDisplay(item, attributeType.SIZE) || 'Nill'}
-															</span>
-														</p>
-														<div className="flex items-center gap-[10px]">
-															<span>color :</span>{' '}
-															<ColorCircle
-																$color={
-																	getDisplay(item, attributeType.COLOR) || ''
-																}
-																$active={true}
-															/>
+								return (
+									<li
+										key={item?._id || index}
+										className="py-[30px] border-b border-b-[var(--mainBody-line)]"
+									>
+										<Item $unavailable={stockDetails?.status}>
+											<button
+												className="image_button"
+												onClick={() =>
+													navigate(`/overview/${item?.shopItem?._id}`)
+												}
+											>
+												<div className="imageHolder">
+													<img
+														src={getImage(item)}
+														alt="Error"
+														onLoad={(e) => {
+															const img = e.currentTarget;
+															const ratio =
+																img.naturalWidth / img.naturalHeight;
+															const position = ratio < 0.79 ? 'top' : 'center';
+															img.style.objectPosition = position;
+														}}
+													/>
+												</div>
+											</button>
+
+											<div className="ml-[clamp(5px,5%,25px)] flex flex-col w-full justify-between py-[8px] pr-[8px]">
+												<div className="flex justify-between w-full">
+													<div>
+														<h3>{item?.shopItem?.name}</h3>
+														<div className="flex gap-[10px] flex-wrap">
+															<p>
+																<span>size :</span>{' '}
+																<span>
+																	{getDisplay(item, attributeType.SIZE) ||
+																		'Nill'}
+																</span>
+															</p>
+															<div className="flex items-center gap-[10px]">
+																<span>color :</span>{' '}
+																<ColorCircle
+																	$color={
+																		getDisplay(item, attributeType.COLOR) || ''
+																	}
+																	$active={true}
+																/>
+															</div>
 														</div>
 													</div>
+
+													<h3>${item?.shopItem?.price}</h3>
 												</div>
 
-												<h3>${item?.shopItem?.price}</h3>
-											</div>
+												<div className="flex justify-between w-full items-center">
+													<p className="flex items-center gap-[10px]">
+														Qty {item?.quantity}{' '}
+														<span className="w-[2px] rounded-full h-[25px] bg-[var(--mainBody-line)]" />
+														<ToggleBtn
+															onClick={() => toggleExclude(item?._id)}
+															$isExcluded={excludedItems.includes(item?._id)}
+														>
+															{excludedItems.includes(item?._id) ? (
+																<i>
+																	<CgRadioCheck />
+																</i>
+															) : (
+																<i>
+																	<CgRadioChecked />
+																</i>
+															)}
+														</ToggleBtn>
+													</p>
 
-											<div className="flex justify-between w-full items-center">
-												<p className="flex items-center gap-[10px]">
-													Qty {item?.quantity}{' '}
-
-													<div className='w-[2px] rounded-full h-[25px] bg-[var(--mainBody-line)]'></div>
-
-													<ToggleBtn
-														onClick={() => toggleExclude(item?._id)}
-														$isExcluded={excludedItems.includes(item?._id)}
+													<button
+														disabled={isRemoving}
+														type="button"
+														className="text-[15px] text-[var(--intro-logo)]"
+														onClick={() => removeItem(item?._id)}
 													>
-														{excludedItems.includes(item?._id) ? (
-															<i><CgRadioCheck /></i>
-														) : (
-															<i><CgRadioChecked /></i>
-														)}
-													</ToggleBtn>
-												</p>
-
-												<button
-													disabled={isRemoving}
-													type="button"
-													className="text-[15px] text-[var(--intro-logo)]"
-													onClick={() => removeItem(item?._id)}
-												>
-													Remove
-												</button>
+														Remove
+													</button>
+												</div>
 											</div>
-										</div>
-										<ItemLoader
-											$isLoading={isRemoving && item?._id === loadingId}
-										>
-											<Spinner thin="50px" />
-										</ItemLoader>
-									</Item>
-								</li>
-							))}
+											<ItemLoader
+												$isLoading={isRemoving && item?._id === loadingId}
+											>
+												<Spinner thin="50px" />
+											</ItemLoader>
+
+											<Unavailable $unavailable={stockDetails?.status}>
+												<div className="icon">
+													<IoIosInformationCircle />
+												</div>
+
+												<div className="content">
+													<h3>{stockDetails?.title}</h3>
+													<p>{stockDetails?.message}</p>
+													<span>{stockDetails?.recommendation}</span>
+												</div>
+											</Unavailable>
+										</Item>
+									</li>
+								);
+							})}
 					</ul>
 				</div>
 
