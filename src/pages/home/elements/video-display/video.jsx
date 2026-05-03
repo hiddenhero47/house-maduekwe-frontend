@@ -51,7 +51,7 @@ function MyVideo({
 	}, []);
 
 	return (
-		<VideoContainer>
+		<VideoContainer className='video_wrapper'>
 			{isLoading ? (
 				<Skeleton
 					height="100%"
@@ -76,7 +76,7 @@ function MyVideo({
 						loop={autoReplay}
 						controls={false}
 						poster={!isPreloaded ? placeholder : undefined}
-						className="video-el"
+						className="video_el"
 					/>
 
 					<div className="controlBar">
