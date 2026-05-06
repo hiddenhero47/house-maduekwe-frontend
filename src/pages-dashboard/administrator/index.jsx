@@ -20,6 +20,7 @@ import { NoDataIcon } from '../../components/icon-components/empty';
 import UserServices from '../../features/services/custom-hooks/user';
 import CreateAdmin from './elements/modal/create-admin';
 import ManageUserRole from './elements/modal/manage-user-role';
+import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 
 function Index() {
 	const navigate = useNavigate();
@@ -98,14 +99,16 @@ function Index() {
 				</Search>
 
 				<div className="flex gap-[10px] items-center">
-					<SearchBtn>
+					<SearchBtn type='button' $isLoading={isPending} onClick={openModal}>
 						<div className="content">
 							<i>
 								<FaUserPlus />
-							</i>{' '}
+							</i>
 							admin
 						</div>
-						<div className="loader"></div>
+						<div className="loader">
+							<BubbleSlide color="var(--addToCart-text)" height="20px" />
+						</div>
 					</SearchBtn>
 				</div>
 			</div>
@@ -182,16 +185,8 @@ function Index() {
 						{
 							Header: () => <span>Manage Role</span>,
 							accessor: 'role',
-							Cell: ({ row }) => (
-								<button
-									className="px-[10px] py-[5px] text-xs font-semibold rounded-md transition-all ml-[10px]"
-									style={{
-										background: 'var(--mainBody-toolkitBg)',
-									}}
-									onClick={() => {}}
-								>
-									<div className="flex items-center gap-[5px]">Change Role</div>
-								</button>
+							Cell: ({ row, value }) => (
+								<ManageUserRole id={row.original._id} currentRole={value} />
 							),
 						},
 					]}
@@ -216,6 +211,8 @@ function Index() {
 					}
 				/>
 			</TableWrapper>
+
+			<CreateAdmin ref={modalRef} closeModal={closeModal} />
 		</Container>
 	);
 }

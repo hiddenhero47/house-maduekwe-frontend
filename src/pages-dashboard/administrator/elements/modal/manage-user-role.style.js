@@ -30,11 +30,40 @@ export const FilterModalWrapper = styled.div`
 	border: 1px solid ${({ theme }) => theme.mainBody.line};
 	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
 	animation: ${fadeIn} 0.18s ease-out;
+	color: ${({ theme }) => theme.mainBody?.text};
 
 	.modal_header {
 		display: flex;
 		justify-content: space-between;
+		align-items: flex-start;
 		margin-bottom: 12px;
+
+		h3 {
+			font-size: 20px;
+			font-weight: 700;
+			letter-spacing: -0.3px;
+			color: ${({ theme }) => theme.mainBody.text};
+		}
+
+		p {
+			margin-top: 6px;
+			max-width: 360px;
+			font-size: 13px;
+			line-height: 1.4;
+			color: ${({ theme }) => theme.mainBody.sbText};
+		}
+
+		.closeBtn {
+			font-size: 22px;
+			cursor: pointer;
+			color: ${({ theme }) => theme.mainBody.sbText};
+			transition: 0.2s ease;
+
+			&:hover {
+				color: ${({ theme }) => theme.mainBody.text};
+				transform: rotate(90deg) scale(1.1);
+			}
+		}
 	}
 
 	.section {

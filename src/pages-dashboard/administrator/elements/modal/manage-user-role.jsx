@@ -8,10 +8,11 @@ import CustomSelect from '../../../../components/form-components/select/custom-s
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useTheme } from 'styled-components';
 import UserServices from '../../../../features/services/custom-hooks/user';
+import { roleType } from '../../../../utilities/app-const';
 
 const ROLE_OPTIONS = [
-	{ label: 'User', value: 'user' },
-	{ label: 'Admin', value: 'admin' },
+	{ label: 'User', value: roleType.BASIC },
+	{ label: 'Admin', value: roleType.ADMIN },
 ];
 
 function ManageUserRole({ id, currentRole }) {
@@ -64,6 +65,8 @@ function ManageUserRole({ id, currentRole }) {
 				maxWidth="480px"
 				refName={modalRef}
 				animation
+				onOpen={() => {}}
+				onClose={() => {}}
 			>
 				<FilterModalWrapper>
 					<div className="modal_header">

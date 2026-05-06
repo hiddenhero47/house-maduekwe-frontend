@@ -38,7 +38,14 @@ function CreateAdmin({ ref, closeModal }) {
 	const { name, email, password } = values;
 
 	return (
-		<Modal.Center width="fit-content" maxWidth="500px" refName={ref} animation>
+		<Modal.Center
+			width="fit-content"
+			maxWidth="500px"
+			refName={ref}
+			animation
+			onOpen={() => {}}
+			onClose={() => {}}
+		>
 			<ModalWrapper>
 				<div className="modal_header">
 					<div>
