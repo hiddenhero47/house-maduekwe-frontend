@@ -146,6 +146,7 @@ export const SaveBtn = styled.button`
 export const AddBtn = styled.button`
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: 8px;
 
 	padding: 6px 14px;
@@ -158,13 +159,31 @@ export const AddBtn = styled.button`
 	background: ${({ theme }) => theme.mainBody.card};
 
 	border: 1px solid ${({ theme }) => theme.mainBody.cardSbLine};
-	cursor: pointer;
+	cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+
+	position: relative;
 
 	transition:
 		background 0.2s ease,
 		color 0.2s ease,
 		transform 0.15s ease,
 		box-shadow 0.15s ease;
+
+	/* CONTENT */
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
+	}
+
+	/* LOADER */
+	.loader {
+		display: ${({ $isLoading }) => ($isLoading ? 'flex' : 'none')};
+		position: absolute;
+		margin: auto;
+		z-index: 2;
+	}
 
 	svg {
 		font-size: 14px;
@@ -182,7 +201,7 @@ export const AddBtn = styled.button`
 		white-space: nowrap;
 	}
 
-	&:hover {
+	&:hover:not(:disabled) {
 		background: ${({ theme }) => theme.mainBody.toolkitBg};
 		color: ${({ theme }) => theme.mainBody.text};
 		transform: translateY(-1px);
@@ -193,9 +212,22 @@ export const AddBtn = styled.button`
 		}
 	}
 
-	&:active {
+	&:active:not(:disabled) {
 		transform: translateY(0);
 		box-shadow: none;
+	}
+
+	&:disabled {
+		opacity: 0.6;
+	}
+
+	@media (max-width: 500px) {
+		padding: 6px 10px;
+
+		.content {
+			gap: 4px;
+			font-size: 12px;
+		}
 	}
 `;
 

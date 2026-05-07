@@ -257,7 +257,7 @@ export const GridItem = styled.div`
 		}
 	}
 
-	button {
+	.holder {
 		width: 100%;
 		height: 100%;
 		border: inherit;

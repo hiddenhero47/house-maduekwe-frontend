@@ -88,7 +88,10 @@ function OrderPreview({ orderId }) {
 
 						<div className="cubicle">
 							<h3 className="section_title flex items-center gap-[5px]">
-								Payment Ref <SpanStatus $status={payment?.status}>{payment?.status}</SpanStatus>
+								Payment Ref{' '}
+								<SpanStatus $status={payment?.status}>
+									{payment?.status}
+								</SpanStatus>
 							</h3>
 							<p className="section_Value">#{payment?._id}</p>
 						</div>
@@ -99,6 +102,23 @@ function OrderPreview({ orderId }) {
 							<h3 className="section_title">Total Amount</h3>
 							<p className="section_Value">
 								{payment?.amountToPay} {payment?.currency}
+							</p>
+						</div>
+					</Section>
+
+					{/* SHIPPING DETAILS 🔥 */}
+					<Section>
+						<div className="cubicle">
+							<h3 className="section_title">Company Name</h3>
+							<p className="section_Value">
+								{order?.shippingDetails?.company || 'N/A'}
+							</p>
+						</div>
+
+						<div className="cubicle">
+							<h3 className="section_title">Tracking Number</h3>
+							<p className="section_Value">
+								{order?.shippingDetails?.trackingNumber || 'N/A'}
 							</p>
 						</div>
 					</Section>

@@ -45,11 +45,11 @@ const useUpdateOrderStatusMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, status }) => 
+		mutationFn: ({ id, data }) => 
 			axiosCall({
 				url: `/api/orders/${id}/status`,
 				method: 'PATCH',
-				data: { status },
+				data,
 			}),
 		onSuccess: () => {
 			queryClient.invalidateQueries({

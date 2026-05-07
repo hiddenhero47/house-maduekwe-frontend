@@ -234,7 +234,8 @@ function Index() {
 							<MasonryGrid>
 								{(products || []).map((item, index) => (
 									<GridItem key={index} className="grid_item">
-										<button
+										<div
+											className="holder"
 											onDoubleClick={() =>
 												navigate(`/admin/products/design/${item?._id}`)
 											}
@@ -270,7 +271,7 @@ function Index() {
 													<FaTrash />
 												</ActionBtn>
 											</div>
-										</button>
+										</div>
 									</GridItem>
 								))}
 							</MasonryGrid>

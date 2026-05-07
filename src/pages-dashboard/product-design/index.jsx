@@ -152,9 +152,8 @@ function Index() {
 						</div>
 					</SaveBtn>
 
-					<AddBtn>
-						<RiStickyNoteAddFill />
-						<span>Add to Group</span>
+					<AddBtn type='button' onClick={() => navigate('/admin/products')} disabled={isPending}>
+						<span>See Products</span>
 						<IoIosArrowForward />
 					</AddBtn>
 				</div>

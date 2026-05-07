@@ -46,11 +46,13 @@ import { shopItemValidationSchema } from '../../features/validations/shopItem-va
 import { useParams } from 'react-router-dom';
 import ShopItemServices from '../../features/services/custom-hooks/shop-items';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
-import { PiCoinsFill } from 'react-icons/pi';
 import { FaTshirt } from 'react-icons/fa';
 import { RiFileCloseFill } from 'react-icons/ri';
 import GroupedVariantsModal from './elements/variants/variants-modal';
-import { PiGitBranchBold } from "react-icons/pi";
+import { PiGitBranchBold } from 'react-icons/pi';
+import { AiOutlineDollar } from 'react-icons/ai';
+import SelectItemGroupModal from '../../components/modal-assets/group-item-modal/filter&group/filter&group';
+import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
 
 const logFormData = (formData) => {
 	const obj = {};
@@ -66,6 +68,9 @@ function Index() {
 	const { id } = useParams();
 	const { data, isPending, isSuccess } = ShopItemServices.getOne(id);
 	const product = data?.data ?? null;
+
+	const { mutate: updateGroup, isPending: isUpdatingGroup } =
+		ItemGroupServices.update();
 
 	const { data: dataCat, isPending: isPendingCat } = CategoryServices.get({
 		limit: 100,
@@ -276,6 +281,16 @@ function Index() {
 		modalRef.current?.open();
 	};
 
+	const groupModalRef = useRef(null);
+	const openGroupModal = () => {
+		groupModalRef.current?.open();
+	};
+
+	const addItemToGroup = (group) => {
+		const payload = { shopItems: [id] };
+		updateGroup({ id: group._id, data: payload });
+	};
+
 	return (
 		<Container>
 			<div className="header">
@@ -301,10 +316,19 @@ function Index() {
 						</div>
 					</SaveBtn>
 
-					<AddBtn>
-						<RiStickyNoteAddFill />
-						<span>Add to Group</span>
-						<IoIosArrowForward />
+					<AddBtn
+						type="button"
+						onClick={openGroupModal}
+						$isLoading={isUpdatingGroup}
+					>
+						<div className="content">
+							<RiStickyNoteAddFill />
+							<span>Add to Group</span>
+							<IoIosArrowForward />
+						</div>
+						<div className="loader">
+							<BubbleSlide color="var(--mainBody-text)" height="20px" />
+						</div>
 					</AddBtn>
 				</div>
 			</div>
@@ -712,7 +736,7 @@ function Index() {
 											</Size>
 											<div className="w-full flex items-center gap-[2px]">
 												<i>
-													<PiCoinsFill size="14px" />
+													<AiOutlineDollar size="16.5px" />
 												</i>
 												<CustomInput
 													type="number"
@@ -830,7 +854,7 @@ function Index() {
 											</div>
 											<div className="w-full flex items-center gap-[2px]">
 												<i>
-													<PiCoinsFill size="14px" />
+													<AiOutlineDollar size="16.5px" />
 												</i>
 												<CustomInput
 													type="number"
@@ -937,6 +961,12 @@ function Index() {
 					attributes={attributes}
 					groupedVariants={groupedVariants || []}
 					setFieldValue={setFieldValue}
+				/>
+
+				<SelectItemGroupModal
+					ref={groupModalRef}
+					closeModal={groupModalRef.current?.close}
+					onApply={addItemToGroup}
 				/>
 			</form>
 		</Container>
