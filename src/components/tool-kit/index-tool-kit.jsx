@@ -36,9 +36,6 @@ function ToolKit({
 		}
 	};
 
-	console.log(coords);
-	
-
 	return (
 		<Container className={warperClass} $useCoords={useCoords}>
 			{/* Trigger */}

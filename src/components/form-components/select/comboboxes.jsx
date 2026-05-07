@@ -38,7 +38,12 @@ const Comboboxes = ({
 	const inputRef = useRef(null);
 	const lastActionRef = useRef(null);
 
-	const selectedOption = options.find((option) => option.value === value);
+	// const selectedOption = options.find((option) => option.value === value);
+	const selectedOption = options.find(
+		(option) =>
+			option.value === value ||
+			String(option.value).toLowerCase() === String(value).toLowerCase()
+	);
 
 	const handleOptionClick = (option) => {
 		if (onChange) {
