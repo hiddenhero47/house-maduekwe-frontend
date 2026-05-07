@@ -179,6 +179,59 @@ const useUpdateProfileMutation = () => {
 	});
 };
 
+const useGetUsersQuery = (params = {}) => {
+	return useQuery({
+		queryKey: ['users/list', params],
+		queryFn: () =>
+			axiosCall({
+				url: '/api/users',
+				method: 'GET',
+				params, // axios will handle query string
+			}),
+		keepPreviousData: true, // 🔥 smooth pagination UX
+		refetchOnWindowFocus: false,
+	});
+};
+
+const useChangeUserRoleMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ id, role }) =>
+			axiosCall({
+				url: `/api/users/${id}/role`,
+				method: 'PATCH',
+				data: { role },
+			}),
+
+		onSuccess: (data) => {
+			// 🔄 refresh user list
+			queryClient.invalidateQueries(['users/list']);
+
+			toast.success(data?.message || 'User role updated successfully');
+		},
+	});
+};
+
+const useRegisterAdminMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (data) =>
+			axiosCall({
+				url: '/api/users/admin-create',
+				method: 'POST',
+				data,
+			}),
+
+		onSuccess: (data) => {
+			// 🔄 refresh users list (important for admin dashboard)
+			queryClient.invalidateQueries(['users/list']);
+			toast.success(data?.message || 'Admin created successfully');
+		},
+	});
+};
+
 export { useGetUserQuery, useRegisterUserMutation, useLoginUserMutation };
 
 const UserServices = {
@@ -191,6 +244,9 @@ const UserServices = {
 	googleLogin: useGoogleLoginMutation,
 	appleLogin: useAppleLoginMutation,
 	updateProfile: useUpdateProfileMutation,
+	getUsers: useGetUsersQuery,
+	changeUserRole: useChangeUserRoleMutation,
+	registerAdmin: useRegisterAdminMutation,
 };
 
 export default UserServices;

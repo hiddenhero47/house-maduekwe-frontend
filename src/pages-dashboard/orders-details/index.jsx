@@ -24,6 +24,9 @@ function Index() {
 	const { data, isPending } = OrderServices.getOne(id);
 	const { order, payment } = data || {};
 
+	console.log(order);
+	
+
 	const getImage = (currentItem) => {
 		const grouped =
 			groupAttributesByType(currentItem?.selectedAttributes || {}) || {};
@@ -46,7 +49,7 @@ function Index() {
 		return attList[0]?.Attribute.display;
 	};
 	return (
-		<Container>
+		<Container className="Y_scroll_style">
 			<div className="flex items-center justify-between mb-[10px]">
 				<h1>Order Details</h1>
 
@@ -54,7 +57,7 @@ function Index() {
 			</div>
 
 			{isPending ? (
-				<div className='m-[auto]'>
+				<div className="m-[auto]">
 					<CandleWrapper color="var(--mainBody-sbKitText)" />
 				</div>
 			) : (
@@ -135,6 +138,23 @@ function Index() {
 							<h3 className="section_title">Shipping Fee</h3>
 							<p className="section_Value">
 								{order?.shippingFee} {payment?.currency}
+							</p>
+						</div>
+					</Section>
+
+					{/* SHIPPING DETAILS 🔥 */}
+					<Section>
+						<div className="cubicle">
+							<h3 className="section_title">Company Name</h3>
+							<p className="section_Value">
+								{order?.shippingDetails?.company || 'N/A'}
+							</p>
+						</div>
+
+						<div className="cubicle">
+							<h3 className="section_title">Tracking Number</h3>
+							<p className="section_Value">
+								{order?.shippingDetails?.trackingNumber || 'N/A'}
 							</p>
 						</div>
 					</Section>

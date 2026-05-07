@@ -37,7 +37,12 @@ const SearchSelect = ({
 	const menuRef = useRef(null);
 	const bodyRef = useRef(null);
 
-	const selectedOption = options.find((option) => option.value === value);
+	// const selectedOption = options.find((option) => option.value === value);
+	const selectedOption = options.find(
+		(option) =>
+			option.value === value ||
+			String(option.value).toLowerCase() === String(value).toLowerCase()
+	);
 
 	const handleOptionClick = (option) => {
 		if (onChange) {

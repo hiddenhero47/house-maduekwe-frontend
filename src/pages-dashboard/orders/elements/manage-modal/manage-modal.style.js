@@ -165,6 +165,16 @@ export const FilterModalWrapper = styled.div`
 			}
 		}
 	}
+
+	.shipping_box {
+		margin-top: 10px;
+		padding: 14px;
+		border-radius: 10px;
+		border: 1px dashed ${({ theme }) => theme.mainBody.line};
+		background: ${({ theme }) => theme.mainBody.toolkitBg};
+
+		animation: ${floatFade} 0.25s ease;
+	}
 `;
 
 export const ApplyBtn = styled.button`

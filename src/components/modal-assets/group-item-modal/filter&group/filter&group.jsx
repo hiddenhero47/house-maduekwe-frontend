@@ -131,7 +131,7 @@ function SelectItemGroupModal({ ref, closeModal, onApply }) {
 							closeModal();
 						}}
 					>
-						Add a Groups
+						Add To Group
 					</button>
 				</div>
 			</FilterModalWrapper>

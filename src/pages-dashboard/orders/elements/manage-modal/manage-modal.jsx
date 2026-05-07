@@ -4,6 +4,7 @@ import { FilterModalWrapper, ApplyBtn } from './manage-modal.style';
 import { IoClose } from 'react-icons/io5';
 import { useFormik } from 'formik';
 import CustomSelect from '../../../../components/form-components/select/custom-select';
+import CustomInput from '../../../../components/form-components/input/custom-input';
 import { OrderServices } from '../../../../features/services/custom-hooks/orders';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useTheme } from 'styled-components';
@@ -36,8 +37,16 @@ function ManageModal({ id }) {
 	};
 
 	const onSubmit = async (values, { resetForm }) => {
+		let data = { id, status: values.status };
+		if (values.status === ORDER_STATUS.SHIPPED) {
+			const shippingDetails = {
+				company: values.company,
+				trackingNumber: values.trackingNumber,
+			};
+			data = { ...data, shippingDetails };
+		}
 		changeStatus(
-			{ id, status: values.status },
+			{ id, data },
 			{
 				onSuccess: () => {
 					resetForm();
@@ -49,12 +58,12 @@ function ManageModal({ id }) {
 
 	const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
 		useFormik({
-			initialValues: { status: '' },
+			initialValues: { status: '', company: '', trackingNumber: '' },
 			// validationSchema: ,
 			onSubmit,
 		});
 
-	const { status } = values;
+	const { status, company, trackingNumber } = values;
 
 	const orderStatusOptions = Object.entries(ORDER_STATUS).map(
 		([key, value]) => ({
@@ -121,6 +130,50 @@ function ManageModal({ id }) {
 								<p className="form_note">Change the statue of an order.</p>
 							</div>
 						</div>
+
+						{status === ORDER_STATUS.SHIPPED && (
+							<div className="section">
+								<div className="shipping_box">
+									<h4 className="mb-[10px]">Shipping Details</h4>
+
+									<div className="form_control">
+										<label className="ml-[10px]">Company Name</label>
+
+										<CustomInput
+											id="company"
+											name="company"
+											value={company}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											isError={touched.company && errors.company}
+											errormessage={errors.company}
+											placeholder="Shipping company name"
+											paddingX="14px"
+											paddingY="9px"
+											useBackground
+										/>
+									</div>
+
+									<div className="form_control">
+										<label className="ml-[10px]">Tracking Number</label>
+
+										<CustomInput
+											id="trackingNumber"
+											name="trackingNumber"
+											value={trackingNumber}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											isError={touched.trackingNumber && errors.trackingNumber}
+											errormessage={errors.trackingNumber}
+											placeholder="Shipping tracking number"
+											paddingX="14px"
+											paddingY="9px"
+											useBackground
+										/>
+									</div>
+								</div>
+							</div>
+						)}
 
 						<div className="actions">
 							<ApplyBtn
