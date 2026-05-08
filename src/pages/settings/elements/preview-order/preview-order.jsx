@@ -8,16 +8,24 @@ import {
 	Color,
 	Size,
 	SpanStatus,
+	OrderActions,
+	ActionButton,
 } from './preview-order.style';
 import { getCountryByCode } from '../../../../utilities/city-state-country';
 import { OrderServices } from '../../../../features/services/custom-hooks/orders';
 import { groupAttributesByType } from '../../../../utilities/basic-functions';
-import { attributeType } from '../../../../utilities/app-const';
+import { attributeType, ORDER_STATUS } from '../../../../utilities/app-const';
 import CandleWrapper from '../../../../components/loaders/candles/Candle';
+import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
+import { useNavigate } from 'react-router-dom';
 
 function OrderPreview({ orderId }) {
+	const navigate = useNavigate();
 	const { data, isPending } = OrderServices.getOne(orderId);
 	const { order, payment } = data || {};
+
+	const { mutate: cancelOrder, isPending: isCanceling } =
+		OrderServices.cancel();
 
 	const getImage = (currentItem) => {
 		const grouped =
@@ -50,6 +58,43 @@ function OrderPreview({ orderId }) {
 			)}
 			{!isPending && (
 				<>
+					{order?.status === ORDER_STATUS.PENDING && (
+						<OrderActions>
+							<div className="info">
+								<span className="title">Pending Payment</span>
+								<p>
+									This order is awaiting payment confirmation. You can cancel
+									the order or continue payment.
+								</p>
+							</div>
+
+							<div className="actions">
+								<ActionButton
+									type="button"
+									$variant="danger"
+									$isLoading={isCanceling}
+									onClick={() => cancelOrder(order._id)}
+								>
+									<div className="content">Cancel</div>
+
+									<div className="loader">
+										<BubbleSlide color="var(--mainBody-text)" height="16px" />
+									</div>
+								</ActionButton>
+
+								<ActionButton
+									type="button"
+									onClick={() => navigate(`/checkout/${order._id}`)}
+								>
+									<div className="content">Pay Now</div>
+
+									<div className="loader">
+										<BubbleSlide color="var(--addToCart-text)" height="16px" />
+									</div>
+								</ActionButton>
+							</div>
+						</OrderActions>
+					)}
 					<Header>
 						<div>
 							<p className="header_label">Order reference</p>

@@ -432,3 +432,45 @@ export const Promotion = styled.section`
 		aspect-ratio: 1.8;
 	}
 `;
+
+export const LoaderWrapper = styled.div`
+	width: 90%;
+	height: 80vh;
+	display: flex;
+	gap: 10px;
+	margin-inline: auto;
+
+	@media (min-width: 920px) and (max-width: 1100px) {
+		width: 95%;
+	}
+
+	@media (min-width: 742px) and (max-width: 910px) {
+		width: 98.5%;
+	}
+
+	@media (min-width: 501px) and (max-width: 741px) {
+		flex-direction: column;
+	}
+
+	@media (max-width: 500px) {
+		flex-direction: column;
+	}
+`;
+
+export const Loader = styled.div`
+	width: 50%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 10px;
+
+	@media (min-width: 501px) and (max-width: 741px) {
+		width: 100%;
+	}
+
+	@media (max-width: 500px) {
+		width: 100%;
+	}
+`;
