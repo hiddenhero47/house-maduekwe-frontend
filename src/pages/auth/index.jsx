@@ -20,12 +20,15 @@ import {
 } from 'react-router-dom';
 
 function Index() {
-	const isLoading = false;
+	const navigate = useNavigate();
 	return (
 		<LoginWrapper>
 			<div id="body">
 				<LeftBox>
-					<div className="mb-[15px] mx-[auto]">
+					<div
+						className="mb-[15px] mx-[auto] cursor-pointer"
+						onClick={() => navigate('/')}
+					>
 						<div id="title">
 							<i>
 								<VectorIcon width="50px" height="50px" vector={AppLogo} />
@@ -37,13 +40,13 @@ function Index() {
 					</div>
 
 					<div className="w-full flex items-center">
-						{useMatch("authentication") && (
+						{useMatch('authentication') && (
 							<MyForm>
 								<SignIn />
 							</MyForm>
 						)}
 
-						{useMatch("authentication/sign-up") && (
+						{useMatch('authentication/sign-up') && (
 							<MyForm>
 								<SignUp />
 							</MyForm>
