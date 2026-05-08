@@ -5,6 +5,8 @@ import {
 	BannerImage,
 	Promotion,
 	AppFooter,
+	LoaderWrapper,
+	Loader,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
 import postImage from '../../assets/images/image.avif';
@@ -12,7 +14,6 @@ import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
-import { items } from '../../dummyData/shopItems';
 import ShopItem from '../../components/shop-item-display-unit/index';
 import {
 	FaInstagram,
@@ -31,6 +32,7 @@ import GroupDisplay from './elements/group-display/group-display';
 import { useNavigate } from 'react-router-dom';
 import MyVideo from './elements/video-display/video';
 import { preloadVideo } from '../../utilities/basic-functions';
+import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
 
 function Index() {
 	const { aftermath } = useOutletContext();
@@ -38,6 +40,13 @@ function Index() {
 	const navigate = useNavigate();
 	const [isVideoReady, setIsVideoReady] = useState(false);
 	const [isVideoReadyB, setIsVideoReadyB] = useState(false);
+
+	const { data, isPending } = ItemGroupServices.get({
+		limit: 4,
+		page: 1,
+	});
+
+	const { data: itemGroups = [], pagination } = data || {};
 
 	const videoOne = 'https://vjs.zencdn.net/v/oceans.mp4';
 	const videoTwo = 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4';
@@ -48,18 +57,6 @@ function Index() {
 			setIsVideoReadyB(true);
 		});
 	}, []);
-
-	const group1 = {
-		groupName: 'Luxury High-End',
-		shopItems: [items[0], items[0], items[0]],
-	};
-
-	const group2 = {
-		groupName: 'Vintage Retro',
-		shopItems: [items[0], items[0], items[0], items[0]],
-	};
-
-	const itemGroup = [group1, group2, group1];
 
 	const normalizeItems = (items) => {
 		const count = items.length;
@@ -213,14 +210,38 @@ function Index() {
 				</Link>
 			</IntroSection>
 
-			{formatItemGroups(itemGroup).map((group, index) => (
-				<GroupDisplay
-					key={index}
-					index={index}
-					group={group}
-					className="mt-[70px]"
-				/>
-			))}
+			{isPending ? (
+				<LoaderWrapper className="mt-[10vh]">
+					<Loader>
+						<Skeleton
+							height="100%"
+							width="100%"
+							$color1="var(--skeleton-background1)"
+							$color2="var(--skeleton-background2)"
+							$borderRadius="10px"
+						/>
+					</Loader>
+
+					<Loader>
+						<Skeleton
+							height="100%"
+							width="100%"
+							$color1="var(--skeleton-background1)"
+							$color2="var(--skeleton-background2)"
+							$borderRadius="10px"
+						/>
+					</Loader>
+				</LoaderWrapper>
+			) : (
+				formatItemGroups(itemGroups).map((group, index) => (
+					<GroupDisplay
+						key={index}
+						index={index}
+						group={group}
+						className="mt-[70px]"
+					/>
+				))
+			)}
 
 			<Promotion onClick={() => navigate('/products/')}>
 				<div className="w-full h-full relative rounded-[inherit]">

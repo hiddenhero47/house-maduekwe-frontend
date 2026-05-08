@@ -26,7 +26,7 @@ import {
 import { attributeType, ItemStatusType } from '../../utilities/app-const';
 import Spinner from '../../components/loaders/spinners/Spinner';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AddressServices from '../../features/services/custom-hooks/addresses';
 import { CheckoutServices } from '../../features/services/custom-hooks/orders';
 import { getCurrencySymbol } from '../../utilities/basic-functions';
@@ -143,6 +143,13 @@ function Index() {
 			return;
 		}
 
+		if (checkoutData?.isPendingOrder) {
+			toast.warning(
+				'You have a pending orders. Please complete or cancel it before checking out.'
+			);
+			return;
+		}
+
 		if (finalItemIds.length > 0) {
 			checkout(
 				{
@@ -160,10 +167,29 @@ function Index() {
 	};
 
 	return (
-		<Container className="Y_scroll_style">
+		<Container className="Y_scroll_style" $isPendingOrder={checkoutData?.isPendingOrder}>
 			<h1 className="text-[30px] font-normal font-[Audiowide] pt-[20px] mb-[50px]">
 				Shopping Cart
 			</h1>
+
+			{checkoutData?.isPendingOrder && (
+				<Link
+					to="/settings?currentSettings=orders"
+					className="pending_order_notice"
+				>
+					<div className="info">
+						<p>You already have a pending order</p>
+
+						<span>
+							Complete payment or cancel the order before checking out again.
+						</span>
+					</div>
+
+					<div className="action">
+						View Order <i>→</i>
+					</div>
+				</Link>
+			)}
 
 			<div className="flex flex-wrap gap-[10px] w-full">
 				<div id="cartItems">

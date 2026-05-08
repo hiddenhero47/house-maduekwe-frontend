@@ -45,7 +45,7 @@ const useUpdateOrderStatusMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ id, data }) => 
+		mutationFn: ({ id, data }) =>
 			axiosCall({
 				url: `/api/orders/${id}/status`,
 				method: 'PATCH',
@@ -94,6 +94,34 @@ const useCheckoutMutation = () => {
 	});
 };
 
+const useCancelOrderMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (id) =>
+			axiosCall({
+				url: `/api/orders/${id}/cancel`,
+				method: 'PATCH',
+			}),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['orders'],
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['orders', 'me'],
+			});
+
+			toast.success('Order cancelled successfully');
+		},
+
+		onError: (error) => {
+			toast.error(error?.response?.data?.message || 'Failed to cancel order');
+		},
+	});
+};
+
 export {
 	useGetMyOrdersQuery,
 	useGetOrdersQuery,
@@ -101,6 +129,7 @@ export {
 	useConfirmCheckoutMutation,
 	useCheckoutMutation,
 	useGetOrderByIdQuery,
+	useCancelOrderMutation,
 };
 
 const OrderServices = {
@@ -108,6 +137,7 @@ const OrderServices = {
 	getAll: useGetOrdersQuery,
 	getOne: useGetOrderByIdQuery,
 	updateStatus: useUpdateOrderStatusMutation,
+	cancel: useCancelOrderMutation,
 };
 
 const CheckoutServices = {

@@ -11,9 +11,11 @@ export const Container = styled.div`
 	letter-spacing: -0.2px;
 
 	& h1:first-of-type {
+		margin-bottom: ${({ $isPendingOrder }) => ($isPendingOrder ? '0' : '')};
 		@media (max-width: 500px) {
 			font-size: 26px;
-			margin-bottom: 30px;
+			margin-bottom: ${({ $isPendingOrder }) =>
+				$isPendingOrder ? '0' : '30px'};
 		}
 	}
 
@@ -51,6 +53,119 @@ export const Container = styled.div`
 
 			@media (max-width: 500px) {
 				width: 100%;
+			}
+		}
+	}
+
+	.pending_order_notice {
+		position: relative;
+		width: 50%;
+		min-height: fit-content;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 16px 18px;
+		margin-block: 10px;
+		border-radius: 14px;
+		border: 1px solid ${({ theme }) => theme?.intro?.boxBorder};
+		background: ${({ theme }) => theme?.intro?.boxBg};
+		backdrop-filter: blur(10px);
+		overflow: hidden;
+		transition:
+			transform 0.25s ease,
+			box-shadow 0.25s ease,
+			border-color 0.25s ease;
+
+		@media (max-width: 947px) {
+			width: 100%;
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+
+			background: linear-gradient(
+				120deg,
+				transparent 0%,
+				rgba(255, 255, 255, 0.03) 45%,
+				transparent 100%
+			);
+
+			opacity: 0;
+			transition: opacity 0.25s ease;
+		}
+
+		&:hover {
+			transform: translateY(-2px);
+
+			box-shadow: ${({ theme }) =>
+				theme.mode === 'dark'
+					? '0 10px 25px rgba(0,0,0,0.35)'
+					: '0 10px 25px rgba(0,0,0,0.08)'};
+
+			border-color: ${({ theme }) => theme?.intro?.logo};
+
+			&::before {
+				opacity: 1;
+			}
+
+			.action {
+				transform: translateX(3px);
+			}
+		}
+
+		.info {
+			position: relative;
+			z-index: 2;
+
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+
+			p {
+				font-size: 15px;
+				font-weight: 600;
+				color: ${({ theme }) => theme?.mainBody?.text};
+			}
+
+			span {
+				font-size: 13px;
+				line-height: 1.45;
+				color: ${({ theme }) => theme?.mainBody?.sbText};
+			}
+		}
+
+		.action {
+			position: relative;
+			z-index: 2;
+
+			display: flex;
+			align-items: center;
+			gap: 6px;
+
+			font-size: 13px;
+			font-weight: 700;
+
+			color: ${({ theme }) => theme?.intro?.logo};
+
+			white-space: nowrap;
+
+			transition: transform 0.25s ease;
+
+			i {
+				font-style: normal;
+				font-size: 16px;
+			}
+		}
+
+		@media (max-width: 540px) {
+			flex-direction: column;
+			align-items: flex-start;
+
+			.action {
+				margin-top: 4px;
 			}
 		}
 	}
