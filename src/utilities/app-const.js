@@ -15,3 +15,14 @@ export const roleType = {
   ADMIN: "admin",
   BASIC: "basic",
 };
+
+export const ORDER_STATUS = {
+  PENDING: "pending",
+  PAID: "paid",
+  PROCESSING: "processing",
+  SHIPPED: "shipped",
+  DELIVERED: "delivered",
+  CANCELLED: "cancelled",
+  RETURNED: "returned",
+  RETURNING: "processing-return",
+};
