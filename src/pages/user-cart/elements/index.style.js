@@ -327,6 +327,7 @@ export const AddressSelect = styled.div`
 
 	.empty_state {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		height: 120px;
@@ -724,5 +725,25 @@ export const Unavailable = styled.div`
 	span {
 		font-size: 11px;
 		color: ${({ theme }) => theme.mainBody.sbText};
+	}
+`;
+
+export const AddBtn = styled.button`
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	padding: 4px 6px;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+	color: ${({ theme }) => theme?.mainBody.text};
+	background-color: ${({ theme }) => theme?.mainBody.toolkitBg};
+	border: 1px solid ${({ theme }) => theme?.mainBody.cardSbLine};
+	transition: all 0.2s ease;
+	margin-top: 15px;
+
+	&:hover {
+		color: ${({ theme }) => theme?.intro.logo};
+		transform: translateY(-1px);
 	}
 `;

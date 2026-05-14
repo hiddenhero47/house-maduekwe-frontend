@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
 	display: flex;
@@ -83,4 +83,106 @@ export const TableWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-top: 5vh;
+`;
+
+const hexToRgba = (hex, opacity) => {
+	const r = parseInt(hex.slice(1, 3), 16);
+	const g = parseInt(hex.slice(3, 5), 16);
+	const b = parseInt(hex.slice(5, 7), 16);
+	return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+const statusStyles = {
+	pending: css`
+		background: ${({ theme }) => theme.form.background};
+		color: ${({ theme }) => theme.form.text};
+	`,
+
+	paid: css`
+		background: ${({ theme }) => hexToRgba(theme.form.green, 0.15)};
+		color: ${({ theme }) => theme.form.green};
+	`,
+
+	processing: css`
+		background: ${({ theme }) => hexToRgba(theme.form.blue, 0.15)};
+		color: ${({ theme }) => theme.form.blue};
+	`,
+
+	shipped: css`
+		background: ${({ theme }) => hexToRgba(theme.form.yellow, 0.2)};
+		color: ${({ theme }) => theme.form.yellow};
+	`,
+
+	delivered: css`
+		background: ${({ theme }) => hexToRgba(theme.form.green, 0.2)};
+		color: ${({ theme }) => theme.form.green};
+	`,
+
+	cancelled: css`
+		background: ${({ theme }) => hexToRgba(theme.form.error, 0.15)};
+		color: ${({ theme }) => theme.form.error};
+	`,
+
+	returned: css`
+		background: ${({ theme }) => hexToRgba(theme.form.orange, 0.2)};
+		color: ${({ theme }) => theme.form.orange};
+	`,
+
+	'processing-return': css`
+		background: ${({ theme }) => hexToRgba(theme.form.violetL, 0.15)};
+		color: ${({ theme }) => theme.form.violetL};
+	`,
+};
+
+export const StatusPill = styled.span`
+	width: fit-content;
+	padding: 0.35rem 0.75rem;
+	border-radius: 999px;
+	font-size: 12.5px;
+	font-weight: 600;
+	text-transform: capitalize;
+	${({ $status }) => statusStyles[$status]};
+`;
+
+const statusColor = (theme, status) => {
+	switch (status) {
+		case 'pending':
+			return theme.form.yellow;
+
+		case 'initiated':
+			return theme.form.blue;
+
+		case 'success':
+			return theme.form.green;
+
+		case 'failed':
+			return theme.form.error;
+
+		case 'refunded':
+			return theme.form.purple;
+
+		default:
+			return theme.form.orange;
+	}
+};
+
+export const SpanStatus = styled.span`
+	width: fit-content;
+	padding-block: 2px;
+	padding-inline: 4px;
+	border-radius: 5px;
+	font-size: 9.5px;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+
+	${({ theme, $status }) => {
+		const color = statusColor(theme, $status);
+
+		return `
+			color: ${color};
+			border: 1px solid ${color};
+			background-color: ${hexToRgba(color, 0.15)};
+		`;
+	}}
 `;

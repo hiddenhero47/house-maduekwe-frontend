@@ -15,6 +15,14 @@ export const Container = styled.div`
 		color: ${({ theme }) => theme?.mainBody?.text};
 		letter-spacing: -0.02em;
 	}
+
+	#display_body {
+		flex-grow: 1;
+		flex-basis: 0;
+		margin-top: 2vh;
+		width: 100%;
+		overflow-y: auto;
+	}
 `;
 
 export const TabNav = styled.nav`

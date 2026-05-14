@@ -26,7 +26,7 @@ function SignUp() {
 	const initialValues = {
 		email: '',
 		password: '',
-		name: '',
+		name: 'New User',
 	};
 
 	const onSubmit = async (values) => {
@@ -48,7 +48,7 @@ function SignUp() {
 				<p>Sign up to access exclusive features</p>
 			</div>
 			<form onSubmit={handleSubmit}>
-				<div className="form_control">
+				{/* <div className="form_control">
 					<label>User Name</label>
 					<CustomInput
 						autoComplete="on"
@@ -64,7 +64,7 @@ function SignUp() {
 						paddingY="10px"
 						useBackground
 					/>
-				</div>
+				</div> */}
 
 				<div className="form_control">
 					<label>Email Address</label>

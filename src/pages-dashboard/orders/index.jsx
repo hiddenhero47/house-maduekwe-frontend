@@ -142,84 +142,90 @@ function Index() {
 				<DateFilter forward={(range) => forward(range)} />
 			</div>
 
-			<TableWrapper>
-				<CustomTable
-					fields={[
-						{
-							Header: () => 'Nos',
-							accessor: '__nos',
-							Cell: ({ nos }) => <span className="nowrap ml-[5px]">{nos}</span>,
-						},
-						{
-							Header: () => 'Order ID',
-							accessor: '_id',
-							Cell: ({ value }) => (
-								<span className="nowrap font-medium">{value}</span>
-							),
-						},
-						{
-							Header: () => 'Items',
-							accessor: 'items',
-							Cell: ({ value }) => (
-								<span className="nowrap ml-[10px]">
-									{Array.isArray(value) ? value.length : 0}
-								</span>
-							),
-						},
-						{
-							Header: () => 'Total Amount',
-							accessor: 'totalAmount',
-							Cell: ({ value, row }) => (
-								<span className="nowrap font-medium ml-[10px]">
-									{row?.original?.currency
-										? `${row.original.currency} ${value.toLocaleString()}`
-										: value.toLocaleString()}
-								</span>
-							),
-						},
-						{
-							Header: () => 'Status',
-							accessor: 'status',
-							Cell: ({ value }) => (
-								<SpanStatus $status={value} className="nowrap capitalize">
-									{value}
-								</SpanStatus>
-							),
-						},
-						{
-							Header: () => 'Date',
-							accessor: 'createdAt',
-							Cell: ({ value }) => (
-								<span className="nowrap">
-									{new Date(value).toLocaleDateString()}
-								</span>
-							),
-						},
-						{
-							Header: () => <span>Manage Status</span>,
-							accessor: 'manage',
-							Cell: ({ row }) => <ManageModal id={row.original._id} />,
-						},
-					]}
-					dataSource={orders || []}
-					emptyIcon={
-						<NoDataIcon
-							width="150px"
-							height="150px"
-							color="var(--mainBody-sbText)"
+			<div id="display_body" className="Y_scroll_style">
+				<div>
+					<TableWrapper>
+						<CustomTable
+							fields={[
+								{
+									Header: () => 'Nos',
+									accessor: '__nos',
+									Cell: ({ nos }) => (
+										<span className="nowrap ml-[5px]">{nos}</span>
+									),
+								},
+								{
+									Header: () => 'Order ID',
+									accessor: '_id',
+									Cell: ({ value }) => (
+										<span className="nowrap font-medium">{value}</span>
+									),
+								},
+								{
+									Header: () => 'Items',
+									accessor: 'items',
+									Cell: ({ value }) => (
+										<span className="nowrap ml-[10px]">
+											{Array.isArray(value) ? value.length : 0}
+										</span>
+									),
+								},
+								{
+									Header: () => 'Total Amount',
+									accessor: 'totalAmount',
+									Cell: ({ value, row }) => (
+										<span className="nowrap font-medium ml-[10px]">
+											{row?.original?.currency
+												? `${row.original.currency} ${value.toLocaleString()}`
+												: value.toLocaleString()}
+										</span>
+									),
+								},
+								{
+									Header: () => 'Status',
+									accessor: 'status',
+									Cell: ({ value }) => (
+										<SpanStatus $status={value} className="nowrap capitalize">
+											{value}
+										</SpanStatus>
+									),
+								},
+								{
+									Header: () => 'Date',
+									accessor: 'createdAt',
+									Cell: ({ value }) => (
+										<span className="nowrap">
+											{new Date(value).toLocaleDateString()}
+										</span>
+									),
+								},
+								{
+									Header: () => <span>Manage Status</span>,
+									accessor: 'manage',
+									Cell: ({ row }) => <ManageModal id={row.original._id} />,
+								},
+							]}
+							dataSource={orders || []}
+							emptyIcon={
+								<NoDataIcon
+									width="150px"
+									height="150px"
+									color="var(--mainBody-sbText)"
+								/>
+							}
+							emptyText="NO ITEMS YET"
+							emptySbText="There is no available data to show. Please try something else"
+							refetch={() => refetch()}
+							isLoading={isPending}
+							currentPage={page}
+							totalPages={pagination?.totalPages || 1}
+							changePage={flipPage}
+							useStrip
+							onDoubleCallRow={(data) => navigate(`/admin/orders/${data?._id}`)}
 						/>
-					}
-					emptyText="NO ITEMS YET"
-					emptySbText="There is no available data to show. Please try something else"
-					refetch={() => refetch()}
-					isLoading={isPending}
-					currentPage={page}
-					totalPages={pagination?.totalPages || 1}
-					changePage={flipPage}
-					useStrip
-					onDoubleCallRow={(data) => navigate(`/admin/orders/${data?._id}`)}
-				/>
-			</TableWrapper>
+					</TableWrapper>
+				</div>
+			</div>
 		</Container>
 	);
 }

@@ -24,6 +24,9 @@ function ManageModal({ id }) {
 	const theme = useTheme();
 	const { mutate: changeStatus, isPending } = OrderServices.updateStatus();
 
+	const { mutate: cancelOrder, isPending: isCanceling } =
+			OrderServices.cancel();
+
 	const modalRef = useRef(null);
 	const openModal = () => {
 		if (modalRef.current) {
@@ -45,6 +48,16 @@ function ManageModal({ id }) {
 			};
 			data = { ...data, shippingDetails };
 		}
+
+		if (values.status === ORDER_STATUS.CANCELLED) {
+			return cancelOrder({id}, {
+				onSuccess: () => {
+					resetForm();
+					closeModal?.();
+				},
+			});
+		}
+
 		changeStatus(
 			{ id, data },
 			{
