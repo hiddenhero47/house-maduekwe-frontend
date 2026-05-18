@@ -95,11 +95,32 @@ export const Wrapper = styled.div`
 			font-weight: 500;
 			font-size: 0.9rem;
 			transition: all 0.2s ease;
-            background-color: ${({theme}) => theme.mode === 'dark' ? '#d9d9d9' : '#e6e6e6'};
+			background-color: ${({ theme }) =>
+				theme.mode === 'dark' ? '#d9d9d9' : '#e6e6e6'};
+			position: relative;
+			overflow: hidden;
 
 			&:hover {
 				transform: translateY(-1px);
-                background-color: ${({theme}) => theme.mode === 'dark' ? '#bfbfbf' : '#cccccc'};
+				background-color: ${({ theme }) =>
+					theme.mode === 'dark' ? '#bfbfbf' : '#cccccc'};
+			}
+		}
+
+		.google_overlay {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+
+			& > div {
+				width: 100% !important;
+				height: 100% !important;
+			}
+
+			iframe {
+				width: 100% !important;
+				height: 100% !important;
+				cursor: pointer !important;
 			}
 		}
 	}
