@@ -129,6 +129,11 @@ const PhoneInput = ({
 					onChange={(e) => handleNumberInput(e.target.value)}
 					placeholder={placeholder}
 					disabled={disabled}
+					autocorrect="off"
+					autocapitalize="off"
+					spellcheck="false"
+					inputMode="tel"
+					pattern="[0-9]*"
 				/>
 			</MyInput>
 

@@ -14,11 +14,18 @@ import {
 import { attributeType } from '../../../utilities/app-const';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Holding({ close }) {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { mutate: addToCart, isPending } = CartServices.add();
 	const { holdings } = useSelector((state) => state.holdings);
+
+	const { user } = useSelector((state) => state.auth);
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
 
 	const removeItem = (tempId) => {
 		dispatch(removeFromHoldings({ tempId }));
@@ -41,6 +48,16 @@ function Holding({ close }) {
 	};
 
 	const cartServer = () => {
+		if (!activeUser) {
+			toast.info('Please log in to add items to your cart');
+
+			setTimeout(() => {
+				navigate('/authentication');
+			}, 1500);
+
+			return;
+		}
+
 		const payload = holdings.map((item) => ({
 			shopItem: item?.shopItem._id,
 			quantity: item?.quantity,
