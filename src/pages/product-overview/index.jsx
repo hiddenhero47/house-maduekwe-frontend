@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
 	Container,
@@ -24,6 +24,7 @@ import { EmptyState } from './elements/loader-on-data/loader-no-data.style';
 import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import { ItemStatusType } from '../../utilities/app-const';
+import ProductGallery from '../../components/modal-assets/product-gallery';
 
 function Index() {
 	const navigate = useNavigate();
@@ -69,6 +70,11 @@ function Index() {
 		const shuffled = [...data].sort(() => Math.random() - 0.5);
 		return shuffled.slice(0, 2);
 	}, [product]);
+
+	const galleryRef = useRef(null);
+	const openGallery = () => {
+		galleryRef.current?.open();
+	};
 
 	return (
 		<Container className="Y_scroll_style">
@@ -132,7 +138,7 @@ function Index() {
 							className="flex flex-col items-center -intro-x"
 						>
 							<SliderWrapper>
-								<button id="fullScale">
+								<button id="fullScale" type="button" onClick={openGallery}>
 									<i>
 										<LuFullscreen />
 									</i>
@@ -308,6 +314,12 @@ function Index() {
 					</div>
 				)}
 			</AlsoLike>
+
+			<ProductGallery
+				ref={galleryRef}
+				images={productDisplay}
+				startIndex={index}
+			/>
 		</Container>
 	);
 }
