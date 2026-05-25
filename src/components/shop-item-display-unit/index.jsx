@@ -17,7 +17,7 @@ import ModalSlider from '../sliders/modal-slider/index';
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
 import { FaBasketShopping } from 'react-icons/fa6';
 import { attributeType, ItemStatusType } from '../../utilities/app-const';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 import { addToHoldings } from '../../store/slice/holding';
 import {
@@ -41,6 +41,10 @@ function ShopItem({
 	const [index, setIndex] = useState(0);
 	const startPos = useRef({ x: 0, y: 0 });
 	const ghostRef = useRef(null);
+
+	const { user } = useSelector((state) => state.auth);
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
 
 	const [attribute, configAttribute] = useState({
 		currentDisplay: null,
@@ -94,6 +98,16 @@ function ShopItem({
 	};
 
 	const cartServer = () => {
+		if (!activeUser) {
+			toast.info('Please log in to add items to your cart');
+
+			setTimeout(() => {
+				navigate('/authentication');
+			}, 1500);
+
+			return;
+		}
+
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
 			toast.warning('size not selected');

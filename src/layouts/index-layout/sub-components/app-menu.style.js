@@ -28,9 +28,9 @@ export const MenuHeader = styled.div`
 		display: flex;
 		align-items: center;
 
-		svg path {
+		/* svg path {
 			fill: ${({ theme }) => theme?.intro.logo};
-		}
+		} */
 
 		div {
 			font-size: clamp(8px, 65%, 9.8px);
@@ -96,9 +96,9 @@ export const UserSection = styled.div`
 		width: 35px;
 		border-radius: 3px;
 		background-color: ${({theme}) => theme?.basicBtn.bgActive};
-		svg path {
+		/* svg path {
 			fill: ${({theme}) => theme?.basicBtn.textActive};
-		}
+		} */
 	}
 
 	#client {

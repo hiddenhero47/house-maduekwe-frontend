@@ -13,7 +13,7 @@ import { attributeType } from '../../../utilities/app-const';
 import { FaShoppingBasket } from 'react-icons/fa';
 import { IoIosArrowForward } from 'react-icons/io';
 import { FaCartShopping } from 'react-icons/fa6';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToHoldings } from '../../../store/slice/holding';
 import { IoIosAdd } from 'react-icons/io';
 import { RiSubtractLine } from 'react-icons/ri';
@@ -26,6 +26,7 @@ import {
 	groupedVariantsChecker,
 	attributesError,
 } from '../../../utilities/basic-functions';
+import { useNavigate } from 'react-router-dom';
 
 function Details({
 	product,
@@ -36,6 +37,12 @@ function Details({
 	setQuantity,
 }) {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const { user } = useSelector((state) => state.auth);
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
+
 	const { mutate: addToCart, isPending } = CartServices.add();
 
 	const { colors, sizes } = useMemo(() => {
@@ -124,6 +131,16 @@ function Details({
 	};
 
 	const cartServer = () => {
+		if (!activeUser) {
+			toast.info('Please log in to add items to your cart');
+
+			setTimeout(() => {
+				navigate('/authentication');
+			}, 1500);
+
+			return;
+		}
+
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
 			toast.warning('size not selected');
@@ -294,17 +311,7 @@ function Details({
 					</button>
 				</Increment>
 			</div>
-			<AddToCartBtn
-				$isLoading={isPending}
-				onClick={() =>
-					dispatch(
-						ensureUser(
-							() => cartServer(),
-							() => toast.warning('Can not add to cart, User not logged in 🛒')
-						)
-					)
-				}
-			>
+			<AddToCartBtn $isLoading={isPending} onClick={() => cartServer()}>
 				<div className="content">
 					Add To Cart
 					<i className="ml-1">

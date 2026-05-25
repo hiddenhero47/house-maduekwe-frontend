@@ -52,9 +52,9 @@ export const Container = styled.div`
 		background: ${({ theme }) => theme?.intro.boxBg};
 		box-shadow: 0 0 25px ${({ theme }) => theme?.intro.boxShadow};
 
-		svg path {
+		/* svg path {
 			fill: ${({ theme }) => theme?.intro.logo};
-		}
+		} */
 
 		@supports not (aspect-ratio: 1 / 1) {
 			width: 20vmin;

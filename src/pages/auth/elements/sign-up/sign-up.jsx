@@ -11,9 +11,17 @@ import { FaGoogle } from 'react-icons/fa';
 import { userCreateValidationSchema } from '../../../../features/validations/user-validation';
 import UserServices from '../../../../features/services/custom-hooks/user';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
+import { useSelector, useDispatch } from 'react-redux';
+import { handleOpen } from '../../../../store/slice/2fa-handler';
+import { setTwoFaRetry } from '../../../../components/modal-assets/2fa-modal/retry-manager';
+import { GoogleLogin } from '@react-oauth/google';
+import AppleSignin from 'react-apple-signin-auth';
+import { toast } from 'react-toastify';
 
 function SignUp() {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const {
 		mutate: registerUser,
 		isPending,
@@ -23,10 +31,30 @@ function SignUp() {
 		data,
 	} = UserServices.register();
 
+	const {
+		mutate: googleLogin,
+		mutateAsync: lazyGoogleLogin,
+		isPending: googleLoginPending,
+		isSuccess: googleLoginSuccess,
+		isError: googleLoginError,
+		error: googleLoginErrorData,
+		data: googleLoginData,
+	} = UserServices.googleLogin();
+
+	const {
+		mutate: appleLogin,
+		mutateAsync: lazyAppleLogin,
+		isPending: appleLoginPending,
+		isSuccess: appleLoginSuccess,
+		isError: appleLoginError,
+		error: appleLoginErrorData,
+		data: appleLoginData,
+	} = UserServices.appleLogin();
+
 	const initialValues = {
 		email: '',
 		password: '',
-		name: '',
+		name: 'New User',
 	};
 
 	const onSubmit = async (values) => {
@@ -41,6 +69,35 @@ function SignUp() {
 		});
 
 	const { email, password, name } = values;
+
+	const loginWithGoogle = async (credentialResponse) => {
+		googleLogin(
+			{
+				idToken: credentialResponse.credential,
+			},
+			{
+				onError: (error, variables) => {
+					if (error?.is2FARequired) {
+						setTwoFaRetry((otp) =>
+							lazyGoogleLogin({
+								...variables,
+								token: otp,
+							})
+						);
+
+						dispatch(handleOpen(true));
+					}
+				},
+			}
+		);
+	};
+
+	const loginWithApple = async (response) => {
+		appleLogin({
+			identityToken: response.authorization.id_token,
+		});
+	};
+
 	return (
 		<Wrapper>
 			<div className="header">
@@ -48,7 +105,7 @@ function SignUp() {
 				<p>Sign up to access exclusive features</p>
 			</div>
 			<form onSubmit={handleSubmit}>
-				<div className="form_control">
+				{/* <div className="form_control">
 					<label>User Name</label>
 					<CustomInput
 						autoComplete="on"
@@ -64,7 +121,7 @@ function SignUp() {
 						paddingY="10px"
 						useBackground
 					/>
-				</div>
+				</div> */}
 
 				<div className="form_control">
 					<label>Email Address</label>
@@ -100,7 +157,12 @@ function SignUp() {
 					/>
 				</div>
 
-				<SubmitBtn $isLoading={isPending} disabled={isPending} type="submit" className="mt-[5px]">
+				<SubmitBtn
+					$isLoading={isPending}
+					disabled={isPending}
+					type="submit"
+					className="mt-[5px]"
+				>
 					<div className="content">
 						<HiOutlineLogin />
 						Sign up
@@ -118,15 +180,38 @@ function SignUp() {
 			</div>
 
 			<div className="socials">
-				<button className="google">
+				<button type="button" className="google">
 					<FcGoogle />
 					Continue with Google
+					<div className="google_overlay">
+						<GoogleLogin
+							onSuccess={(credentialResponse) =>
+								loginWithGoogle(credentialResponse)
+							}
+							onError={() => {
+								toast.error('Google Login Failed');
+							}}
+						/>
+					</div>
 				</button>
 
-				<button className="apple">
-					<IoLogoApple />
-					Continue with Apple
-				</button>
+				<AppleSignin
+					authOptions={{
+						clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
+						scope: 'email name',
+						redirectURI: window.location.origin,
+						responseType: 'code id_token',
+						responseMode: 'fragment',
+					}}
+					onSuccess={(response) => loginWithApple(response)}
+					onError={(err) => toast.error('Apple Login Failed')}
+					render={(props) => (
+						<button className="apple" {...props}>
+							<IoLogoApple />
+							Continue with Apple
+						</button>
+					)}
+				/>
 			</div>
 
 			<span className="footer_text">

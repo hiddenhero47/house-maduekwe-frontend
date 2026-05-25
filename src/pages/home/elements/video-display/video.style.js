@@ -118,6 +118,11 @@ export const VideoContainer = styled.div`
 		background: rgba(255, 255, 255, 0.2);
 		transform: scale(1.1);
 	}
+
+	.mute_only media-play-button {
+		padding: 4px;
+		margin-right: 8px;
+	}
 `;
 
 export const VideoPlaceHolder = styled.div`

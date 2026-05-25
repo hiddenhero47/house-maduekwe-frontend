@@ -1,61 +1,68 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
 	ModalWrapper,
 	MyForm,
 	SubmitBtn,
 	DefaultToggle,
 } from './address.style';
-import Modal from '../../../../components/modal/index_modal';
-import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
+import Modal from '../../modal/index_modal';
+import BubbleSlide from '../../loaders/bubbles/BubbleSlide';
 import { useFormik } from 'formik';
-import CustomTextarea from '../../../../components/form-components/input/custom-textarea';
-import SearchSelect from '../../../../components/form-components/select/search-select';
-import CustomInput from '../../../../components/form-components/input/custom-input';
-import { addressValidationSchema } from '../../../../features/validations/address-validation';
+import CustomTextarea from '../../form-components/input/custom-textarea';
+import SearchSelect from '../../form-components/select/search-select';
+import CustomInput from '../../form-components/input/custom-input';
+import { addressValidationSchema } from '../../../features/validations/address-validation';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { HiViewGridAdd } from 'react-icons/hi';
 import {
 	getCountryOptions,
 	getStatesOptions,
 	getCitiesOptions,
-} from '../../../../utilities/city-state-country';
-import AddressServices from '../../../../features/services/custom-hooks/addresses';
+} from '../../../utilities/city-state-country';
+import AddressServices from '../../../features/services/custom-hooks/addresses';
 
-function CreateModal({ ref, openModal, closeModal }) {
-	const initialValues = {
-		country: '',
-		state: '',
-		city: '',
-		zipCode: '',
-		stateLine: '',
-		fullAddress: '',
-		description: '',
-		isDefault: false,
-	};
+function EditAddress({ ref, closeModal, address, clear }) {
+	// ✅ Memoized initial values (same pattern as category)
+	const initialValues = useMemo(
+		() => ({
+			country: address?.country || '',
+			state: address?.state || '',
+			city: address?.city || '',
+			zipCode: address?.zipCode || '',
+			stateLine: address?.stateLine || '',
+			fullAddress: address?.fullAddress || '',
+			description: address?.description || '',
+			isDefault: address?.isDefault || false,
+		}),
+		[address]
+	);
 
-	const { mutate: createAddress, isPending } = AddressServices.create();
+	const { mutate: updateAddress, isPending } = AddressServices.update();
 
-	const onSubmit = (values, { resetForm }) => {
-		createAddress(values, {
-			onSuccess: () => {
-				resetForm();
-				closeModal?.();
-			},
-		});
+	const onSubmit = (values) => {
+		updateAddress(
+			{ id: address._id, data: values },
+			{
+				onSuccess: () => {
+					closeModal?.();
+				},
+			}
+		);
 	};
 
 	const {
 		values,
 		errors,
-		handleBlur,
 		touched,
 		handleChange,
+		handleBlur,
 		handleSubmit,
 		setFieldValue,
 	} = useFormik({
 		initialValues,
 		validationSchema: addressValidationSchema,
 		onSubmit,
+		enableReinitialize: true, // ✅ VERY IMPORTANT
 	});
 
 	const {
@@ -68,24 +75,22 @@ function CreateModal({ ref, openModal, closeModal }) {
 		zipCode,
 		stateLine,
 	} = values;
+
 	return (
 		<Modal.Center
 			width="fit-content"
 			maxWidth="500px"
-			onClose={() => {}}
+			onClose={() => clear && clear()}
 			onOpen={() => {}}
 			refName={ref}
-			animation={true}
+			animation
 		>
 			<ModalWrapper>
-				{/* Header */}
+				{/* HEADER */}
 				<div className="modal_header">
 					<div>
-						<h3>Add New Address</h3>
-						<p>
-							Add a delivery address. You can set one address as your
-							default for faster checkout.
-						</p>
+						<h3>Edit Address</h3>
+						<p>Update your address details.</p>
 					</div>
 
 					<button className="closeBtn" onClick={closeModal}>
@@ -232,17 +237,16 @@ function CreateModal({ ref, openModal, closeModal }) {
 						</div>
 					</div>
 
-					{/* DEFAULT TOGGLE */}
+					{/* DEFAULT */}
 					<DefaultToggle>
 						<div>
 							<strong>Set as Default Address</strong>
-							<p>This address will be selected automatically at checkout.</p>
+							<p>This address will be used at checkout.</p>
 						</div>
 
 						<label className="switch">
 							<input
 								type="checkbox"
-								id="isDefault"
 								name="isDefault"
 								checked={isDefault}
 								onChange={handleChange}
@@ -271,4 +275,4 @@ function CreateModal({ ref, openModal, closeModal }) {
 	);
 }
 
-export default CreateModal;
+export default EditAddress;

@@ -3,14 +3,21 @@ import { LoaderWrapper, NoData, RetryBtn } from './cart-loader.style';
 import { useSelector } from 'react-redux';
 import CandleWrapper from '../../../../components/loaders/candles/Candle';
 import { useTheme } from 'styled-components';
-import {EmptyCartIcon} from '../../../../components/icon-components/empty-cart-icon';
+import { EmptyCartIcon } from '../../../../components/icon-components/empty-cart-icon';
+import { useNavigate } from 'react-router-dom';
 
 function CartLoader({ isLoading, data, refetch }) {
+	const navigate = useNavigate();
+
 	const { user } = useSelector((state) => state.auth);
-  const theme = useTheme();
-  const isDark = theme.mode === 'dark';
+
 	const activeUser =
 		user && typeof user === 'object' && Object.keys(user).length > 0;
+
+	const theme = useTheme();
+
+	const isDark = theme.mode === 'dark';
+
 	return (
 		<>
 			{isLoading ? (
@@ -22,7 +29,9 @@ function CartLoader({ isLoading, data, refetch }) {
 			) : data.length === 0 ? (
 				<NoData>
 					<div className="countian">
-						<i><EmptyCartIcon width="100%" height="100%"/></i>
+						<i>
+							<EmptyCartIcon width="100%" height="100%" />
+						</i>
 
 						<h3>{activeUser ? 'NO ITEMS IN CART' : 'USER NOT LOGGED IN'}</h3>
 
@@ -32,9 +41,15 @@ function CartLoader({ isLoading, data, refetch }) {
 								: 'You are not logged in. Login to experience more'}
 						</span>
 
-						{(refetch && activeUser) && (
+						{refetch && activeUser && (
 							<RetryBtn onClick={() => refetch()}>
 								<div className="content">Retry</div>
+							</RetryBtn>
+						)}
+
+						{!activeUser && (
+							<RetryBtn onClick={() => navigate('/authentication')}>
+								<div className="content">Log In</div>
 							</RetryBtn>
 						)}
 					</div>
@@ -47,4 +62,3 @@ function CartLoader({ isLoading, data, refetch }) {
 }
 
 export default CartLoader;
-

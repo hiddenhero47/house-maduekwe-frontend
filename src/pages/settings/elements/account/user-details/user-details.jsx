@@ -17,12 +17,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { TbLogout } from 'react-icons/tb';
 import { roleType } from '../../../../../utilities/app-const';
 import { logout } from '../../../../../store/slice/auth';
+import { setTheme } from '../../../../../store/slice/app-theme';
 import { userUpdateValidationSchema } from '../../../../../features/validations/user-validation';
 import { VectorIcon } from '../../../../../components/icon-components/index.style';
 import profile from '../../../../../assets/images/profile3.svg?react';
 import UserServices from '../../../../../features/services/custom-hooks/user';
 import BubbleSlide from '../../../../../components/loaders/bubbles/BubbleSlide';
 import { convertFileToBase64 } from '../../../../../utilities/basic-functions';
+import { getFromLocalStorage } from '../../../../../utilities/basic-functions';
 
 function UserDetails() {
 	const navigate = useNavigate();
@@ -75,9 +77,11 @@ function UserDetails() {
 	const { name, phoneNumber, image } = values;
 
 	const logoutUser = async () => {
+		const appThemes = getFromLocalStorage("appThemes") || "light";
 		await navigate('/');
 		dispatch(logout());
 		localStorage.clear();
+        dispatch(setTheme(appThemes));
 	};
 
 	const onChangeFile = (e) => {
