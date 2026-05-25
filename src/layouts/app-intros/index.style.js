@@ -44,7 +44,7 @@ export const IntroWrapper = styled.div`
 		animation: logoEnter 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
 		svg path {
-			fill: ${({theme}) => theme?.intro.logo};
+			/* fill: ${({theme}) => theme?.intro.logo}; */
 			animation: svgGlow 2.5s ease-in-out infinite alternate;
 		}
 
