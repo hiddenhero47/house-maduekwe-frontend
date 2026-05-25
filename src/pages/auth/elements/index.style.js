@@ -30,9 +30,9 @@ export const LoginWrapper = styled.div`
 		display: flex;
 		align-items: center;
 
-		svg path {
+		/* svg path {
 			fill: ${({ theme }) => theme?.intro.logo};
-		}
+		} */
 
 		div {
 			font-size: clamp(8px, 5vw, 11px);

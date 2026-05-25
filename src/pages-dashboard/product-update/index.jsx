@@ -29,7 +29,6 @@ import { ItemStatusType } from '../../utilities/app-const';
 import { FaRuler } from 'react-icons/fa6';
 import { FaBrush } from 'react-icons/fa';
 import { FaImages } from 'react-icons/fa6';
-import { items } from '../../dummyData/shopItems';
 import { attributeType } from '../../utilities/app-const';
 import {
 	groupAttributesByType,

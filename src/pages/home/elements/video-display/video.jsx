@@ -77,11 +77,13 @@ function MyVideo({
 						controls={false}
 						poster={!isPreloaded ? placeholder : undefined}
 						className="video_el"
+						playsInline
 					/>
 
 					<div className="controlBar">
 						{useMuteOnly ? (
 							<div className="mute_only">
+								<MediaPlayButton />
 								<MediaMuteButton />
 							</div>
 						) : (

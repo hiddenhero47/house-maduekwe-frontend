@@ -4,6 +4,7 @@ import {
 	TabNav,
 	OptionBtn,
 	TableWrapper,
+	SpanStatus,
 } from './elements/index.style';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';

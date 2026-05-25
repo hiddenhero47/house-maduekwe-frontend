@@ -30,50 +30,56 @@ import Payment from './pages-dashboard/payment';
 import Flagged from './pages-dashboard/flagged';
 import Administrator from './pages-dashboard/administrator';
 import AppSettings from './pages-dashboard/settings';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
 
 function App() {
 	return (
-		<QueryClientProvider client={queryClient}>
-			<Router>
-				<GlobalStyleInjector />
-				<div id="containerBody">
-					<Routes>
-						<Route element={<IndexLayout />}>
-							<Route path="/" element={<Home />} />
-							<Route path="/about-us" element={<AboutUs />} />
-							<Route path="/settings" element={<Settings />} />
-							<Route path="/overview/:id" element={<ProductOverview />} />
-							<Route path="/my-cart" element={<UserCart />} />
-							<Route path="/products/*" element={<ShopeItems />} />
-							<Route path="/checkout/:orderId" element={<Checkout />} />
-						</Route>
+		<GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+			<QueryClientProvider client={queryClient}>
+				<Router>
+					<GlobalStyleInjector />
+					<div id="containerBody">
+						<Routes>
+							<Route element={<IndexLayout />}>
+								<Route path="/" element={<Home />} />
+								<Route path="/about-us" element={<AboutUs />} />
+								<Route path="/settings" element={<Settings />} />
+								<Route path="/overview/:id" element={<ProductOverview />} />
+								<Route path="/my-cart" element={<UserCart />} />
+								<Route path="/products/*" element={<ShopeItems />} />
+								<Route path="/checkout/:orderId" element={<Checkout />} />
+							</Route>
 
-						<Route path="/admin" element={<DashboardLayout />}>
-							<Route index element={<Overview />} />
-							<Route path="products" element={<Product />} />
-							<Route path="products/design" element={<ProductDesign />} />
-							<Route path="products/design/:id" element={<ProductUpdate />} />
-							<Route path="products/group" element={<ProductGroups />} />
-							<Route path="products/classification" element={<ProductClassing />} />
-							<Route path="orders" element={<Orders />} />
-							<Route path="orders/:id" element={<OrdersDetails />} />
-							<Route path="payment-logs" element={<Payment />} />
-							<Route path="flagged-orders" element={<Flagged />} />
-							<Route path="administrate" element={<Administrator />} />
-							<Route path="app-settings" element={<AppSettings />} />
-						</Route>
+							<Route path="/admin" element={<DashboardLayout />}>
+								<Route index element={<Overview />} />
+								<Route path="products" element={<Product />} />
+								<Route path="products/design" element={<ProductDesign />} />
+								<Route path="products/design/:id" element={<ProductUpdate />} />
+								<Route path="products/group" element={<ProductGroups />} />
+								<Route
+									path="products/classification"
+									element={<ProductClassing />}
+								/>
+								<Route path="orders" element={<Orders />} />
+								<Route path="orders/:id" element={<OrdersDetails />} />
+								<Route path="payment-logs" element={<Payment />} />
+								<Route path="flagged-orders" element={<Flagged />} />
+								<Route path="administrate" element={<Administrator />} />
+								<Route path="app-settings" element={<AppSettings />} />
+							</Route>
 
-						<Route element={<WrapperLayout />}>
-							<Route path="/authentication/*" element={<Authentication />} />
-							<Route path="*" element={<NotFound />} />
-						</Route>
-					</Routes>
-				</div>
-			</Router>
-			<AppToast />
-		</QueryClientProvider>
+							<Route element={<WrapperLayout />}>
+								<Route path="/authentication/*" element={<Authentication />} />
+								<Route path="*" element={<NotFound />} />
+							</Route>
+						</Routes>
+					</div>
+				</Router>
+				<AppToast />
+			</QueryClientProvider>
+		</GoogleOAuthProvider>
 	);
 }
 

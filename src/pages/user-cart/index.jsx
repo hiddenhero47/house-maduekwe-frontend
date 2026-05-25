@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
 	Container,
 	Item,
@@ -11,6 +11,7 @@ import {
 	AddressBox,
 	CheckoutBtn,
 	Unavailable,
+	AddBtn,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import { MdOutlineToggleOff } from 'react-icons/md';
@@ -34,6 +35,8 @@ import { CgRadioChecked } from 'react-icons/cg';
 import { CgRadioCheck } from 'react-icons/cg';
 import { IoIosInformationCircle } from 'react-icons/io';
 import { toast } from 'react-toastify';
+import { FaLocationDot } from 'react-icons/fa6';
+import CreateAddress from '../../components/modal-assets/address/create-address';
 
 function Index() {
 	const navigate = useNavigate();
@@ -166,8 +169,16 @@ function Index() {
 		}
 	};
 
+	const modalRef = useRef(null);
+	const openModal = () => {
+		modalRef.current?.open();
+	};
+
 	return (
-		<Container className="Y_scroll_style" $isPendingOrder={checkoutData?.isPendingOrder}>
+		<Container
+			className="Y_scroll_style"
+			$isPendingOrder={checkoutData?.isPendingOrder}
+		>
 			<h1 className="text-[30px] font-normal font-[Audiowide] pt-[20px] mb-[50px]">
 				Shopping Cart
 			</h1>
@@ -337,7 +348,12 @@ function Index() {
 						)}
 
 						{!IsLoadingAddr && !addresses?.length && (
-							<div className="empty_state">No saved addresses found.</div>
+							<div className="empty_state">
+								<p>No saved addresses found.</p>
+								<AddBtn type='button' onClick={openModal}>
+									Add address <FaLocationDot />
+								</AddBtn>
+							</div>
 						)}
 
 						{!IsLoadingAddr && addresses?.length > 0 && (
@@ -424,6 +440,11 @@ function Index() {
 					</SummaryContainer>
 				</div>
 			</div>
+			<CreateAddress
+				ref={modalRef}
+				openModal={openModal}
+				closeModal={() => modalRef.current?.close()}
+			/>
 		</Container>
 	);
 }

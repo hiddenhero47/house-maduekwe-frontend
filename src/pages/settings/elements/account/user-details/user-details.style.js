@@ -138,9 +138,9 @@ export const DetailsItem = styled.li`
 		border-radius: 3px;
 		background-color: ${({theme}) => theme?.basicBtn.bgActive};
 
-		svg path {
+		/* svg path {
 			fill: ${({theme}) => theme?.basicBtn.textActive};
-		}
+		} */
 	}
 
 	@media (max-width: 439px) {

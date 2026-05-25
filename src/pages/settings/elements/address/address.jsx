@@ -4,7 +4,7 @@ import { IoIosAdd } from 'react-icons/io';
 import CustomTable from '../../../../components/table_components/basicTableOne';
 import { AddressIcon } from '../../../../components/icon-components/empty';
 import { truncate } from '../../../../utilities/basic-functions';
-import CreateModal from './create-address';
+import CreateAddress from '../../../../components/modal-assets/address/create-address';
 import AddressServices from '../../../../features/services/custom-hooks/addresses';
 import { getCountryByCode } from '../../../../utilities/city-state-country';
 import ToolKit from '../../../../components/tool-kit/index-tool-kit';
@@ -13,7 +13,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FiEdit2 } from 'react-icons/fi';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import DeleteModal from '../../../../components/modal-assets/delete-modal/delete-modal';
-import EditAddress from './edit-address';
+import EditAddress from '../../../../components/modal-assets/address/edit-address';
 
 function Address() {
 	const { data, isPending, isError, refetch } = AddressServices.getAll();
@@ -148,7 +148,7 @@ function Address() {
 				/>
 			</TableWrapper>
 
-			<CreateModal
+			<CreateAddress
 				ref={modalRef}
 				openModal={openModal}
 				closeModal={closeModal}
