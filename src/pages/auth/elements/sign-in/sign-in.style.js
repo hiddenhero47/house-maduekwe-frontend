@@ -111,8 +111,16 @@ export const Wrapper = styled.div`
 			position: absolute;
 			inset: 0;
 			opacity: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
 			& > div {
+				width: 100% !important;
+				height: 100% !important;
+			}
+
+			div {
 				width: 100% !important;
 				height: 100% !important;
 			}
