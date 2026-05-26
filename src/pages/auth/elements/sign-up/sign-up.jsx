@@ -98,6 +98,15 @@ function SignUp() {
 		});
 	};
 
+	const GoogleBtn = React.memo(() => (
+		<GoogleLogin
+			onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
+			onError={() => {
+				toast.error('Google Login Failed');
+			}}
+		/>
+	));
+
 	return (
 		<Wrapper>
 			<div className="header">
@@ -184,14 +193,7 @@ function SignUp() {
 					<FcGoogle />
 					Continue with Google
 					<div className="google_overlay">
-						<GoogleLogin
-							onSuccess={(credentialResponse) =>
-								loginWithGoogle(credentialResponse)
-							}
-							onError={() => {
-								toast.error('Google Login Failed');
-							}}
-						/>
+						<GoogleBtn />
 					</div>
 				</button>
 
