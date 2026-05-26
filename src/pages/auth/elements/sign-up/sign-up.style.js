@@ -117,6 +117,11 @@ export const Wrapper = styled.div`
 				height: 100% !important;
 			}
 
+			div {
+				width: 100% !important;
+				height: 100% !important;
+			}
+
 			iframe {
 				width: 100% !important;
 				height: 100% !important;
