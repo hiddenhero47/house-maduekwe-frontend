@@ -13,6 +13,7 @@ const useGetCategoriesQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

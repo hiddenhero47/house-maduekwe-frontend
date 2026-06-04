@@ -12,6 +12,7 @@ const useGetShopItemsQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -25,6 +26,7 @@ const useGetShopItemByIdQuery = (id) => {
 			}),
 		enabled: !!id,
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -39,6 +41,7 @@ const useGetRelatedShopItemsQuery = (id, limit = 8) => {
 			}),
 		enabled: !!id,
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

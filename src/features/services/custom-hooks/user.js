@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken, updateUser } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../store/slice/auth';
+import { setTheme } from '../../../store/slice/app-theme';
+import { getFromLocalStorage } from '../../../utilities/basic-functions';
 
 const useGetUserQuery = () => {
 	const dispatch = useDispatch();
@@ -228,6 +231,69 @@ const useRegisterAdminMutation = () => {
 			// 🔄 refresh users list (important for admin dashboard)
 			queryClient.invalidateQueries(['users/list']);
 			toast.success(data?.message || 'Admin created successfully');
+		},
+	});
+};
+
+const useRequestResetMutation = () => {
+	return useMutation({
+		mutationFn: (email) =>
+			axiosCall({
+				url: '/api/users/request-reset',
+				method: 'POST',
+				data: { email },
+			}),
+
+		onSuccess: (data) => {
+			toast.success(
+				data?.message ||
+					'If an account exists with that email, a reset link has been sent.'
+			);
+		},
+	});
+};
+
+const useResetPasswordMutation = () => {
+	const navigate = useNavigate();
+
+	return useMutation({
+		mutationFn: ({ token, password }) =>
+			axiosCall({
+				url: '/api/users/reset-password',
+				method: 'POST',
+				data: {
+					token,
+					password,
+				},
+			}),
+
+		onSuccess: (data) => {
+			toast.success(data?.message || 'Password reset successfully');
+			navigate('/authentication/sign-in');
+		},
+	});
+};
+
+const useLogoutAllMutation = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	// const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: () =>
+			axiosCall({
+				url: '/api/users/invalidate',
+				method: 'PATCH',
+			}),
+
+		onSuccess: (data) => {
+			const appThemes = getFromLocalStorage('appThemes') || 'light';
+			dispatch(logout());
+			localStorage.clear();
+			dispatch(setTheme(appThemes));
+			// queryClient.clear();
+			navigate('/authentication/sign-in');
+			toast.success(data?.message || 'Logged out from all devices');
 		},
 	});
 };

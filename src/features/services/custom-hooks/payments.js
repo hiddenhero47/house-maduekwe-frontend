@@ -12,6 +12,7 @@ const useGetMyPaymentsQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -25,6 +26,7 @@ const useGetPaymentsQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

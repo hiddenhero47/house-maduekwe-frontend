@@ -12,6 +12,7 @@ const useGetCartQuery = () => {
 				method: 'GET',
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

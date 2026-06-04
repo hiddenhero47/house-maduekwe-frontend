@@ -12,6 +12,7 @@ const useGetExportFeesQuery = (active) => {
 				params: typeof active === 'boolean' ? { active } : undefined,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

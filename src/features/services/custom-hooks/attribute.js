@@ -13,6 +13,7 @@ const useGetAttributesQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -27,6 +28,7 @@ const useGetAttributeByIdQuery = (id) => {
 			}),
 		enabled: !!id,
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

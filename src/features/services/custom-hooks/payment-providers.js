@@ -12,6 +12,7 @@ const useGetPaymentProvidersQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -24,6 +25,7 @@ const useGetClientPaymentProvidersQuery = () => {
 				method: 'GET',
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
