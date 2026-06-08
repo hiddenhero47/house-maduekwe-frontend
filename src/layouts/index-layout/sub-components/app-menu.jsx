@@ -250,7 +250,7 @@ function LeftMenu({ closeMe, openHolding }) {
 					</a>
 				</div>
 
-				<div className="footer_text">© 2025 House Maduekwe</div>
+				<div className="footer_text">© 2026 House Maduekwe</div>
 			</SocialSection>
 		</MenuWrapper>
 	);

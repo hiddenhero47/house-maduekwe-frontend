@@ -63,7 +63,7 @@ function Index() {
 
 			<div id="footer">
 				<div>
-					<span className="text-[12px] mx-[auto]">© 2025 House Maduekwe</span>
+					<span className="text-[12px] mx-[auto]">© 2026 House Maduekwe</span>
 				</div>
 
 				<div>

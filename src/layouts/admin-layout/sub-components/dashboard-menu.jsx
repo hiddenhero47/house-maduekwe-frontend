@@ -244,7 +244,7 @@ function SideMenu({ close }) {
 					</a>
 				</div>
 
-				<div className="footer_text">© 2025 House Maduekwe</div>
+				<div className="footer_text">© 2026 House Maduekwe</div>
 			</SocialSection>
 		</SideBar>
 	);

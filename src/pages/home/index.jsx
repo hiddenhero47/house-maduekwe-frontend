@@ -369,7 +369,7 @@ function Index() {
 					</div>
 
 					<p className="font-sans">
-						© 2025 House Maduekwe, Inc. All rights reserved.
+						© 2026 House Maduekwe, Inc. All rights reserved.
 					</p>
 				</div>
 			</AppFooter>
