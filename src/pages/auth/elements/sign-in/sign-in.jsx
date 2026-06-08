@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Wrapper, SubmitBtn } from './sign-in.style';
 import CustomInput from '../../../../components/form-components/input/custom-input';
 import CustomPassword from '../../../../components/form-components/input/custom-password';
@@ -17,6 +17,7 @@ import { setTwoFaRetry } from '../../../../components/modal-assets/2fa-modal/ret
 import { GoogleLogin } from '@react-oauth/google';
 import AppleSignin from 'react-apple-signin-auth';
 import { toast } from 'react-toastify';
+import ForgotPasswordModal from '../../../../components/modal-assets/forgot-password/index';
 
 function SignIn() {
 	const dispatch = useDispatch();
@@ -118,6 +119,8 @@ function SignIn() {
 		/>
 	));
 
+	const forgotPasswordRef = useRef();
+
 	return (
 		<Wrapper>
 			<div className="header">
@@ -159,9 +162,13 @@ function SignIn() {
 					/>
 				</div>
 
-				<Link to="/auth/forgot-password" id="forgot_password">
+				<button
+					type="button"
+					id="forgot_password"
+					onClick={() => forgotPasswordRef.current?.open()}
+				>
 					Forgot Password?
-				</Link>
+				</button>
 
 				<SubmitBtn $isLoading={isPending} disabled={isPending} type="submit">
 					<div className="content">
@@ -211,6 +218,11 @@ function SignIn() {
 			<span className="footer_text">
 				Don’t have an account? <Link to="/authentication/sign-up">Sign up</Link>
 			</span>
+
+			<ForgotPasswordModal
+				ref={forgotPasswordRef}
+				closeModal={() => forgotPasswordRef.current?.close()}
+			/>
 		</Wrapper>
 	);
 }

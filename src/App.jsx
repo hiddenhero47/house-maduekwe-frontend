@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 // import './index.css';
 import GlobalStyleInjector from './global.style';
 import IndexLayout from './layouts/index-layout/index';
@@ -17,6 +18,7 @@ import UserCart from './pages/user-cart';
 import ShopeItems from './pages/shope-items';
 import Authentication from './pages/auth';
 import Checkout from './pages/checkout ';
+import ResetPassword from './pages/reset-password';
 // Dashboard pages
 import Overview from './pages-dashboard/home';
 import Product from './pages-dashboard/products';
@@ -30,7 +32,6 @@ import Payment from './pages-dashboard/payment';
 import Flagged from './pages-dashboard/flagged';
 import Administrator from './pages-dashboard/administrator';
 import AppSettings from './pages-dashboard/settings';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ function App() {
 
 							<Route element={<WrapperLayout />}>
 								<Route path="/authentication/*" element={<Authentication />} />
+								<Route path="/reset-password/:token?" element={<ResetPassword />} />
 								<Route path="*" element={<NotFound />} />
 							</Route>
 						</Routes>

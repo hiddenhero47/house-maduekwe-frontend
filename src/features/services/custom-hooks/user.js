@@ -313,6 +313,8 @@ const UserServices = {
 	getUsers: useGetUsersQuery,
 	changeUserRole: useChangeUserRoleMutation,
 	registerAdmin: useRegisterAdminMutation,
+	requestReset: useRequestResetMutation,
+	resetPassword: useResetPasswordMutation,
 };
 
 export default UserServices;
