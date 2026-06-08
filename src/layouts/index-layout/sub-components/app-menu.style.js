@@ -27,17 +27,17 @@ export const MenuHeader = styled.div`
 	#title {
 		display: flex;
 		align-items: center;
+		margin-inline: auto;
 
 		/* svg path {
 			fill: ${({ theme }) => theme?.intro.logo};
 		} */
 
 		div {
-			font-size: clamp(8px, 65%, 9.8px);
-			font-family: ZeroG;
+			font-size: clamp(8px, 4vw, 15.2px);
+			font-family: Audiowide;
 			font-weight: 900;
 			line-height: 10px;
-			transform: translateX(-8px);
 			color: ${({ theme }) => theme?.mainBody.text};
 
 			span {
@@ -45,11 +45,11 @@ export const MenuHeader = styled.div`
 			}
 
 			@media (min-width: 501px) and (max-width: 899px) {
-				font-size: clamp(8px, 58%, 9.8px);
+				font-size: clamp(13.5px, 3vw, 14.8px);
 			}
 
 			@media (max-width: 500px) {
-				font-size: clamp(8px, 55%, 9.8px);
+				font-size: clamp(13.5px, 3.8vw, 14.8px);
 			}
 		}
 	}

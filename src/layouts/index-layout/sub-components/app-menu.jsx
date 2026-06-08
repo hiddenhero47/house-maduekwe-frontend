@@ -52,11 +52,11 @@ function LeftMenu({ closeMe, openHolding }) {
 		<MenuWrapper>
 			<MenuHeader>
 				<div id="title">
-					<i>
-						<VectorIcon width="50px" height="50px" vector={AppLogo} />
+					<i className="py-[5px]">
+						<VectorIcon width="35px" height="35px" vector={AppLogo} />
 					</i>
 					<div>
-						House <span>Maduekwe</span>
+						HOUSE <span>MADUEKWE</span>
 					</div>
 				</div>
 				<button id="closeLeftMenuBtn" onClick={closeMe}>
