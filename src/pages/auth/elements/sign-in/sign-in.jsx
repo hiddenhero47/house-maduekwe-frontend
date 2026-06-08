@@ -18,6 +18,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import AppleSignin from 'react-apple-signin-auth';
 import { toast } from 'react-toastify';
 import ForgotPasswordModal from '../../../../components/modal-assets/forgot-password/index';
+import { GoogleBtn } from '../google-btn';
 
 function SignIn() {
 	const dispatch = useDispatch();
@@ -110,15 +111,6 @@ function SignIn() {
 		});
 	};
 
-	const GoogleBtn = React.memo(() => (
-		<GoogleLogin
-			onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
-			onError={() => {
-				toast.error('Google Login Failed');
-			}}
-		/>
-	));
-
 	const forgotPasswordRef = useRef();
 
 	return (
@@ -192,7 +184,7 @@ function SignIn() {
 					<FcGoogle />
 					Continue with Google
 					<div className="google_overlay">
-						<GoogleBtn />
+						<GoogleBtn loginWithGoogle={loginWithGoogle} />
 					</div>
 				</button>
 

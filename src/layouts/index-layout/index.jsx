@@ -93,6 +93,16 @@ function IndexLayout() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data]);
 
+	useEffect(() => {
+		const path = location.pathname;
+		if (
+			!path.startsWith('/authentication') &&
+			!path.startsWith('/reset-password')
+		) {
+			sessionStorage.setItem('lastRoute', path);
+		}
+	}, [location.pathname]);
+
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />

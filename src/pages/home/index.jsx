@@ -49,14 +49,19 @@ function Index() {
 
 	const { data: itemGroups = [], pagination } = data || {};
 
-	const videoOne = 'https://vjs.zencdn.net/v/oceans.mp4';
-	const videoTwo = 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4';
+	const videoOne =
+		'https://drive.google.com/uc?export=download&id=1Ai0LmiTYACZLubpNrsV6GjN4prUC2Rf3';
+	const videoTwo =
+		'https://drive.google.com/uc?export=download&id=1Ai0LmiTYACZLubpNrsV6GjN4prUC2Rf3';
 
 	useEffect(() => {
-		Promise.all([preloadVideo(videoOne), preloadVideo(videoTwo)]).then(() => {
-			setIsVideoReady(true);
-			setIsVideoReadyB(true);
-		});
+		preloadVideo(videoOne)
+			.then(() => setIsVideoReady(true))
+			.catch(() => setIsVideoReady(false));
+
+		preloadVideo(videoTwo)
+			.then(() => setIsVideoReadyB(true))
+			.catch(() => setIsVideoReadyB(false));
 	}, []);
 
 	const normalizeItems = (items) => {
@@ -146,7 +151,7 @@ function Index() {
 				<div className="w-full h-full relative">
 					{isVideoReady && (
 						<MyVideo
-							videoSrc={promotionVideo}
+							videoSrc={videoOne}
 							isPreloaded
 							autoPlay
 							onStartNoSound
@@ -185,7 +190,7 @@ function Index() {
 
 			<IntroSection>
 				<div className="floating_square" />
-				
+
 				<div className="background_shape_1" />
 
 				<div className="intro_content">
@@ -257,7 +262,7 @@ function Index() {
 				<div className="promo_video">
 					<div className="w-full h-full relative rounded-[inherit]">
 						<MyVideo
-							videoSrc={promotionVideo}
+							videoSrc={videoTwo}
 							isPreloaded
 							autoPlay
 							onStartNoSound

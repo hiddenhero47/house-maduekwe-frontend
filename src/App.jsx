@@ -73,7 +73,10 @@ function App() {
 
 							<Route element={<WrapperLayout />}>
 								<Route path="/authentication/*" element={<Authentication />} />
-								<Route path="/reset-password/:token?" element={<ResetPassword />} />
+								<Route
+									path="/reset-password/:token?"
+									element={<ResetPassword />}
+								/>
 								<Route path="*" element={<NotFound />} />
 							</Route>
 						</Routes>
