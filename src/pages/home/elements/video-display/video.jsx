@@ -51,6 +51,14 @@ function MyVideo({
 		};
 	}, []);
 
+	const handleLoaded = async () => {
+		try {
+			await videoRef.current?.play();
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return (
 		<VideoContainer className="video_wrapper">
 			{isLoading ? (
@@ -72,6 +80,8 @@ function MyVideo({
 						ref={videoRef}
 						slot="media"
 						src={videoSrc}
+						preload="auto"
+						fetchpriority="high"
 						autoPlay={autoPlay}
 						muted={onStartNoSound}
 						loop={autoReplay}
@@ -80,6 +90,7 @@ function MyVideo({
 						className="video_el"
 						onCanPlay={() => loadingCallBack?.(true)}
 						onError={() => loadingCallBack?.(false)}
+						onLoadedData={handleLoaded}
 						playsInline
 					/>
 
