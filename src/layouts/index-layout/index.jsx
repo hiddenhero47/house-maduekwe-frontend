@@ -28,6 +28,14 @@ function IndexLayout() {
 
 	const { mutate: addToCart, isPending } = CartServices.add();
 
+	const {
+		data: cartCount = {},
+		isPending: loading,
+		isSuccess,
+	} = CartServices.getCount();
+
+	const { count = 0 } = cartCount;
+
 	if (typeof document !== 'undefined') {
 		document.body?.setAttribute('data-theme', theme);
 	}
@@ -151,11 +159,18 @@ function IndexLayout() {
 								className="flex items-center text-[17px] gap-[5px]"
 								onClick={() => navigate('/my-cart')}
 								$isLoading={isPending}
+								$pulse={(loading && isSuccess)}
 							>
 								<span>Cart</span>
 								<i className="text-[20px]">
 									<FaCartShopping />
 								</i>
+
+								{count > 0 && (
+									<span className="cart_badge">
+										{count > 99 ? '99+' : count}
+									</span>
+								)}
 							</CartBtn>
 
 							<div id="line2" className="h-[1.5px] w-full flex gap-[4px]">
