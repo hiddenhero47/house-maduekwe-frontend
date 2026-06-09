@@ -161,7 +161,7 @@ export const IntroSection = styled.section`
 		aspect-ratio: 1;
 		border-radius: 20px;
 		background: ${({ theme }) =>
-			theme.mode === 'dark' ? "#cccccc" : "#4d4d4d"};
+			theme.mode === 'dark' ? '#cccccc' : '#4d4d4d'};
 		opacity: ${({ theme }) => (theme.mode === 'dark' ? 0.04 : 0.044)};
 		transform: rotate(-18deg);
 		pointer-events: none;
@@ -671,4 +671,10 @@ export const Promotion = styled.section`
 			line-height: 1.4;
 		}
 	}
+`;
+
+export const VideoWrapper = styled.div`
+	display: ${({ $isLoading }) => ($isLoading ? 'none' : 'flex')};
+	width: auto;
+	height: 100%;
 `;

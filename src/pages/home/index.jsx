@@ -7,6 +7,7 @@ import {
 	AppFooter,
 	LoaderWrapper,
 	Loader,
+	VideoWrapper,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
 import postImage from '../../assets/images/image.avif';
@@ -31,9 +32,7 @@ import bannerImage from '../../assets/images/brand-name.svg';
 import GroupDisplay from './elements/group-display/group-display';
 import { useNavigate } from 'react-router-dom';
 import MyVideo from './elements/video-display/video';
-import { preloadVideo } from '../../utilities/basic-functions';
 import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
-import promotionVideo from '../../assets/videos/HOUSE-MADUEKWE-P.mp4';
 
 function Index() {
 	const { aftermath } = useOutletContext();
@@ -49,20 +48,8 @@ function Index() {
 
 	const { data: itemGroups = [], pagination } = data || {};
 
-	const videoOne =
-		'https://drive.google.com/uc?export=download&id=1Ai0LmiTYACZLubpNrsV6GjN4prUC2Rf3';
-	const videoTwo =
-		'https://drive.google.com/uc?export=download&id=1Ai0LmiTYACZLubpNrsV6GjN4prUC2Rf3';
-
-	useEffect(() => {
-		preloadVideo(videoOne)
-			.then(() => setIsVideoReady(true))
-			.catch(() => setIsVideoReady(false));
-
-		preloadVideo(videoTwo)
-			.then(() => setIsVideoReadyB(true))
-			.catch(() => setIsVideoReadyB(false));
-	}, []);
+	const videoOne = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
+	const videoTwo = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
 
 	const normalizeItems = (items) => {
 		const count = items.length;
@@ -149,7 +136,7 @@ function Index() {
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
 				<div className="w-full h-full relative">
-					{isVideoReady && (
+					<VideoWrapper $isLoading={!isVideoReady}>
 						<MyVideo
 							videoSrc={videoOne}
 							isPreloaded
@@ -159,8 +146,9 @@ function Index() {
 							scrubberDisplay={false}
 							timeDisplay={false}
 							useMuteOnly
+							loadingCallBack={setIsVideoReady}
 						/>
-					)}
+					</VideoWrapper>
 
 					{!isVideoReady && (
 						<div className="imageHolder">
@@ -261,17 +249,29 @@ function Index() {
 			<Promotion>
 				<div className="promo_video">
 					<div className="w-full h-full relative rounded-[inherit]">
-						<MyVideo
-							videoSrc={videoTwo}
-							isPreloaded
-							autoPlay
-							onStartNoSound
-							autoReplay
-							scrubberDisplay={false}
-							timeDisplay={false}
-							useMuteOnly
-							isLoading={!isVideoReadyB}
-						/>
+						<VideoWrapper $isLoading={!isVideoReadyB}>
+							<MyVideo
+								videoSrc={videoTwo}
+								isPreloaded
+								autoPlay
+								onStartNoSound
+								autoReplay
+								scrubberDisplay={false}
+								timeDisplay={false}
+								useMuteOnly
+								loadingCallBack={setIsVideoReadyB}
+							/>
+						</VideoWrapper>
+
+						{!isVideoReadyB && (
+							<Skeleton
+								height="100%"
+								width="100%"
+								className="video_loader"
+								$color1="var(--skeleton-background1)"
+								$color2="var(--skeleton-background2)"
+							/>
+						)}
 					</div>
 				</div>
 

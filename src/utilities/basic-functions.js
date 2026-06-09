@@ -340,51 +340,6 @@ export const buildShopItemFormData = (values) => {
 	return formData;
 };
 
-// export const preloadVideo = (src) => {
-// 	return new Promise((resolve, reject) => {
-// 		const video = document.createElement('video');
-
-// 		video.src = src;
-// 		video.preload = 'auto';
-
-// 		video.oncanplaythrough = () => resolve(true);
-// 		video.onerror = reject;
-
-// 		video.load();
-// 	});
-// };
-
-export const preloadVideo = (src) => {
-	return new Promise((resolve, reject) => {
-		const video = document.createElement('video');
-
-		video.src = src;
-		video.preload = 'auto';
-		video.muted = true; // important for mobile autoplay preload
-		video.playsInline = true;
-
-		const onLoaded = () => {
-			resolve(true);
-			cleanup();
-		};
-
-		const onError = (err) => {
-			reject(err);
-			cleanup();
-		};
-
-		const cleanup = () => {
-			video.removeEventListener('canplay', onLoaded);
-			video.removeEventListener('error', onError);
-		};
-
-		video.addEventListener('canplay', onLoaded);
-		video.addEventListener('error', onError);
-
-		video.load();
-	});
-};
-
 export const getAttrKey = (a) => {
 	if (!a?.Attribute) return null;
 
