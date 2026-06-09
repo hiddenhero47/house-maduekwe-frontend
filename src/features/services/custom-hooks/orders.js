@@ -12,6 +12,7 @@ const useGetMyOrdersQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -25,6 +26,7 @@ const useGetOrdersQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -38,6 +40,7 @@ const useGetOrderByIdQuery = (id) => {
 			}),
 		enabled: !!id,
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

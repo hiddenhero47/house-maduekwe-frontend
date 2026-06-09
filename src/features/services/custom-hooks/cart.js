@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 // Get cart
 const useGetCartQuery = () => {
+	const queryClient = useQueryClient();
 	return useQuery({
 		queryKey: ['cart'],
 		queryFn: () =>
@@ -12,6 +13,26 @@ const useGetCartQuery = () => {
 				method: 'GET',
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
+		onSuccess: (data) => {
+			const { itemList: items = [] } = data || {};
+			const count = items?.length || 0;
+			queryClient.setQueryData(['cart-count'], count);
+		}
+	});
+};
+
+// Get cart count
+const useGetCartCountQuery = () => {
+	return useQuery({
+		queryKey: ['cart-count'],
+		queryFn: () =>
+			axiosCall({
+				url: '/api/cart/count',
+				method: 'GET',
+			}),
+		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 
@@ -29,6 +50,7 @@ const useAddToCartMutation = () => {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
+			queryClient.invalidateQueries({ queryKey: ['cart-count'] });
 			toast.success('🛒 Item added to cart');
 		},
 	});
@@ -48,6 +70,7 @@ const useRemoveFromCartMutation = () => {
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
+			queryClient.invalidateQueries({ queryKey: ['cart-count'] });
 			toast.success('Item removed from cart');
 		},
 	});
@@ -57,6 +80,7 @@ export { useGetCartQuery, useAddToCartMutation, useRemoveFromCartMutation };
 
 const CartServices = {
 	get: useGetCartQuery,
+	getCount: useGetCartCountQuery,
 	add: useAddToCartMutation,
 	remove: useRemoveFromCartMutation,
 };

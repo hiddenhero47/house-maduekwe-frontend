@@ -27,7 +27,7 @@ function Intro({onstart, onend}) {
 			</svg>
 			<div id="introContainer">
 				<div id="introBox">
-					<VectorIcon width="90%" height="90%" vector={AppLogo} />
+					<VectorIcon width="80%" height="80%" vector={AppLogo} />
 				</div>
 				<div id="intrText" className="">
 					<span className="first">HOUSE</span><span className="second">MADUEKWE</span>

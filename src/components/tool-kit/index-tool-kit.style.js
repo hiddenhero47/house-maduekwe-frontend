@@ -76,6 +76,11 @@ export const MenuDialog = styled.dialog.withConfig({
 		display: flex; /* 👈 important for exit animation */
 	}
 
+	@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+		(-webkit-appearance: none) {
+		min-height: 100px;
+	}
+
 	.wrapper {
 		flex: 1;
 		width: 100%;

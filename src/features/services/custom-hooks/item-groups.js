@@ -12,6 +12,7 @@ const useGetItemGroupsQuery = (params = {}) => {
 				params,
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

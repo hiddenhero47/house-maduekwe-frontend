@@ -1,21 +1,21 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const CustomSelectContainer = styled.div`
-  width: fit-content;
-  max-width: 200px;
+	width: fit-content;
+	max-width: 200px;
 `;
 
 export const CustomSelectValue = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s;
-  gap: 5px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	box-sizing: border-box;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.2s;
+	gap: 5px;
 
-  .arrow {
+	.arrow {
 		transition: all 0.4s;
 		cursor: pointer;
 		pointer-events: none;
@@ -44,6 +44,18 @@ export const MenuDialog = styled.dialog.withConfig({
 	transition: all 0.4s;
 	color: ${({ theme }) => theme?.form.menuText};
 
+	@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+		(-webkit-appearance: none) {
+		min-height: 200px;
+		&::backdrop {
+			display: none !important;
+			background-color: transparent !important;
+			background: transparent !important;
+			pointer-events: none !important;
+			opacity: 0 !important;
+		}
+	}
+
 	.wrapper {
 		flex: 1;
 		width: 100%;
@@ -64,102 +76,102 @@ export const MenuDialog = styled.dialog.withConfig({
 `;
 
 export const Option = styled.div`
-  width: 97%;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-family: Outfit;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 23px;
-  letter-spacing: 0em;
-  color: ${(props) =>
-    props.selected
-      ? (theme) => theme?.formInput?.optionHoverTx
-      : (theme) => theme?.formInput?.menuTx};
-  padding: 3px 10px;
-  gap: 5px;
-  background: ${(props) =>
-    props.selected
-      ? (theme) => theme?.formInput?.optionHoverBg
-      : "transparent"};
+	width: 97%;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-family: Outfit;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 23px;
+	letter-spacing: 0em;
+	color: ${(props) =>
+		props.selected
+			? (theme) => theme?.formInput?.optionHoverTx
+			: (theme) => theme?.formInput?.menuTx};
+	padding: 3px 10px;
+	gap: 5px;
+	background: ${(props) =>
+		props.selected
+			? (theme) => theme?.formInput?.optionHoverBg
+			: 'transparent'};
 
-  &:hover {
-    background: ${({ theme }) => theme?.formInput?.optionHoverBg};
-    color: ${({ theme }) => theme?.formInput?.optionHoverTx};
-  }
+	&:hover {
+		background: ${({ theme }) => theme?.formInput?.optionHoverBg};
+		color: ${({ theme }) => theme?.formInput?.optionHoverTx};
+	}
 
-  .imageContainer {
-    height: 20px;
-    width: 20px;
-  }
+	.imageContainer {
+		height: 20px;
+		width: 20px;
+	}
 `;
 
 export const ImageHolder = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
 
-  img {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    object-fit: cover;
-  }
+	img {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		object-fit: cover;
+	}
 `;
 
 export const SearchBox = styled.div`
-  width: 95%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme?.formInput?.borderColor};
-  transition: border-color 0.1s;
-  padding: 7px 12px;
-  margin-bottom: 8px;
+	width: 95%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 5px;
+	border: 1px solid ${({ theme }) => theme?.formInput?.borderColor};
+	transition: border-color 0.1s;
+	padding: 7px 12px;
+	margin-bottom: 8px;
 
-  &:focus-within {
-    border-color: ${({ theme }) => theme?.formInput?.borderColor};
-  }
+	&:focus-within {
+		border-color: ${({ theme }) => theme?.formInput?.borderColor};
+	}
 
-  button {
-    color: ${({ theme }) => theme?.formInput?.placeholder};
-    padding: 0;
-    border: 0 solid transparent;
-    background-color: transparent;
-  }
+	button {
+		color: ${({ theme }) => theme?.formInput?.placeholder};
+		padding: 0;
+		border: 0 solid transparent;
+		background-color: transparent;
+	}
 
-  .myInput {
-    padding: 0;
-    width: 93%;
-    background-color: transparent;
-    font-family: Outfit;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 12px;
-    letter-spacing: 0em;
-    color: ${({ theme }) => theme?.formInput?.color};
+	.myInput {
+		padding: 0;
+		width: 93%;
+		background-color: transparent;
+		font-family: Outfit;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 12px;
+		letter-spacing: 0em;
+		color: ${({ theme }) => theme?.formInput?.color};
 
-    &::placeholder {
-      color: ${({ theme }) => theme?.formInput?.placeholder};
-    }
+		&::placeholder {
+			color: ${({ theme }) => theme?.formInput?.placeholder};
+		}
 
-    &:focus {
-      outline: none;
-      border-color: transparent;
-    }
-  }
+		&:focus {
+			outline: none;
+			border-color: transparent;
+		}
+	}
 
-  @media (min-width: 745px) and (max-width: 860px) {
-    max-width: 100%;
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+	@media (min-width: 745px) and (max-width: 860px) {
+		max-width: 100%;
+		width: 95%;
+		margin-left: auto;
+		margin-right: auto;
+	}
 `;

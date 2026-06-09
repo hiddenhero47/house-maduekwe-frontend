@@ -31,7 +31,7 @@ function Order() {
 				<i>
 					<BsBoxSeam />
 				</i>
-				User Address
+				User Orders
 			</h3>
 
 			<TableWrapper>

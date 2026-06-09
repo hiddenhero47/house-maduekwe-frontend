@@ -64,6 +64,25 @@ function CountryCodeSelect({
 		return options;
 	};
 
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const handleClick = (e) => {
+			const clickedInsideBody = bodyRef.current?.contains(e.target);
+			const clickedInsideMenu = menuRef.current?.contains(e.target);
+
+			if (!clickedInsideBody && !clickedInsideMenu) {
+				setIsOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClick);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+		};
+	}, [isOpen]);
+
 	return (
 		<CustomSelectContainer tabIndex={0} onBlur={handleBlur} id={id}>
 			<CustomSelectValue

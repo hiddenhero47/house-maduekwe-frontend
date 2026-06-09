@@ -12,6 +12,7 @@ const useGetAddressesQuery = () => {
 				method: 'GET',
 			}),
 		refetchOnWindowFocus: false,
+		retry: false,
 	});
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	CustomSelectContainer,
 	CustomSelectValue,
@@ -61,6 +61,25 @@ const CustomSelect = ({
 			onBlur(name ?? id);
 		}
 	};
+
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const handleClick = (e) => {
+			const clickedInsideBody = bodyRef.current?.contains(e.target);
+			const clickedInsideMenu = menuRef.current?.contains(e.target);
+
+			if (!clickedInsideBody && !clickedInsideMenu) {
+				setIsOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClick);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+		};
+	}, [isOpen]);
 
 	return (
 		<>
