@@ -1,4 +1,4 @@
-import styled, {keyframes, css} from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const LayoutWrapper = styled.div`
 	width: 100%;
@@ -121,7 +121,7 @@ export const ToolBar = styled.button`
 		$transitionY ? 'translateY(0)' : 'translateY(calc(-50% + 20px))'};
 	font-size: 20px;
 	padding: 14px;
-	background-color: ${({theme}) => theme?.intro.logo};
+	background-color: ${({ theme }) => theme?.intro.logo};
 	color: #ffff;
 	border-radius: 9999px;
 
@@ -146,12 +146,58 @@ const bounce = keyframes`
 `;
 
 export const CartBtn = styled.button`
-  ${({ $isLoading }) =>
-    $isLoading &&
-    css`
-      i svg {
-        animation: ${bounce} 0.6s ease-in-out infinite;
-        transform-origin: center;
-      }
-    `}
+	${({ $isLoading }) =>
+		$isLoading &&
+		css`
+			i svg {
+				animation: ${bounce} 0.6s ease-in-out infinite;
+				transform-origin: center;
+			}
+		`}
+	position: relative;
+
+	.cart_badge {
+		position: absolute;
+		top: -8px;
+		right: -10px;
+		min-width: 18px;
+		height: 18px;
+		padding-inline: 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 11px;
+		font-weight: 700;
+		border-radius: 999px;
+		background: ${({ theme }) => theme.intro.logo};
+		color: white;
+		box-shadow: 0 0 0 3px ${({ theme }) => theme.mainBody.container};
+		animation: badgePop 0.25s ease;
+	}
+
+	@keyframes badgePop {
+		0% {
+			transform: scale(0.5);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	${({ $pulse, theme }) =>
+		$pulse &&
+		css`
+			.cart_badge {
+				animation: pulseGlow 0.8s ease;
+			}
+
+			@keyframes pulseGlow {
+				0% {
+					box-shadow: 0 0 0 0 ${theme.intro.logo}66;
+				}
+				100% {
+					box-shadow: 0 0 0 14px transparent;
+				}
+			}
+		`}
 `;
