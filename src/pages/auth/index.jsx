@@ -31,10 +31,10 @@ function Index() {
 					>
 						<div id="title">
 							<i>
-								<VectorIcon width="50px" height="50px" vector={AppLogo} />
+								<VectorIcon width="35px" height="35px" vector={AppLogo} />
 							</i>
 							<div>
-								House <span>Maduekwe</span>
+								HOUSE <span>MADUEKWE</span>
 							</div>
 						</div>
 					</div>
@@ -63,7 +63,7 @@ function Index() {
 
 			<div id="footer">
 				<div>
-					<span className="text-[12px] mx-[auto]">© 2025 House Maduekwe</span>
+					<span className="text-[12px] mx-[auto]">© 2026 House Maduekwe</span>
 				</div>
 
 				<div>

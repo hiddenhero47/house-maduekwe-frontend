@@ -7,6 +7,7 @@ import {
 	AppFooter,
 	LoaderWrapper,
 	Loader,
+	VideoWrapper,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
 import postImage from '../../assets/images/image.avif';
@@ -31,7 +32,6 @@ import bannerImage from '../../assets/images/brand-name.svg';
 import GroupDisplay from './elements/group-display/group-display';
 import { useNavigate } from 'react-router-dom';
 import MyVideo from './elements/video-display/video';
-import { preloadVideo } from '../../utilities/basic-functions';
 import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
 
 function Index() {
@@ -48,15 +48,8 @@ function Index() {
 
 	const { data: itemGroups = [], pagination } = data || {};
 
-	const videoOne = 'https://vjs.zencdn.net/v/oceans.mp4';
-	const videoTwo = 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4';
-
-	useEffect(() => {
-		Promise.all([preloadVideo(videoOne), preloadVideo(videoTwo)]).then(() => {
-			setIsVideoReady(true);
-			setIsVideoReadyB(true);
-		});
-	}, []);
+	const videoOne = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
+	const videoTwo = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
 
 	const normalizeItems = (items) => {
 		const count = items.length;
@@ -143,7 +136,7 @@ function Index() {
 		<Container className="Y_scroll_style">
 			<div id="myVideoPlayer">
 				<div className="w-full h-full relative">
-					{isVideoReady && (
+					<VideoWrapper $isLoading={!isVideoReady}>
 						<MyVideo
 							videoSrc={videoOne}
 							isPreloaded
@@ -153,8 +146,9 @@ function Index() {
 							scrubberDisplay={false}
 							timeDisplay={false}
 							useMuteOnly
+							loadingCallBack={setIsVideoReady}
 						/>
-					)}
+					</VideoWrapper>
 
 					{!isVideoReady && (
 						<div className="imageHolder">
@@ -176,38 +170,41 @@ function Index() {
 				{aftermath && (
 					<div id="accessories" className="-intro-x">
 						<div id="introBox">
-							<VectorIcon width="100%" height="100%" vector={AppLogo} />
+							<VectorIcon width="80%" height="80%" vector={AppLogo} />
 						</div>
 					</div>
 				)}
 			</div>
 
-			<IntroSection className="intro-y">
-				<div className="flex flex-col gap-[10px]">
-					<div className="flex flex-col gap-[5px] text-[24px] font-semibold">
-						<p className="text-[var(--mainBody-sbText)]">
-							Step Into House Maduekwe
-						</p>
-						<p className="text-[var(--mainBody-text)]">
-							Where Fashion Dreams Unfold.
-						</p>
-					</div>
-					<Link to="/authentication" id="authBtn">
-						Step In
-					</Link>
+			<IntroSection>
+				<div className="floating_square" />
+
+				<div className="background_shape_1" />
+
+				<div className="intro_content">
+					<span className="eyebrow">ATELIER EST. MMXII</span>
+
+					<h1>
+						Crafted Elegance.
+						<br />
+						Tailored Identity.
+					</h1>
+
+					<p>
+						Discover fashion that blends artistry, craftsmanship, and modern
+						sophistication.
+					</p>
 				</div>
 
-				<Link to="/products" id="galleryBtn">
-					<div>
-						<span className="text-[var(--mainBody-sbText)]">
-							Explore more option
-						</span>{' '}
-						<span className="text-[var(--intro-logo)]">in our gallery</span>
-					</div>
-					<i className="text-[var(--mainBody-sbText)]">
-						<IoIosArrowForward />
-					</i>
-				</Link>
+				<div className="intro_actions">
+					<Link to="/products" id="galleryBtn">
+						Explore Collection
+					</Link>
+
+					<Link to="/authentication" id="authBtn">
+						Sign In
+					</Link>
+				</div>
 			</IntroSection>
 
 			{isPending ? (
@@ -243,22 +240,60 @@ function Index() {
 				))
 			)}
 
-			<Promotion onClick={() => navigate('/products/')}>
-				<div className="w-full h-full relative rounded-[inherit]">
-					{/* <div className="imageHolder rounded-[inherit]">
-						<img src={postImage} alt="No Image" />
-					</div> */}
-					<MyVideo
-						videoSrc={videoTwo}
-						isPreloaded
-						autoPlay
-						onStartNoSound
-						autoReplay
-						scrubberDisplay={false}
-						timeDisplay={false}
-						useMuteOnly
-						isLoading={!isVideoReadyB}
-					/>
+			<div className="promotion_header">
+				<span>Featured Collection</span>
+
+				<h2>The Art Of Modern Tailoring</h2>
+			</div>
+
+			<Promotion>
+				<div className="promo_video">
+					<div className="w-full h-full relative rounded-[inherit]">
+						<VideoWrapper $isLoading={!isVideoReadyB}>
+							<MyVideo
+								videoSrc={videoTwo}
+								isPreloaded
+								autoPlay
+								onStartNoSound
+								autoReplay
+								scrubberDisplay={false}
+								timeDisplay={false}
+								useMuteOnly
+								loadingCallBack={setIsVideoReadyB}
+							/>
+						</VideoWrapper>
+
+						{!isVideoReadyB && (
+							<Skeleton
+								height="100%"
+								width="100%"
+								className="video_loader"
+								$color1="var(--skeleton-background1)"
+								$color2="var(--skeleton-background2)"
+							/>
+						)}
+					</div>
+				</div>
+
+				<div className="promo_hero" onClick={() => navigate('/products')}>
+					<div className="overlay" />
+
+					<div className="content">
+						<span className="tag">New Collection</span>
+
+						<h2>
+							Crafted To
+							<br />
+							Define Presence
+						</h2>
+
+						<p>
+							Discover bespoke pieces tailored for those who value elegance,
+							confidence, and timeless style.
+						</p>
+
+						<button>Explore Collection</button>
+					</div>
 				</div>
 			</Promotion>
 
@@ -339,7 +374,7 @@ function Index() {
 					</div>
 
 					<p className="font-sans">
-						© 2025 House Maduekwe, Inc. All rights reserved.
+						© 2026 House Maduekwe, Inc. All rights reserved.
 					</p>
 				</div>
 			</AppFooter>

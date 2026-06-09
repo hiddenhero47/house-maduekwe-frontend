@@ -149,10 +149,22 @@ export const MenuDialog = styled.dialog.withConfig({
 	display: ${({ $open }) => ($open ? 'flex' : 'none')};
 	flex-direction: column;
 	align-items: center;
-	z-index: 1;
+	z-index: 2;
 	background-color: ${({ theme }) => theme?.form.menuBg};
 	transition: all 0.4s;
 	color: ${({ theme }) => theme?.form.menuText};
+
+	@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+		(-webkit-appearance: none) {
+		min-height: 200px;
+		&::backdrop {
+			display: none !important;
+			background-color: transparent !important;
+			background: transparent !important;
+			pointer-events: none !important;
+			opacity: 0 !important;
+		}
+	}
 
 	.wrapper {
 		flex: 1;

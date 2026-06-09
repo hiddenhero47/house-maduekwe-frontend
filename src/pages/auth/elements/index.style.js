@@ -35,9 +35,10 @@ export const LoginWrapper = styled.div`
 		} */
 
 		div {
-			font-size: clamp(8px, 5vw, 11px);
-			font-family: ZeroG;
-			transform: translateX(-8px);
+			font-size: clamp(8px, 4vw, 16px);
+			font-family: Audiowide;
+			font-weight: 900;
+			line-height: 10px;
 			color: ${({ theme }) => theme?.mainBody.text};
 
 			span {

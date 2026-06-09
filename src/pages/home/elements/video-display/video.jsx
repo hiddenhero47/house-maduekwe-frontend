@@ -25,6 +25,7 @@ function MyVideo({
 	onStartNoSound = true,
 	isLoading = false,
 	useMuteOnly = true,
+	loadingCallBack,
 }) {
 	const videoRef = useRef(null);
 	const [showPlayer, setShowPlayer] = useState(isPreloaded);
@@ -50,8 +51,16 @@ function MyVideo({
 		};
 	}, []);
 
+	const handleLoaded = async () => {
+		try {
+			await videoRef.current?.play();
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	return (
-		<VideoContainer className='video_wrapper'>
+		<VideoContainer className="video_wrapper">
 			{isLoading ? (
 				<Skeleton
 					height="100%"
@@ -71,12 +80,17 @@ function MyVideo({
 						ref={videoRef}
 						slot="media"
 						src={videoSrc}
+						preload="auto"
+						fetchpriority="high"
 						autoPlay={autoPlay}
 						muted={onStartNoSound}
 						loop={autoReplay}
 						controls={false}
 						poster={!isPreloaded ? placeholder : undefined}
 						className="video_el"
+						onCanPlay={() => loadingCallBack?.(true)}
+						onError={() => loadingCallBack?.(false)}
+						onLoadedData={handleLoaded}
 						playsInline
 					/>
 

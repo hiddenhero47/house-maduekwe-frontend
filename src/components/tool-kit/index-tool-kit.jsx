@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Container, MenuDialog } from './index-tool-kit.style';
 
 function ToolKit({
@@ -16,6 +16,8 @@ function ToolKit({
 }) {
 	const [open, setOpen] = useState(false);
 	const [coords, setCoords] = useState({ top: 0, left: 0, right: 0 });
+	const menuRef = useRef(null);
+	const bodyRef = useRef(null);
 
 	const toggle = (e) => {
 		setOpen((prev) => !prev);
@@ -36,8 +38,27 @@ function ToolKit({
 		}
 	};
 
+	useEffect(() => {
+		if (!open) return;
+
+		const handleClick = (e) => {
+			const clickedInsideBody = bodyRef.current?.contains(e.target);
+			const clickedInsideMenu = menuRef.current?.contains(e.target);
+
+			if (!clickedInsideBody && !clickedInsideMenu) {
+				setOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClick);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+		};
+	}, [open]);
+
 	return (
-		<Container className={warperClass} $useCoords={useCoords}>
+		<Container ref={bodyRef} className={warperClass} $useCoords={useCoords}>
 			{/* Trigger */}
 			<button onClick={toggle} id={btnId} className={btnClass}>
 				{icon && <i>{icon}</i>}
@@ -46,6 +67,7 @@ function ToolKit({
 
 			{/* Dropdown Panel */}
 			<MenuDialog
+				ref={menuRef}
 				id={menuId}
 				className={menuClass}
 				open={open}

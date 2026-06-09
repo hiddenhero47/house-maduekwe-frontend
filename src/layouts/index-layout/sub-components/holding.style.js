@@ -166,7 +166,7 @@ export const Footer = styled.div`
 
 export const AddToCartBtn = styled.button`
 	width: 100%;
-	padding-block: 12px;
+	padding-block: 14px;
 	/* padding-inline: 10px; */
 	display: flex;
 	align-items: center;

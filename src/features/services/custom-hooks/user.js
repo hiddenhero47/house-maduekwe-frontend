@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken, updateUser } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../store/slice/auth';
+import { setTheme } from '../../../store/slice/app-theme';
+import { getFromLocalStorage } from '../../../utilities/basic-functions';
 
 const useGetUserQuery = () => {
 	const dispatch = useDispatch();
@@ -37,8 +40,10 @@ const useRegisterUserMutation = () => {
 			const { token, ...others } = data;
 			dispatch(setToken(token));
 			dispatch(setUser({ ...others }));
-			navigate('/');
-			toast.success('You have been registered');
+
+			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
+			navigate(lastRoute);
+			toast.success('welcome in!');
 		},
 	});
 };
@@ -58,8 +63,10 @@ const useLoginUserMutation = () => {
 			const { token, ...others } = data;
 			dispatch(setToken(token));
 			dispatch(setUser({ ...others }));
-			navigate('/');
-			toast.success('Log in successful');
+
+			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
+			navigate(lastRoute);
+			toast.success('welcome in!');
 		},
 	});
 };
@@ -133,8 +140,10 @@ const useGoogleLoginMutation = () => {
 			const { token, ...others } = data;
 			dispatch(setToken(token));
 			dispatch(setUser({ ...others }));
-			navigate('/');
-			toast.success('Login successful');
+
+			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
+			navigate(lastRoute);
+			toast.success('welcome in!');
 		},
 	});
 };
@@ -154,8 +163,10 @@ const useAppleLoginMutation = () => {
 			const { token, ...others } = data;
 			dispatch(setToken(token));
 			dispatch(setUser({ ...others }));
-			navigate('/');
-			toast.success('Login successful');
+
+			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
+			navigate(lastRoute);
+			toast.success('welcome in!');
 		},
 	});
 };
@@ -232,6 +243,69 @@ const useRegisterAdminMutation = () => {
 	});
 };
 
+const useRequestResetMutation = () => {
+	return useMutation({
+		mutationFn: (email) =>
+			axiosCall({
+				url: '/api/users/request-reset',
+				method: 'POST',
+				data: { email },
+			}),
+
+		onSuccess: (data) => {
+			toast.success(
+				data?.message ||
+					'If an account exists with that email, a reset link has been sent.'
+			);
+		},
+	});
+};
+
+const useResetPasswordMutation = () => {
+	const navigate = useNavigate();
+
+	return useMutation({
+		mutationFn: ({ token, password }) =>
+			axiosCall({
+				url: '/api/users/reset-password',
+				method: 'POST',
+				data: {
+					token,
+					password,
+				},
+			}),
+
+		onSuccess: (data) => {
+			toast.success(data?.message || 'Password reset successfully');
+			navigate('/authentication/sign-in');
+		},
+	});
+};
+
+const useLogoutAllMutation = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	// const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: () =>
+			axiosCall({
+				url: '/api/users/invalidate',
+				method: 'PATCH',
+			}),
+
+		onSuccess: (data) => {
+			const appThemes = getFromLocalStorage('appThemes') || 'light';
+			dispatch(logout());
+			localStorage.clear();
+			dispatch(setTheme(appThemes));
+			// queryClient.clear();
+			navigate('/authentication/sign-in');
+			toast.success(data?.message || 'Logged out from all devices');
+		},
+	});
+};
+
 export { useGetUserQuery, useRegisterUserMutation, useLoginUserMutation };
 
 const UserServices = {
@@ -247,6 +321,8 @@ const UserServices = {
 	getUsers: useGetUsersQuery,
 	changeUserRole: useChangeUserRoleMutation,
 	registerAdmin: useRegisterAdminMutation,
+	requestReset: useRequestResetMutation,
+	resetPassword: useResetPasswordMutation,
 };
 
 export default UserServices;

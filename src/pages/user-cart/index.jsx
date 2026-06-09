@@ -390,8 +390,8 @@ function Index() {
 									Subtotal
 								</p>
 								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									{getCurrencySymbol(checkoutData?.payment?.currency) || '$'}{' '}
-									{checkoutData?.order?.totalAmount || 'Nill'}
+									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+									{checkoutData?.order?.totalAmount || ''}
 								</p>
 							</div>
 
@@ -400,16 +400,16 @@ function Index() {
 									Tax estimate
 								</p>
 								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									{getCurrencySymbol(checkoutData?.payment?.currency) || '$'}{' '}
-									{checkoutData?.order?.totalVat || 'Nill'}
+									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+									{checkoutData?.order?.totalVat || ''}
 								</p>
 							</div>
 
 							<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
 								<p>Order total</p>
 								<p>
-									{getCurrencySymbol(checkoutData?.payment?.currency) || '$'}{' '}
-									{checkoutData?.payment?.amountToPay || 'Nill'}
+									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+									{checkoutData?.payment?.amountToPay || ''}
 								</p>
 							</div>
 

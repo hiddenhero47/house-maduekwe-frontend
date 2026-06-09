@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
@@ -32,6 +32,7 @@ function DashboardLayout() {
 	const [menuIsActive, setMenuIsActive] = useState(true);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const location = useLocation();
 
 	if (typeof document !== 'undefined') {
 		document.body?.setAttribute('data-theme', theme);
@@ -84,6 +85,17 @@ function DashboardLayout() {
 		};
 		return roleDisplays[role] ?? 'unauthorized';
 	};
+
+	useEffect(() => {
+		const path = location.pathname;
+		if (
+			!path.startsWith('/authentication') &&
+			!path.startsWith('/reset-password')
+		) {
+			sessionStorage.setItem('lastRoute', path);
+		}
+	}, [location.pathname]);
+
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
@@ -135,7 +147,7 @@ function DashboardLayout() {
 									</div>
 									<div className="flex flex-col ml-[8px] font-sans">
 										<span className="text-[13px] text-[var(--mainBody-text)]">
-											{user?.name || "Error"}
+											{user?.name || 'Error'}
 										</span>
 										<span className="text-[11px] text-[var(--mainBody-kitTextDark)]">
 											{showRole(user)}

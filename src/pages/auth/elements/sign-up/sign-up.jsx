@@ -17,6 +17,7 @@ import { setTwoFaRetry } from '../../../../components/modal-assets/2fa-modal/ret
 import { GoogleLogin } from '@react-oauth/google';
 import AppleSignin from 'react-apple-signin-auth';
 import { toast } from 'react-toastify';
+import { GoogleBtn } from '../google-btn';
 
 function SignUp() {
 	const dispatch = useDispatch();
@@ -97,15 +98,6 @@ function SignUp() {
 			identityToken: response.authorization.id_token,
 		});
 	};
-
-	const GoogleBtn = React.memo(() => (
-		<GoogleLogin
-			onSuccess={(credentialResponse) => loginWithGoogle(credentialResponse)}
-			onError={() => {
-				toast.error('Google Login Failed');
-			}}
-		/>
-	));
 
 	return (
 		<Wrapper>
@@ -193,7 +185,7 @@ function SignUp() {
 					<FcGoogle />
 					Continue with Google
 					<div className="google_overlay">
-						<GoogleBtn />
+						<GoogleBtn loginWithGoogle={loginWithGoogle} />
 					</div>
 				</button>
 
