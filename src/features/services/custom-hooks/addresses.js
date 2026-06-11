@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
-import { toast } from 'react-toastify';
+import { toast } from '../../../layouts/toast/toast-handler';
 
 // Get all addresses
 const useGetAddressesQuery = () => {

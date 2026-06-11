@@ -34,7 +34,7 @@ import { getCurrencySymbol } from '../../utilities/basic-functions';
 import { CgRadioChecked } from 'react-icons/cg';
 import { CgRadioCheck } from 'react-icons/cg';
 import { IoIosInformationCircle } from 'react-icons/io';
-import { toast } from 'react-toastify';
+import { toast } from '../../layouts/toast/toast-handler';
 import { FaLocationDot } from 'react-icons/fa6';
 import CreateAddress from '../../components/modal-assets/address/create-address';
 

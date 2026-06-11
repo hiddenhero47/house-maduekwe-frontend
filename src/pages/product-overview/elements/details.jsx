@@ -19,7 +19,7 @@ import { IoIosAdd } from 'react-icons/io';
 import { RiSubtractLine } from 'react-icons/ri';
 import { ensureUser } from '../../../store/slice/auth';
 import CartServices from '../../../features/services/custom-hooks/cart';
-import { toast } from 'react-toastify';
+import { toast } from '../../../layouts/toast/toast-handler';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 import {
 	groupAttributesByType,

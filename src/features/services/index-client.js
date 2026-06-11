@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { store } from '../../store/index';
-import { toast } from 'react-toastify';
+import { toast } from '../../layouts/toast/toast-handler';
 
 // Get user details
 const userDetails = () => {

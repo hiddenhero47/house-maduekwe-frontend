@@ -16,7 +16,7 @@ import { handleOpen } from '../../../../store/slice/2fa-handler';
 import { setTwoFaRetry } from '../../../../components/modal-assets/2fa-modal/retry-manager';
 import { GoogleLogin } from '@react-oauth/google';
 import AppleSignin from 'react-apple-signin-auth';
-import { toast } from 'react-toastify';
+import { toast } from '../../../../layouts/toast/toast-handler';
 import { GoogleBtn } from '../google-btn';
 
 function SignUp() {

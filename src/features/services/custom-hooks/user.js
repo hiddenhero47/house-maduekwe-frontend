@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
-import { toast } from 'react-toastify';
+import { toast } from '../../../layouts/toast/toast-handler';
 import { useDispatch } from 'react-redux';
 import { setUser, setToken, updateUser } from '../../../store/slice/auth';
 import { useNavigate } from 'react-router-dom';

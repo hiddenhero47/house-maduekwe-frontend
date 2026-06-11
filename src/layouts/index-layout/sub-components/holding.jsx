@@ -15,7 +15,7 @@ import { attributeType } from '../../../utilities/app-const';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from '../../toast/toast-handler';
 
 function Holding({ close }) {
 	const navigate = useNavigate();
