@@ -6,7 +6,7 @@ import CustomInput from '../../components/form-components/input/custom-input';
 import CustomPassword from '../../components/form-components/input/custom-password';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 import UserServices from '../../features/services/custom-hooks/user';
-import { toast } from 'react-toastify';
+import { toast } from '../../layouts/toast/toast-handler';
 import { PageWrapper, ResetCard, SubmitBtn } from './elements/index.style';
 
 function ResetPassword() {

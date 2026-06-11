@@ -6,7 +6,7 @@ import UserServices from '../../../../../features/services/custom-hooks/user';
 import { userPasswordValidationSchema } from '../../../../../features/validations/user-validation';
 import BubbleSlide from '../../../../../components/loaders/bubbles/BubbleSlide';
 import { FiLock } from 'react-icons/fi';
-import { toast } from 'react-toastify';
+import { toast } from '../../../../../layouts/toast/toast-handler';
 
 function ChangePassword() {
 	const { mutate: update, isPending } = UserServices.updateProfile();
