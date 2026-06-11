@@ -25,7 +25,7 @@ import {
 	groupedVariantsChecker,
 	attributesError,
 } from '../../utilities/basic-functions';
-import { toast } from 'react-toastify';
+import { toast } from '../../layouts/toast/toast-handler';
 
 function ShopItem({
 	useBackground = true,

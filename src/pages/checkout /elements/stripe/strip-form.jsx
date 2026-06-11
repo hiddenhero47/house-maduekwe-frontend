@@ -5,7 +5,7 @@ import {
 	useElements,
 } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from '../../../../layouts/toast/toast-handler';
 
 function StripePaymentForm({
 	isPaying,

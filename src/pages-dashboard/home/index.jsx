@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Container } from './elements/index.style';
-import { toast } from '../../layouts/toast/toastify-handler';
+import { toast } from '../../layouts/toast/toast-handler';
 
 function Index() {
 	return (

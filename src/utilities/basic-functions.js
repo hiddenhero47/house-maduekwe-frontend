@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from '../layouts/toast/toast-handler';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import moment from 'moment';
 import { ItemStatusType } from './app-const';

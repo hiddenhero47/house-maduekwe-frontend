@@ -3,9 +3,8 @@ import { IoClose } from 'react-icons/io5';
 import {
 	HiCheckCircle,
 	HiExclamationCircle,
-	HiInformationCircle,
 } from 'react-icons/hi';
-import { BiSolidInfoSquare } from "react-icons/bi";
+import { BiSolidInfoSquare } from 'react-icons/bi';
 import { HiExclamationTriangle } from 'react-icons/hi2';
 import { ToastWrapper, IconHolder, ProgressBar } from './custom-toast.style';
 import { ThemeProvider } from 'styled-components';
@@ -52,13 +51,15 @@ function CustomToast({
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ToastWrapper $color={item.color}>
-				<div className="flex items-center">
+				<div className="flex">
 					<IconHolder $color={item.color}>{item.icon}</IconHolder>
 
-					<div className="content">
-						<div className="title">{item.title} message</div>
+					<div className="flex flex-col">
+						<div className="content">
+							<div className="title font-sans">{item.title}</div>
 
-						<div className="message font-sans">{message}</div>
+							<div className="message font-sans">{message}</div>
+						</div>
 					</div>
 
 					{actionText && onAction && (
@@ -73,13 +74,13 @@ function CustomToast({
 						</button>
 					)}
 
-					<div className="progress_wrapper">
+					{/* <div className="progress_wrapper">
 						<ProgressBar
 							$color={item.color}
 							$duration={duration}
 							$paused={isPaused}
 						/>
-					</div>
+					</div> */}
 				</div>
 
 				<button className="close" onClick={closeToast}>
