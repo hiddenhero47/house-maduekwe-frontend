@@ -45,6 +45,27 @@ const GlobalStyleInjector = createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+  .custom-toast-wrapper {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    border: none !important;
+  }
+
+  .custom-toast-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .Toastify__toast {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    width: fit-content !important;
+	  max-width: none !important;
+  }
 `;
 
 export default GlobalStyleInjector;

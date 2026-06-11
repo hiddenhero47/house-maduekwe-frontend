@@ -81,7 +81,7 @@ function MyVideo({
 						slot="media"
 						src={videoSrc}
 						preload="auto"
-						fetchpriority="high"
+						fetchPriority="high"
 						autoPlay={autoPlay}
 						muted={onStartNoSound}
 						loop={autoReplay}

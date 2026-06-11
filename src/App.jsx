@@ -7,7 +7,7 @@ import GlobalStyleInjector from './global.style';
 import IndexLayout from './layouts/index-layout/index';
 import DashboardLayout from './layouts/admin-layout/index';
 import WrapperLayout from './layouts/wrapper-layout/index';
-import AppToast from './layouts/toast';
+import AppToast from './layouts/toast/index-toast';
 //pages
 import Home from './pages/home';
 import AboutUs from './pages/about-us';
