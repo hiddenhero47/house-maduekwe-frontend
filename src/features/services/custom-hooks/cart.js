@@ -1,9 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from '../../../layouts/toast/toast-handler';
+import { useSelector } from 'react-redux';
 
 // Get cart
 const useGetCartQuery = () => {
+	const { user, token } = useSelector((state) => state.auth);
 	const queryClient = useQueryClient();
 	return useQuery({
 		queryKey: ['cart'],
@@ -12,18 +14,20 @@ const useGetCartQuery = () => {
 				url: '/api/cart',
 				method: 'GET',
 			}),
+		enabled: !!token || !!user?._id,
 		refetchOnWindowFocus: false,
 		retry: false,
 		onSuccess: (data) => {
 			const { itemList: items = [] } = data || {};
 			const count = items?.length || 0;
 			queryClient.setQueryData(['cart-count'], count);
-		}
+		},
 	});
 };
 
 // Get cart count
 const useGetCartCountQuery = () => {
+	const { user, token } = useSelector((state) => state.auth);
 	return useQuery({
 		queryKey: ['cart-count'],
 		queryFn: () =>
@@ -31,6 +35,7 @@ const useGetCartCountQuery = () => {
 				url: '/api/cart/count',
 				method: 'GET',
 			}),
+		enabled: !!token || !!user?._id,
 		refetchOnWindowFocus: false,
 		retry: false,
 	});

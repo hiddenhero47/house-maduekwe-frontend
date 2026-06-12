@@ -1,9 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from '../../../layouts/toast/toast-handler';
+import { useSelector } from 'react-redux';
 
 // Get all addresses
 const useGetAddressesQuery = () => {
+	const { user, token } = useSelector((state) => state.auth);
 	return useQuery({
 		queryKey: ['addresses'],
 		queryFn: () =>
@@ -11,6 +13,7 @@ const useGetAddressesQuery = () => {
 				url: '/api/addresses',
 				method: 'GET',
 			}),
+		enabled: !!token || !!user?._id,
 		refetchOnWindowFocus: false,
 		retry: false,
 	});

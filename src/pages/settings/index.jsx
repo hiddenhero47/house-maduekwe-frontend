@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Container,
 	SettingsWrapper,
@@ -13,6 +13,7 @@ import AccountSettings from './elements/account/account';
 import Address from './elements/address/address';
 import Order from './elements/order/order';
 import OrderPreview from './elements/preview-order/preview-order';
+import { useSelector } from 'react-redux';
 
 function Index() {
 	const settings = {
@@ -20,6 +21,8 @@ function Index() {
 		ADDRESS: 'address',
 		ORDERS: 'orders',
 	};
+
+	const { user, token } = useSelector((state) => state.auth);
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -42,6 +45,12 @@ function Index() {
 	};
 
 	const isActive = (value) => currentSettings === value;
+
+	useEffect(() => {
+		if (!token || !user?._id) {
+			navigate('/');
+		}
+	});
 
 	return (
 		<Container className="Y_scroll_style">
@@ -95,8 +104,7 @@ function Index() {
 							$active={isActive(settings.ORDERS)}
 							onClick={() => navigateTo(settings.ORDERS)}
 						>
-							
-							{orderId ? "Back To History" : "Order History"}
+							{orderId ? 'Back To History' : 'Order History'}
 						</NavBarBtn>
 					</div>
 				</Header>

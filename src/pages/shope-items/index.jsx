@@ -133,7 +133,7 @@ function Index() {
 		<Container className="Y_scroll_style">
 			<section
 				id="headerBox"
-				className="w-full mt-[30px] rounded-[8px] relative"
+				className="w-full mt-[15px] rounded-[8px] relative"
 			>
 				{theme.mode === 'dark' ? (
 					<ProductHeaderBgD width="100%" height="100%" />
