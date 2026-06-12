@@ -79,9 +79,22 @@ export const Container = styled.div`
 	}
 
 	#headerBox {
-		height: 50vh;
+		flex-shrink: 0;
+
+		@media (min-width: 1001px) {
+			height: 50vh;
+		}
+
+		@media (min-width: 601px) and (max-width: 1000px) {
+			aspect-ratio: 2.6 / 1;
+			height: max(44vh, calc(100vw / 2.6));
+			max-height: 50vh;
+		}
+
 		@media (max-width: 600px) {
-			height: 35vh;
+			aspect-ratio: 2.2 / 1;
+			height: max(31vh, calc(100vw / 2.2));
+			max-height: 50vh;
 		}
 	}
 `;
