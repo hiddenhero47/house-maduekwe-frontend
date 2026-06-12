@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Container,
 	SettingsWrapper,
@@ -46,11 +46,11 @@ function Index() {
 
 	const isActive = (value) => currentSettings === value;
 
-	(() => {
-		if (token || user?._id) {
+	useEffect(() => {
+		if (!token || !user?._id) {
 			navigate('/');
 		}
-	})();
+	});
 
 	return (
 		<Container className="Y_scroll_style">
