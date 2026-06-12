@@ -399,6 +399,14 @@ export const ShopItem = styled.div`
 			font-weight: 400;
 			color: ${({ theme }) => theme?.intro.logo};
 		}
+
+		@media (max-width: 500px) {
+			font-size: 13px;
+
+			span {
+				font-size: 11px;
+			}
+		}
 	}
 `;
 
@@ -483,8 +491,9 @@ export const Color = styled.div`
 		outline-offset 0.2s ease;
 
 	@media (max-width: 500px) {
-		width: 11px;
-		height: 11px;
+		width: 10px;
+		height: 10px;
+		outline-offset: -1.5px;
 	}
 `;
 
@@ -494,6 +503,10 @@ export const Size = styled.span`
 	font-family: Inter;
 	font-weight: 600;
 	color: ${({ theme }) => theme?.mainBody.text};
+
+	@media (max-width: 500px) {
+		font-size: 11px;
+	}
 `;
 
 export const GhostButton = styled.button`

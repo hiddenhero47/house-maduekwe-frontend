@@ -66,7 +66,7 @@ function DashboardLayout() {
 		setMenuIsActive(!menuIsActive);
 	};
 
-	(() => {
+	useEffect(() => {
 		dispatch(
 			ensureRole(
 				[roleType.ADMIN, roleType.SUPER_ADMIN], // ✅ allowed roles must be an array
@@ -74,7 +74,7 @@ function DashboardLayout() {
 				() => navigate('/')
 			)
 		);
-	})();
+	});
 
 	const showRole = (u) => {
 		const { role, email } = u;

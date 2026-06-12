@@ -41,13 +41,13 @@ import CreateAddress from '../../components/modal-assets/address/create-address'
 function Index() {
 	const navigate = useNavigate();
 
-	const { data, isPending } = CartServices.get();
+	const { data, isPending, isFetching } = CartServices.get();
 	const { itemList: cartItems = [] } = data || {};
 
 	const { mutate: removeFromCart, isPending: isRemoving } =
 		CartServices.remove();
 
-	const { data: addresses, isPending: IsLoadingAddr } =
+	const { data: addresses, isFetching: IsLoadingAddr } =
 		AddressServices.getAll();
 
 	const { mutate: confirmCheckout, isPending: isConfirming } =
@@ -205,9 +205,9 @@ function Index() {
 			<div className="flex flex-wrap gap-[10px] w-full">
 				<div id="cartItems">
 					<ul role="list">
-						<CartLoader isLoading={isPending} data={cartItems || []} />
+						<CartLoader isLoading={(isPending && isFetching)} data={cartItems || []} />
 						{cartItems &&
-							!isPending &&
+							(!isPending && !isFetching) &&
 							cartItems?.length > 0 &&
 							cartItems?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({
