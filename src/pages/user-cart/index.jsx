@@ -12,6 +12,9 @@ import {
 	CheckoutBtn,
 	Unavailable,
 	AddBtn,
+	HoldingItem,
+	HoldingActions,
+	CustomerName,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import { MdOutlineToggleOff } from 'react-icons/md';
@@ -37,9 +40,17 @@ import { IoIosInformationCircle } from 'react-icons/io';
 import { toast } from '../../layouts/toast/toast-handler';
 import { FaLocationDot } from 'react-icons/fa6';
 import CreateAddress from '../../components/modal-assets/address/create-address';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromHoldings } from '../../store/slice/holding';
+import CustomInput from '../../components/form-components/input/custom-input';
+import { openMenu } from '../../store/slice/holding';
 
 function Index() {
 	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
+
+	const { holdings } = useSelector((state) => state.holdings);
 
 	const { data, isPending, isFetching } = CartServices.get();
 	const { itemList: cartItems = [] } = data || {};
@@ -174,6 +185,10 @@ function Index() {
 		modalRef.current?.open();
 	};
 
+	const removeHolding = (tempId) => {
+		dispatch(removeFromHoldings(tempId));
+	};
+
 	return (
 		<Container
 			className="Y_scroll_style"
@@ -205,9 +220,13 @@ function Index() {
 			<div className="flex flex-wrap gap-[10px] w-full">
 				<div id="cartItems">
 					<ul role="list">
-						<CartLoader isLoading={(isPending && isFetching)} data={cartItems || []} />
+						<CartLoader
+							isLoading={isPending && isFetching}
+							data={cartItems || []}
+						/>
 						{cartItems &&
-							(!isPending && !isFetching) &&
+							!isPending &&
+							!isFetching &&
 							cartItems?.length > 0 &&
 							cartItems?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({
@@ -323,9 +342,92 @@ function Index() {
 								);
 							})}
 					</ul>
+
+					{holdings.length > 0 && (
+						<ul role="list" className="holdings_list">
+							<li className="holding_header">
+								<h3>Saved Holdings ({holdings.length})</h3>
+								<span>
+									Items waiting to be moved to cart or use guest checkout
+								</span>
+							</li>
+
+							{holdings.map((item) => (
+								<li key={item.tempId}>
+									<HoldingItem>
+										<div className="imageHolder">
+											<img
+												src={
+													item?.shopItem?.placeHolder?.url ||
+													item?.shopItem?.imageCatalog?.[0]?.url
+												}
+												alt={item?.shopItem?.name}
+											/>
+										</div>
+
+										<div className="details">
+											<div>
+												<h4>{item?.shopItem?.name}</h4>
+												<p>Qty {item.quantity}</p>
+											</div>
+
+											<div className="actions">
+												<h4>${item?.shopItem?.price}</h4>
+
+												<button
+													type="button"
+													onClick={() => removeHolding(item.tempId)}
+												>
+													Remove
+												</button>
+											</div>
+										</div>
+									</HoldingItem>
+								</li>
+							))}
+
+							<li>
+								<HoldingActions>
+									<button
+										type="button"
+										className="add_btn"
+										onClick={() => dispatch(openMenu('display'))}
+									>
+										Add All To Cart
+									</button>
+
+									<button
+										type="button"
+										className="guest_btn"
+										onClick={() => dispatch(openMenu('guest'))}
+									>
+										Guest Checkout
+									</button>
+								</HoldingActions>
+							</li>
+						</ul>
+					)}
 				</div>
 
 				<div id="cartSummary">
+					<CustomerName>
+						<h3>Consignee's Name</h3>
+
+						<CustomInput
+							id="name"
+							name="name"
+							// value={zipCode}
+							// onChange={handleChange}
+							// onBlur={handleBlur}
+							// isError={touched.zipCode && errors.zipCode}
+							// errormessage={errors.zipCode}
+							placeholder="Enter Your Full Name, Fist & Last"
+							paddingX="14px"
+							paddingY="9px"
+							useBackground
+						/>
+					</CustomerName>
+
 					<AddressSelect
 						$isLoading={IsLoadingAddr}
 						$isEmpty={!addresses?.length}
@@ -342,15 +444,17 @@ function Index() {
 						</h3>
 
 						{IsLoadingAddr && (
-							<div className="loading_overlay">
-								<Spinner thin="45px" />
+							<div className="h-[50px]">
+								<div className="loading_overlay">
+									<Spinner thin="45px" />
+								</div>
 							</div>
 						)}
 
 						{!IsLoadingAddr && !addresses?.length && (
 							<div className="empty_state">
 								<p>No saved addresses found.</p>
-								<AddBtn type='button' onClick={openModal}>
+								<AddBtn type="button" onClick={openModal}>
 									Add address <FaLocationDot />
 								</AddBtn>
 							</div>
@@ -415,6 +519,7 @@ function Index() {
 
 							<Footer>
 								<CheckoutBtn
+									className="btn"
 									type="button"
 									onClick={checkoutCart}
 									$isLoading={isCheckingOut}

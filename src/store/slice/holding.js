@@ -7,6 +7,8 @@ const generateTempId = () =>
 const initialState = {
 	holdings: [],
 	show: true,
+	isOpen: false,
+	stage: 'display',
 };
 
 const holdingSlice = createSlice({
@@ -42,6 +44,22 @@ const holdingSlice = createSlice({
 			state.holdings = [];
 		},
 
+		// open / close / toggle / change
+		openMenu: (state, action) => {
+			state.isOpen = true;
+			state.stage = action.payload ?? state.stage;
+		},
+		closeMenu: (state) => {
+			state.stage = 'display';
+			state.isOpen = false;
+		},
+		toggleMenu: (state) => {
+			state.isOpen = !state.isOpen;
+		},
+		changeStage: (state, action) => {
+			state.stage = action?.payload;
+		},
+
 		// 👁️ Show / hide / toggle
 		showHoldings: (state) => {
 			state.show = true;
@@ -52,6 +70,8 @@ const holdingSlice = createSlice({
 		toggleHoldings: (state) => {
 			state.show = !state.show;
 		},
+
+		resetHolding: () => ({ ...initialState }),
 	},
 });
 
@@ -71,6 +91,11 @@ export const {
 	showHoldings,
 	hideHoldings,
 	toggleHoldings,
+	openMenu,
+	closeMenu,
+	toggleMenu,
+	changeStage,
+	resetHolding,
 } = holdingSlice.actions;
 
 export default holdingSlice.reducer;

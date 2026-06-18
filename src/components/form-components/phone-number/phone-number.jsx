@@ -23,8 +23,8 @@ const PhoneInput = ({
 	country,
 }) => {
 	const [codes, setCodes] = useState({
-		phone: '+234',
-		country: 'NG',
+		phone: '+1',
+		country: 'US',
 	});
 	const [number, setNumber] = useState('');
 	const isNumber = /^[0-9]+$/;

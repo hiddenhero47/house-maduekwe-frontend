@@ -14,6 +14,7 @@ import ToolBar from './sub-components/holding-tool-bar';
 import Holding from './sub-components/holding';
 import TwoFaModal from '../../components/modal-assets/2fa-modal/index';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
+import { openMenu } from '../../store/slice/holding';
 import CartServices from '../../features/services/custom-hooks/cart';
 
 // shop-item
@@ -76,8 +77,6 @@ function IndexLayout() {
 
 	// Open the modal
 	const openHolding = () => {
-		console.log('cccc');
-
 		if (modalHoldingRef.current) {
 			modalHoldingRef.current.open();
 		}
@@ -187,7 +186,7 @@ function IndexLayout() {
 					<ToolBar
 						layoutRef={layoutRef}
 						nos={holdings.length}
-						openHoldings={openHolding}
+						openHoldings={() => dispatch(openMenu('display'))}
 					/>
 				)}
 			</LayoutWrapper>
@@ -205,16 +204,7 @@ function IndexLayout() {
 				<LeftMenu closeMe={closeModal} />
 			</Modal.Left>
 
-			<Modal.Center
-				width="fit-content"
-				maxWidth="500px"
-				onClose={() => {}}
-				onOpen={() => {}}
-				refName={modalHoldingRef}
-				animation={true}
-			>
-				<Holding close={closeHolding} />
-			</Modal.Center>
+			<Holding />
 
 			<TwoFaModal />
 		</ThemeProvider>
