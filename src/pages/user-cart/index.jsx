@@ -41,9 +41,12 @@ import { toast } from '../../layouts/toast/toast-handler';
 import { FaLocationDot } from 'react-icons/fa6';
 import CreateAddress from '../../components/modal-assets/address/create-address';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromHoldings } from '../../store/slice/holding';
 import CustomInput from '../../components/form-components/input/custom-input';
-import { openMenu } from '../../store/slice/holding';
+import { openMenu, removeFromHoldings } from '../../store/slice/holding';
+import {
+	nameValidationSchema,
+	checkoutValidationSchema,
+} from '../../features/validations/checkout-validation';
 
 function Index() {
 	const navigate = useNavigate();
@@ -71,6 +74,22 @@ function Index() {
 	const [excludedItems, setExcludedItems] = useState([]);
 	const [selectedAddr, setSelectedAddr] = useState();
 	const [loadingId, setLoadingId] = useState();
+	const [consignee, setConsignee] = useState({
+		name: '',
+		isError: false,
+		touched: false,
+	});
+
+	const onChangeConsignee = async (value) => {
+		const isValid = await nameValidationSchema.isValid({
+			name: value,
+		});
+		setConsignee((prev) => ({
+			...prev,
+			name: value,
+			isError: !isValid,
+		}));
+	};
 
 	const toggleExclude = (id) => {
 		setExcludedItems(
@@ -143,7 +162,8 @@ function Index() {
 	}, [data, selectedAddr, excludedItems]);
 
 	const checkoutCart = async () => {
-		if (!data?.itemList?.length || !selectedAddr || !checkoutData) return;
+		// if (!data?.itemList?.length || !selectedAddr || !checkoutData) return;
+		if (!data?.itemList?.length || !checkoutData) return;
 
 		const allItemIds = data.itemList.map((item) => item._id);
 		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
@@ -151,6 +171,12 @@ function Index() {
 		const stockIssues = (checkoutData?.stock || [])
 			.map((s, index) => ({ ...s, index }))
 			.filter((s) => !s.isAvailable);
+
+		const isValid = await checkoutValidationSchema.isValid({
+			itemList: finalItemIds,
+			selectedAddress: selectedAddr,
+			consigneesName: consignee.name,
+		});
 
 		if (stockIssues.length > 0) {
 			toast.warning(`${stockIssues[0].message}`);
@@ -164,11 +190,23 @@ function Index() {
 			return;
 		}
 
+		if (!isValid) {
+			const message =
+				!finalItemIds.length > 0
+					? 'No checkout item'
+					: !selectedAddr
+						? 'select an address'
+						: 'Invalid consignee name';
+			toast.warning(message);
+			return;
+		}
+
 		if (finalItemIds.length > 0) {
 			checkout(
 				{
 					itemList: finalItemIds,
 					selectedAddress: selectedAddr,
+					consigneesName: consignee.name,
 				},
 				{
 					onSuccess: (response) => {
@@ -185,8 +223,21 @@ function Index() {
 		modalRef.current?.open();
 	};
 
+	const selectPlaceholder = (data) => {
+		if (!data) return '';
+
+		const colorAttr = data.selectedAttributes?.find(
+			(attr) => attr?.Attribute?.type === attributeType.COLOR
+		);
+
+		const attrImage = colorAttr?.images?.[0]?.url;
+		const placeHolder = data.shopItem?.placeHolder?.url;
+		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
+		return attrImage || placeHolder || firstImage || '';
+	};
+
 	const removeHolding = (tempId) => {
-		dispatch(removeFromHoldings(tempId));
+		dispatch(removeFromHoldings({ tempId }));
 	};
 
 	return (
@@ -357,10 +408,7 @@ function Index() {
 									<HoldingItem>
 										<div className="imageHolder">
 											<img
-												src={
-													item?.shopItem?.placeHolder?.url ||
-													item?.shopItem?.imageCatalog?.[0]?.url
-												}
+												src={selectPlaceholder(item)}
 												alt={item?.shopItem?.name}
 											/>
 										</div>
@@ -416,11 +464,13 @@ function Index() {
 						<CustomInput
 							id="name"
 							name="name"
-							// value={zipCode}
-							// onChange={handleChange}
-							// onBlur={handleBlur}
-							// isError={touched.zipCode && errors.zipCode}
-							// errormessage={errors.zipCode}
+							value={consignee?.name || ''}
+							onChange={(e) => onChangeConsignee(e.target.value)}
+							// onBlur={() =>
+							// 	setConsignee((prev) => ({ ...prev, touched: true }))
+							// }
+							// isError={consignee.touched && consignee.isError}
+							// errormessage={'Invalid consignee name'}
 							placeholder="Enter Your Full Name, Fist & Last"
 							paddingX="14px"
 							paddingY="9px"

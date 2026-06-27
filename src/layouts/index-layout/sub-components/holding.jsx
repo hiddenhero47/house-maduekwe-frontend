@@ -4,6 +4,9 @@ import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import {
 	removeFromHoldings,
 	clearHoldings,
+	resetHolding,
+	closeMenu,
+	changeStage,
 } from '../../../store/slice/holding';
 import {
 	HoldingWrapper,
@@ -17,11 +20,11 @@ import {
 } from './holding.style';
 import { attributeType } from '../../../utilities/app-const';
 import CartServices from '../../../features/services/custom-hooks/cart';
+import { CheckoutServices } from '../../../features/services/custom-hooks/orders';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '../../toast/toast-handler';
 import Modal from '../../../components/modal/index_modal';
-import { closeMenu, changeStage } from '../../../store/slice/holding';
 import { IoClose } from 'react-icons/io5';
 import { guestCheckoutValidationSchema } from '../../../features/validations/guest-checkout-validation';
 import { useFormik } from 'formik';
@@ -36,11 +39,14 @@ import {
 	getStatesOptions,
 	getCitiesOptions,
 } from '../../../utilities/city-state-country';
+import { pickNonEmptyValues } from '../../../utilities/basic-functions';
 
 function Holding() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { mutate: addToCart, isPending } = CartServices.add();
+	const { mutate: checkoutGuest, isPending: isLoading } =
+		CheckoutServices.guestCheckout();
 	const { holdings, isOpen, stage } = useSelector((state) => state.holdings);
 
 	const { user } = useSelector((state) => state.auth);
@@ -116,9 +122,9 @@ function Holding() {
 	// Guest checkout section
 
 	const initialValues = {
-		fullName: '',
+		consigneesName: '',
 		email: '',
-		phoneNumber: '',
+		phoneNumber: null,
 		country: '',
 		state: '',
 		city: '',
@@ -128,7 +134,47 @@ function Holding() {
 	};
 
 	const onSubmit = (values, { resetForm }) => {
-		console.log(values);
+		const payload = holdings.map((item) => ({
+			shopItem: item?.shopItem._id,
+			quantity: item?.quantity,
+			selectedAttributes: item?.selectedAttributes,
+		}));
+
+		const isValidData =
+			payload &&
+			Array.isArray(payload) &&
+			payload.length > 0 &&
+			payload.every(
+				(item) =>
+					item.shopItem &&
+					typeof item.quantity === 'number' &&
+					item.quantity > 0
+			);
+
+		if (!isValidData) return;
+
+		const { consigneesName, email, phoneNumber } = values;
+		const address = pickNonEmptyValues(values, [
+			'country',
+			'state',
+			'city',
+			'zipCode',
+			'fullAddress',
+		]);
+
+		const guestData = { consigneesName, email, address, itemList: payload };
+
+		if (phoneNumber) guestData.phoneNumber = phoneNumber;
+
+		checkoutGuest(guestData, {
+			onSuccess: (response) => {
+				const orderId = response?.order?._id;
+				resetForm();
+				dispatch(resetHolding());
+				modalHoldingRef.current?.close();
+				navigate(`/checkout/${orderId}`);
+			},
+		});
 	};
 
 	const {
@@ -144,6 +190,17 @@ function Holding() {
 		validationSchema: guestCheckoutValidationSchema,
 		onSubmit,
 	});
+
+	const {
+		consigneesName,
+		email,
+		phoneNumber,
+		country,
+		state,
+		city,
+		zipCode,
+		fullAddress,
+	} = values;
 
 	return (
 		<Modal.Center
@@ -178,13 +235,13 @@ function Holding() {
 									<label>Consignee's Full Name</label>
 
 									<CustomInput
-										id="fullName"
-										name="fullName"
-										value={values.fullName}
+										id="consigneesName"
+										name="consigneesName"
+										value={consigneesName}
 										onChange={handleChange}
 										onBlur={handleBlur}
-										isError={touched.fullName && errors.fullName}
-										errormessage={errors.fullName}
+										isError={touched.consigneesName && errors.consigneesName}
+										errormessage={errors.consigneesName}
 										placeholder="John Doe"
 										paddingX="14px"
 										paddingY="9px"
@@ -199,7 +256,7 @@ function Holding() {
 										id="email"
 										name="email"
 										type="email"
-										value={values.email}
+										value={email}
 										onChange={handleChange}
 										onBlur={handleBlur}
 										isError={touched.email && errors.email}
@@ -217,15 +274,21 @@ function Holding() {
 									<PhoneInput
 										id="phoneNumber"
 										name="phoneNumber"
-										phoneNumber={values.phoneNumber}
+										phoneNumber={phoneNumber?.number || ''}
 										onBlur={handleBlur}
-										handleChange={setFieldValue}
+										customChange={(value) =>
+											setFieldValue('phoneNumber', {
+												number: value?.fullPhoneNumber?.toString(),
+												country: value?.country,
+											})
+										}
 										isError={touched.phoneNumber && errors.phoneNumber}
 										errormessage={errors.phoneNumber}
 										placeholder="8012345678"
 										paddingX="14px"
 										paddingY="9px"
 										useBackground
+										country={phoneNumber?.country}
 									/>
 								</div>
 							</div>
@@ -240,7 +303,7 @@ function Holding() {
 										<SearchSelect
 											id="country"
 											name="country"
-											value={values.country}
+											value={country}
 											handleChange={handleChange}
 											onChange={() => {
 												setFieldValue('state', '');
@@ -263,7 +326,7 @@ function Holding() {
 										<SearchSelect
 											id="state"
 											name="state"
-											value={values.state}
+											value={state}
 											handleChange={handleChange}
 											onChange={() => setFieldValue('city', '')}
 											onBlur={handleBlur}
@@ -285,7 +348,7 @@ function Holding() {
 										<SearchSelect
 											id="city"
 											name="city"
-											value={values.city}
+											value={city}
 											handleChange={handleChange}
 											onBlur={handleBlur}
 											isError={touched.city && errors.city}
@@ -304,7 +367,7 @@ function Holding() {
 										<CustomInput
 											id="zipCode"
 											name="zipCode"
-											value={values.zipCode}
+											value={zipCode}
 											onChange={handleChange}
 											onBlur={handleBlur}
 											placeholder="Code"
@@ -315,7 +378,7 @@ function Holding() {
 									</div>
 								</div>
 
-								<div className="form_control">
+								{/* <div className="form_control">
 									<label>State Line</label>
 
 									<CustomInput
@@ -329,7 +392,7 @@ function Holding() {
 										paddingY="9px"
 										useBackground
 									/>
-								</div>
+								</div> */}
 
 								<div className="form_control">
 									<label>Full Address</label>
@@ -337,7 +400,7 @@ function Holding() {
 									<CustomTextarea
 										id="fullAddress"
 										name="fullAddress"
-										value={values.fullAddress}
+										value={fullAddress}
 										onChange={handleChange}
 										onBlur={handleBlur}
 										isError={touched.fullAddress && errors.fullAddress}
@@ -443,7 +506,7 @@ function Holding() {
 									type="button"
 									onClick={() => dispatch(changeStage('guest'))}
 									className="btn btn_anon"
-									disabled={(holdings.length <= 0)}
+									disabled={holdings.length <= 0}
 								>
 									Guest Checkout{' '}
 									<i>

@@ -192,6 +192,10 @@ export const GuestCheckoutStage = styled.div`
 	flex-direction: column;
 	padding: 24px;
 
+	.Form_error {
+		font-size: 10px;
+	}
+
 	.modal_header {
 		display: flex;
 		justify-content: space-between;

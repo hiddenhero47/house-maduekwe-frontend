@@ -1,11 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { getFromLocalStorage } from '../../utilities/basic-functions';
+
+const HOLDINGS_STORAGE_KEY = 'holdings';
+const HOLDING_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
+
+const isExpired = (item) => Date.now() >= item.expiresAt;
+
+const removeExpiredItems = (holdings) =>
+	holdings.filter((item) => !isExpired(item));
+
+const saveHoldings = (holdings) => {
+	localStorage.setItem(
+		HOLDINGS_STORAGE_KEY,
+		JSON.stringify(removeExpiredItems(holdings))
+	);
+};
+
+const loadHoldings = () => {
+	const stored = getFromLocalStorage(HOLDINGS_STORAGE_KEY);
+	if (!stored) return [];
+	try {
+		const holdings = JSON.parse(stored);
+		const validHoldings = removeExpiredItems(holdings);
+		// Keep localStorage clean
+		saveHoldings(validHoldings);
+		return validHoldings;
+	} catch {
+		localStorage.removeItem(HOLDINGS_STORAGE_KEY);
+		return [];
+	}
+};
 
 // Generate a temporary unique ID for local tracking
 const generateTempId = () =>
 	`${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
 const initialState = {
-	holdings: [],
+	holdings: loadHoldings(),
 	show: true,
 	isOpen: false,
 	stage: 'display',
@@ -23,29 +54,39 @@ const holdingSlice = createSlice({
 				selectedAttributes = [],
 			} = action.payload;
 
-			const newItem = {
+			const holdings = removeExpiredItems(state.holdings);
+
+			holdings.push({
 				tempId: generateTempId(),
-				shopItem, // full object used for UI display
+				expiresAt: Date.now() + HOLDING_EXPIRY_MS,
+				shopItem,
 				quantity,
 				selectedAttributes,
-			};
+			});
 
-			state.holdings.push(newItem);
+			state.holdings = holdings;
+			saveHoldings(state.holdings);
 		},
 
 		// ❌ Remove an item by its temporary ID
 		removeFromHoldings: (state, action) => {
 			const { tempId } = action.payload;
-			state.holdings = state.holdings.filter((item) => item.tempId !== tempId);
+			state.holdings = removeExpiredItems(state.holdings).filter(
+				(item) => item.tempId !== tempId
+			);
+			saveHoldings(state.holdings);
 		},
 
 		// 🧹 Clear all holdings
 		clearHoldings: (state) => {
 			state.holdings = [];
+			saveHoldings([]);
 		},
 
 		// open / close / toggle / change
 		openMenu: (state, action) => {
+			state.holdings = removeExpiredItems(state.holdings);
+			saveHoldings(state.holdings);
 			state.isOpen = true;
 			state.stage = action.payload ?? state.stage;
 		},
@@ -70,8 +111,13 @@ const holdingSlice = createSlice({
 		toggleHoldings: (state) => {
 			state.show = !state.show;
 		},
-
-		resetHolding: () => ({ ...initialState }),
+		resetHolding: () => {
+			saveHoldings([]);
+			return {
+				...initialState,
+				holdings: [],
+			};
+		},
 	},
 });
 
