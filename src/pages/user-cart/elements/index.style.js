@@ -28,7 +28,7 @@ export const Container = styled.div`
 		flex-basis: 0;
 		display: flex;
 
-		@media (max-width: 500px) {
+		@media (max-width: 513px) {
 			min-width: 100%;
 		}
 	}
@@ -40,18 +40,23 @@ export const Container = styled.div`
 	#cartSummary {
 		/* margin-top: 30px; */
 		flex-direction: column;
+
+		@media (min-width: 952px) and (max-width: 1600px) {
+			transform: translateY(-40px);
+		}
 	}
 
 	#cartItems {
 		border-top: 1px solid ${({ theme }) => theme?.mainBody.line};
 		margin-bottom: 40px;
+		flex-direction: column;
 
 		ul {
 			width: clamp(500px, 100%, 750px);
 			margin-inline: auto;
 			padding-inline: 4px;
 
-			@media (max-width: 500px) {
+			@media (max-width: 513px) {
 				width: 100%;
 			}
 		}
@@ -85,26 +90,22 @@ export const Container = styled.div`
 			content: '';
 			position: absolute;
 			inset: 0;
-
 			background: linear-gradient(
 				120deg,
 				transparent 0%,
 				rgba(255, 255, 255, 0.03) 45%,
 				transparent 100%
 			);
-
 			opacity: 0;
 			transition: opacity 0.25s ease;
 		}
 
 		&:hover {
 			transform: translateY(-2px);
-
 			box-shadow: ${({ theme }) =>
 				theme.mode === 'dark'
 					? '0 10px 25px rgba(0,0,0,0.35)'
 					: '0 10px 25px rgba(0,0,0,0.08)'};
-
 			border-color: ${({ theme }) => theme?.intro?.logo};
 
 			&::before {
@@ -119,7 +120,6 @@ export const Container = styled.div`
 		.info {
 			position: relative;
 			z-index: 2;
-
 			display: flex;
 			flex-direction: column;
 			gap: 4px;
@@ -140,18 +140,13 @@ export const Container = styled.div`
 		.action {
 			position: relative;
 			z-index: 2;
-
 			display: flex;
 			align-items: center;
 			gap: 6px;
-
 			font-size: 13px;
 			font-weight: 700;
-
 			color: ${({ theme }) => theme?.intro?.logo};
-
 			white-space: nowrap;
-
 			transition: transform 0.25s ease;
 
 			i {
@@ -168,6 +163,30 @@ export const Container = styled.div`
 				margin-top: 4px;
 			}
 		}
+	}
+
+	.holdings_list {
+		margin-top: 35px;
+		/* border-top: 1px solid var(--mainBody-line); */
+		padding-top: 20px;
+
+		li:not(:first-child) {
+			margin-top: 12px;
+		}
+	}
+
+	.holding_header {
+		margin-bottom: 16px;
+	}
+
+	.holding_header h3 {
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+	.holding_header span {
+		font-size: 13px;
+		color: var(--mainBody-sbText);
 	}
 `;
 
@@ -294,7 +313,7 @@ export const AddressSelect = styled.div`
 	padding: 24px;
 	border-radius: 5px;
 	margin-inline: auto;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 	background-color: ${({ theme }) => theme?.mainBody.container};
 	border: 1px solid ${({ theme }) => theme?.mainBody.line};
 	position: relative;
@@ -330,7 +349,7 @@ export const AddressSelect = styled.div`
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		height: 120px;
+		height: fit-content;
 		color: ${({ theme }) => theme?.mainBody.sbText};
 		font-size: 14px;
 	}
@@ -428,7 +447,6 @@ export const Footer = styled.div`
 	flex-direction: column;
 	gap: 8px;
 	width: 100%;
-
 	/* Enable container queries */
 	container-type: inline-size;
 	container-name: footer;
@@ -470,6 +488,11 @@ export const Footer = styled.div`
 		.btn {
 			font-size: 14px;
 			padding-block: 12px;
+
+			.content {
+				gap: 5px;
+				font-size: 14px;
+			}
 		}
 	}
 
@@ -477,6 +500,11 @@ export const Footer = styled.div`
 		.btn {
 			font-size: 13px;
 			padding-block: 10px;
+
+			.content {
+				gap: 4px;
+				font-size: 12px;
+			}
 		}
 	}
 `;
@@ -616,13 +644,14 @@ export const CheckoutBtn = styled.button`
 		z-index: 2;
 	}
 
-	@media (max-width: 500px) {
+	/* @media (max-width: 500px) {
 		padding-inline: 7px;
+		padding-block: 10px;
 		.content {
 			gap: 4px;
 			font-size: 12px;
 		}
-	}
+	} */
 `;
 
 export const Unavailable = styled.div`
@@ -745,5 +774,153 @@ export const AddBtn = styled.button`
 	&:hover {
 		color: ${({ theme }) => theme?.intro.logo};
 		transform: translateY(-1px);
+	}
+`;
+
+export const HoldingItem = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px;
+	border-radius: 8px;
+	background: ${({ theme }) =>
+		theme.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'};
+	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+
+	.imageHolder {
+		width: 70px;
+		height: 70px;
+		border-radius: 8px;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
+	.details {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.actions {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 6px;
+
+		button {
+			font-size: 13px;
+			font-weight: 500;
+			color: ${({ theme }) => theme?.intro?.logo};
+			transition: opacity 0.2s ease;
+
+			&:hover {
+				opacity: 0.75;
+			}
+		}
+	}
+
+	h4 {
+		font-size: 15px;
+		font-weight: 600;
+		color: ${({ theme }) => theme?.mainBody?.text};
+	}
+
+	p {
+		font-size: 13px;
+		color: ${({ theme }) => theme?.mainBody?.sbText};
+		margin-top: 3px;
+	}
+
+	&:hover {
+		background: ${({ theme }) =>
+			theme.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'};
+	}
+`;
+
+export const HoldingActions = styled.div`
+	display: flex;
+	gap: 12px;
+	margin-top: 20px;
+
+	/* Enable container queries */
+	container-type: inline-size;
+	container-name: holdingActions;
+
+	button {
+		flex: 1;
+		padding: 13px;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 600;
+		transition:
+			transform 0.2s ease,
+			opacity 0.2s ease;
+
+		&:hover {
+			transform: translateY(-1px);
+			opacity: 0.92;
+		}
+
+		&:active {
+			transform: scale(0.97);
+		}
+	}
+
+	.add_btn {
+		background: ${({ theme }) => theme?.addToCart?.background};
+		color: ${({ theme }) => theme?.addToCart?.text};
+	}
+
+	.guest_btn {
+		background: transparent;
+		color: ${({ theme }) => theme?.mainBody?.text};
+		border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	}
+
+	/* Container queries */
+	@container holdingActions (max-width: 600px) {
+		button {
+			font-size: 14px;
+			padding-block: 11.5px;
+		}
+	}
+
+	@container holdingActions (max-width: 400px) {
+		button {
+			font-size: 13px;
+			padding-block: 10px;
+		}
+	}
+
+	@media (max-width: 500px) {
+		flex-direction: column;
+	}
+`;
+
+export const CustomerName = styled.div`
+	width: 80%;
+	max-width: 615px;
+	padding: 15px;
+	border-radius: 5px;
+	margin-inline: auto;
+	margin-bottom: 15px;
+	background-color: ${({ theme }) => theme?.mainBody.container};
+	border: 1px solid ${({ theme }) => theme?.mainBody.line};
+	position: relative;
+
+	@media (max-width: 800px) {
+		width: 100%;
+	}
+
+	h3 {
+		font-size: 14px;
+		font-weight: 600;
+		margin-bottom: 8px;
+
+		span {
+			font-size: 14px;
+		}
 	}
 `;

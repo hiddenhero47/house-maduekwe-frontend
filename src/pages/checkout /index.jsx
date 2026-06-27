@@ -134,6 +134,7 @@ function Index() {
 										setError={setError}
 										PayNowBtn={PayNowBtn}
 										BubbleSlide={BubbleSlide}
+										checkoutType={order?.checkoutType}
 									/>
 								</PaymentArea>
 							</Elements>

@@ -23,8 +23,8 @@ const PhoneInput = ({
 	country,
 }) => {
 	const [codes, setCodes] = useState({
-		phone: '+234',
-		country: 'NG',
+		phone: '+1',
+		country: 'US',
 	});
 	const [number, setNumber] = useState('');
 	const isNumber = /^[0-9]+$/;
@@ -129,11 +129,11 @@ const PhoneInput = ({
 					onChange={(e) => handleNumberInput(e.target.value)}
 					placeholder={placeholder}
 					disabled={disabled}
-					autocorrect="off"
-					autocapitalize="off"
-					spellcheck="false"
+					autoCorrect="off"
+					autoCapitalize="off"
+					spellCheck="false"
 					inputMode="tel"
-					pattern="[0-9]*"
+					// pattern="[0-9]*"
 				/>
 			</MyInput>
 

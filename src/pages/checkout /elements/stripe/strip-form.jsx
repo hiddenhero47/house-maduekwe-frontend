@@ -13,6 +13,7 @@ function StripePaymentForm({
 	setError,
 	PayNowBtn,
 	BubbleSlide,
+	checkoutType,
 }) {
 	const navigate = useNavigate();
 
@@ -39,7 +40,11 @@ function StripePaymentForm({
 			if (paymentIntent?.status === 'succeeded') {
 				console.log('Payment success 🎉', paymentIntent);
 				toast.success('Payment success 🎉');
-				navigate('/settings?currentSettings=orders');
+				const url =
+					checkoutType === 'user-checkout'
+						? '/settings?currentSettings=orders'
+						: '/';
+				navigate(url);
 			}
 		} catch {
 			setError('Something went wrong during payment.');
@@ -49,7 +54,7 @@ function StripePaymentForm({
 	};
 
 	return (
-		<div className='flex flex-col w-full gap-[20px]'>
+		<div className="flex flex-col w-full gap-[20px]">
 			<div className="w-full">
 				<PaymentElement />
 			</div>

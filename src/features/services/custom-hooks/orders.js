@@ -81,6 +81,8 @@ const useConfirmCheckoutMutation = () => {
 };
 
 const useCheckoutMutation = () => {
+	const queryClient = useQueryClient();
+
 	return useMutation({
 		mutationFn: (data) =>
 			axiosCall({
@@ -89,11 +91,25 @@ const useCheckoutMutation = () => {
 				data,
 			}),
 		onSuccess: () => {
-			toast.success('Order placed successfully');
+			// toast.success('Order placed successfully');
+			queryClient.invalidateQueries({
+				queryKey: ['cart-count'],
+			});
 		},
 		onError: () => {
-			toast.error('Checkout failed');
+			// toast.error('Checkout failed');
 		},
+	});
+};
+
+const useGuestCheckoutMutation = () => {
+	return useMutation({
+		mutationFn: (data) =>
+			axiosCall({
+				url: '/api/orders/guest-checkout',
+				method: 'POST',
+				data,
+			}),
 	});
 };
 
@@ -146,6 +162,7 @@ const OrderServices = {
 const CheckoutServices = {
 	confirm: useConfirmCheckoutMutation,
 	checkout: useCheckoutMutation,
+	guestCheckout: useGuestCheckoutMutation,
 };
 
 export { OrderServices, CheckoutServices };

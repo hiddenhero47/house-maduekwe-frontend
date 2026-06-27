@@ -219,9 +219,16 @@ function Index() {
 	const getAttributeId = (attr) =>
 		typeof attr?.Attribute === 'object' ? attr.Attribute?._id : attr?.Attribute;
 
-	const onAttrChange = ({ AttributeId, key, value }) => {
+	const converters = {
+		string: (v) => v?.toString(),
+		number: (v) => Number(v),
+		boolean: (v) => Boolean(v),
+	};
+
+	const onAttrChange = ({ AttributeId, key, value, type }) => {
+		const data = converters[type]?.(value) ?? value;
 		const updated = attributes.map((attr) =>
-			getAttributeId(attr) === AttributeId ? { ...attr, [key]: value } : attr
+			getAttributeId(attr) === AttributeId ? { ...attr, [key]: data } : attr
 		);
 
 		setFieldValue('attributes', updated);
@@ -750,6 +757,7 @@ function Index() {
 															AttributeId: att?.Attribute?._id,
 															key: 'additionalAmount',
 															value: e.target.value,
+															type: 'number',
 														})
 													}
 													onBlur={handleBlur}
@@ -868,6 +876,7 @@ function Index() {
 															AttributeId: att?.Attribute?._id,
 															key: 'additionalAmount',
 															value: e.target.value,
+															type: 'number',
 														})
 													}
 													onBlur={handleBlur}
@@ -955,19 +964,20 @@ function Index() {
 						</AttributeBody>
 					</div>
 				</div>
-				<GroupedVariantsModal
-					modalRef={modalRef}
-					attributes={attributes}
-					groupedVariants={groupedVariants || []}
-					setFieldValue={setFieldValue}
-				/>
-
-				<SelectItemGroupModal
-					ref={groupModalRef}
-					closeModal={groupModalRef.current?.close}
-					onApply={addItemToGroup}
-				/>
 			</form>
+
+			<GroupedVariantsModal
+				modalRef={modalRef}
+				attributes={attributes}
+				groupedVariants={groupedVariants || []}
+				setFieldValue={setFieldValue}
+			/>
+
+			<SelectItemGroupModal
+				ref={groupModalRef}
+				closeModal={groupModalRef.current?.close}
+				onApply={addItemToGroup}
+			/>
 		</Container>
 	);
 }

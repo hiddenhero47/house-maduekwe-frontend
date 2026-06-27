@@ -24,11 +24,18 @@ const successResponseHandler = (res) => {
 };
 
 const errorResponseHandler = (error) => {
-	const message =
+	let message =
 		error.response?.data?.message ||
 		error.response?.data ||
 		error.message ||
 		'An unknown error occurred';
+
+	if (
+		error.response.status === 400 &&
+		error.response?.data?.message === 'Validation failed'
+	) {
+		message = error.response?.data?.errors[0];
+	}
 
 	if (error.response && error.response.status === 400) {
 		const message = error?.response?.data?.message;
@@ -95,11 +102,18 @@ export const axiosCall = async (arg) => {
 
 		return response.data; // Return only the data part of the response
 	} catch (error) {
-		const message =
+		let message =
 			error.response?.data?.message ||
 			error.response?.data ||
 			error.message ||
 			'An unknown error occurred';
+
+		if (
+			error.response.status === 400 &&
+			error.response?.data?.message === 'Validation failed'
+		) {
+			message = error.response?.data?.errors[0];
+		}
 		console.error('Axios Error:', message);
 		throw error;
 	}
