@@ -12,6 +12,9 @@ import {
 	CheckoutBtn,
 	Unavailable,
 	AddBtn,
+	HoldingItem,
+	HoldingActions,
+	CustomerName,
 } from './elements/index.style';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import { MdOutlineToggleOff } from 'react-icons/md';
@@ -37,9 +40,20 @@ import { IoIosInformationCircle } from 'react-icons/io';
 import { toast } from '../../layouts/toast/toast-handler';
 import { FaLocationDot } from 'react-icons/fa6';
 import CreateAddress from '../../components/modal-assets/address/create-address';
+import { useSelector, useDispatch } from 'react-redux';
+import CustomInput from '../../components/form-components/input/custom-input';
+import { openMenu, removeFromHoldings } from '../../store/slice/holding';
+import {
+	nameValidationSchema,
+	checkoutValidationSchema,
+} from '../../features/validations/checkout-validation';
 
 function Index() {
 	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
+
+	const { holdings } = useSelector((state) => state.holdings);
 
 	const { data, isPending, isFetching } = CartServices.get();
 	const { itemList: cartItems = [] } = data || {};
@@ -60,6 +74,22 @@ function Index() {
 	const [excludedItems, setExcludedItems] = useState([]);
 	const [selectedAddr, setSelectedAddr] = useState();
 	const [loadingId, setLoadingId] = useState();
+	const [consignee, setConsignee] = useState({
+		name: '',
+		isError: false,
+		touched: false,
+	});
+
+	const onChangeConsignee = async (value) => {
+		const isValid = await nameValidationSchema.isValid({
+			name: value,
+		});
+		setConsignee((prev) => ({
+			...prev,
+			name: value,
+			isError: !isValid,
+		}));
+	};
 
 	const toggleExclude = (id) => {
 		setExcludedItems(
@@ -132,7 +162,8 @@ function Index() {
 	}, [data, selectedAddr, excludedItems]);
 
 	const checkoutCart = async () => {
-		if (!data?.itemList?.length || !selectedAddr || !checkoutData) return;
+		// if (!data?.itemList?.length || !selectedAddr || !checkoutData) return;
+		if (!data?.itemList?.length || !checkoutData) return;
 
 		const allItemIds = data.itemList.map((item) => item._id);
 		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
@@ -140,6 +171,12 @@ function Index() {
 		const stockIssues = (checkoutData?.stock || [])
 			.map((s, index) => ({ ...s, index }))
 			.filter((s) => !s.isAvailable);
+
+		const isValid = await checkoutValidationSchema.isValid({
+			itemList: finalItemIds,
+			selectedAddress: selectedAddr,
+			consigneesName: consignee.name,
+		});
 
 		if (stockIssues.length > 0) {
 			toast.warning(`${stockIssues[0].message}`);
@@ -153,11 +190,23 @@ function Index() {
 			return;
 		}
 
+		if (!isValid) {
+			const message =
+				!finalItemIds.length > 0
+					? 'No checkout item'
+					: !selectedAddr
+						? 'select an address'
+						: 'Invalid consignee name';
+			toast.warning(message);
+			return;
+		}
+
 		if (finalItemIds.length > 0) {
 			checkout(
 				{
 					itemList: finalItemIds,
 					selectedAddress: selectedAddr,
+					consigneesName: consignee.name,
 				},
 				{
 					onSuccess: (response) => {
@@ -172,6 +221,23 @@ function Index() {
 	const modalRef = useRef(null);
 	const openModal = () => {
 		modalRef.current?.open();
+	};
+
+	const selectPlaceholder = (data) => {
+		if (!data) return '';
+
+		const colorAttr = data.selectedAttributes?.find(
+			(attr) => attr?.Attribute?.type === attributeType.COLOR
+		);
+
+		const attrImage = colorAttr?.images?.[0]?.url;
+		const placeHolder = data.shopItem?.placeHolder?.url;
+		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
+		return attrImage || placeHolder || firstImage || '';
+	};
+
+	const removeHolding = (tempId) => {
+		dispatch(removeFromHoldings({ tempId }));
 	};
 
 	return (
@@ -205,9 +271,13 @@ function Index() {
 			<div className="flex flex-wrap gap-[10px] w-full">
 				<div id="cartItems">
 					<ul role="list">
-						<CartLoader isLoading={(isPending && isFetching)} data={cartItems || []} />
+						<CartLoader
+							isLoading={isPending && isFetching}
+							data={cartItems || []}
+						/>
 						{cartItems &&
-							(!isPending && !isFetching) &&
+							!isPending &&
+							!isFetching &&
 							cartItems?.length > 0 &&
 							cartItems?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({
@@ -323,9 +393,91 @@ function Index() {
 								);
 							})}
 					</ul>
+
+					{holdings.length > 0 && (
+						<ul role="list" className="holdings_list">
+							<li className="holding_header">
+								<h3>Saved Holdings ({holdings.length})</h3>
+								<span>
+									Items waiting to be moved to cart or use guest checkout
+								</span>
+							</li>
+
+							{holdings.map((item) => (
+								<li key={item.tempId}>
+									<HoldingItem>
+										<div className="imageHolder">
+											<img
+												src={selectPlaceholder(item)}
+												alt={item?.shopItem?.name}
+											/>
+										</div>
+
+										<div className="details">
+											<div>
+												<h4>{item?.shopItem?.name}</h4>
+												<p>Qty {item.quantity}</p>
+											</div>
+
+											<div className="actions">
+												<h4>${item?.shopItem?.price}</h4>
+
+												<button
+													type="button"
+													onClick={() => removeHolding(item.tempId)}
+												>
+													Remove
+												</button>
+											</div>
+										</div>
+									</HoldingItem>
+								</li>
+							))}
+
+							<li>
+								<HoldingActions>
+									<button
+										type="button"
+										className="add_btn"
+										onClick={() => dispatch(openMenu('display'))}
+									>
+										Add All To Cart
+									</button>
+
+									<button
+										type="button"
+										className="guest_btn"
+										onClick={() => dispatch(openMenu('guest'))}
+									>
+										Guest Checkout
+									</button>
+								</HoldingActions>
+							</li>
+						</ul>
+					)}
 				</div>
 
 				<div id="cartSummary">
+					<CustomerName>
+						<h3>Consignee's Name</h3>
+
+						<CustomInput
+							id="name"
+							name="name"
+							value={consignee?.name || ''}
+							onChange={(e) => onChangeConsignee(e.target.value)}
+							// onBlur={() =>
+							// 	setConsignee((prev) => ({ ...prev, touched: true }))
+							// }
+							// isError={consignee.touched && consignee.isError}
+							// errormessage={'Invalid consignee name'}
+							placeholder="Enter Your Full Name, Fist & Last"
+							paddingX="14px"
+							paddingY="9px"
+							useBackground
+						/>
+					</CustomerName>
+
 					<AddressSelect
 						$isLoading={IsLoadingAddr}
 						$isEmpty={!addresses?.length}
@@ -342,15 +494,17 @@ function Index() {
 						</h3>
 
 						{IsLoadingAddr && (
-							<div className="loading_overlay">
-								<Spinner thin="45px" />
+							<div className="h-[50px]">
+								<div className="loading_overlay">
+									<Spinner thin="45px" />
+								</div>
 							</div>
 						)}
 
 						{!IsLoadingAddr && !addresses?.length && (
 							<div className="empty_state">
 								<p>No saved addresses found.</p>
-								<AddBtn type='button' onClick={openModal}>
+								<AddBtn type="button" onClick={openModal}>
 									Add address <FaLocationDot />
 								</AddBtn>
 							</div>
@@ -415,6 +569,7 @@ function Index() {
 
 							<Footer>
 								<CheckoutBtn
+									className="btn"
 									type="button"
 									onClick={checkoutCart}
 									$isLoading={isCheckingOut}
