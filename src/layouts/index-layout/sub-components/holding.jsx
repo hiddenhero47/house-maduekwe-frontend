@@ -40,6 +40,7 @@ import {
 	getCitiesOptions,
 } from '../../../utilities/city-state-country';
 import { pickNonEmptyValues } from '../../../utilities/basic-functions';
+import { CHECKOUT_TYPES } from '../../../utilities/app-const';
 
 function Holding() {
 	const navigate = useNavigate();
@@ -172,7 +173,7 @@ function Holding() {
 				resetForm();
 				dispatch(resetHolding());
 				modalHoldingRef.current?.close();
-				navigate(`/checkout/${orderId}`);
+				navigate(`/checkout/${orderId}?checkoutType=${CHECKOUT_TYPES.GUEST}`);
 			},
 		});
 	};
@@ -426,8 +427,11 @@ function Holding() {
 									Back to Holdings
 								</button>
 
-								<SubmitBtn type="submit">
+								<SubmitBtn type="submit" $isLoading={isLoading}>
 									<div className="content">Checkout</div>
+									<div className="loader">
+										<BubbleSlide color="var(--addToCart-text)" height="20px" />
+									</div>
 								</SubmitBtn>
 							</div>
 						</MyForm>

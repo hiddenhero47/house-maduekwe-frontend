@@ -47,6 +47,7 @@ import {
 	nameValidationSchema,
 	checkoutValidationSchema,
 } from '../../features/validations/checkout-validation';
+import { CHECKOUT_TYPES } from '../../utilities/app-const';
 
 function Index() {
 	const navigate = useNavigate();
@@ -211,7 +212,7 @@ function Index() {
 				{
 					onSuccess: (response) => {
 						const orderId = response?.order?._id;
-						navigate(`/checkout/${orderId}`);
+						navigate(`/checkout/${orderId}?checkoutType=${CHECKOUT_TYPES.USER}`);
 					},
 				}
 			);

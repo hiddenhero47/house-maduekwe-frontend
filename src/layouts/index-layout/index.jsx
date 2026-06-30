@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, matchPath } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -110,6 +110,14 @@ function IndexLayout() {
 		}
 	}, [location.pathname]);
 
+	const isExcluded = () => {
+		const list = ['/checkout/:orderId', '/success'];
+		if (!list.length) return false;
+		return list.some((route) =>
+			matchPath({ path: route, end: true }, location.pathname)
+		);
+	};
+
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
@@ -158,7 +166,7 @@ function IndexLayout() {
 								className="flex items-center text-[17px] gap-[5px]"
 								onClick={() => navigate('/my-cart')}
 								$isLoading={isPending}
-								$pulse={(loading && isSuccess)}
+								$pulse={loading && isSuccess}
 							>
 								<span>Cart</span>
 								<i className="text-[20px]">
@@ -182,7 +190,7 @@ function IndexLayout() {
 
 				<Outlet context={{ aftermath }} />
 
-				{!!holdings.length && show && (
+				{!!holdings.length && show && !isExcluded() && (
 					<ToolBar
 						layoutRef={layoutRef}
 						nos={holdings.length}

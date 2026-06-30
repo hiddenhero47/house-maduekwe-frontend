@@ -18,6 +18,7 @@ import { attributeType, ORDER_STATUS } from '../../../../utilities/app-const';
 import CandleWrapper from '../../../../components/loaders/candles/Candle';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useNavigate } from 'react-router-dom';
+import { CHECKOUT_TYPES } from '../../../../utilities/app-const';
 
 function OrderPreview({ orderId }) {
 	const navigate = useNavigate();
@@ -84,7 +85,11 @@ function OrderPreview({ orderId }) {
 
 								<ActionButton
 									type="button"
-									onClick={() => navigate(`/checkout/${order._id}`)}
+									onClick={() =>
+										navigate(
+											`/checkout/${order._id}?checkoutType=${CHECKOUT_TYPES.USER}`
+										)
+									}
 								>
 									<div className="content">Pay Now</div>
 
