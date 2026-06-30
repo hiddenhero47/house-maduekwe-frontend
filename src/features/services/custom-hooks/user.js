@@ -43,7 +43,7 @@ const useRegisterUserMutation = () => {
 
 			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
 			navigate(lastRoute);
-			toast.success('welcome in!');
+			toast.success('Welcome in!');
 		},
 	});
 };
@@ -66,7 +66,7 @@ const useLoginUserMutation = () => {
 
 			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
 			navigate(lastRoute);
-			toast.success('welcome in!');
+			toast.success('Welcome in!');
 		},
 	});
 };
@@ -143,7 +143,7 @@ const useGoogleLoginMutation = () => {
 
 			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
 			navigate(lastRoute);
-			toast.success('welcome in!');
+			toast.success('Welcome in!');
 		},
 	});
 };
@@ -166,7 +166,7 @@ const useAppleLoginMutation = () => {
 
 			const lastRoute = sessionStorage.getItem('lastRoute') || '/';
 			navigate(lastRoute);
-			toast.success('welcome in!');
+			toast.success('Welcome in!');
 		},
 	});
 };
