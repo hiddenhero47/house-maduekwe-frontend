@@ -6,6 +6,7 @@ import {
 } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '../../../../layouts/toast/toast-handler';
+import { getCurrencySymbol } from '../../../../utilities/basic-functions';
 
 function StripePaymentForm({
 	isPaying,
@@ -13,12 +14,16 @@ function StripePaymentForm({
 	setError,
 	PayNowBtn,
 	BubbleSlide,
-	checkoutType,
+	order,
+	payment,
 }) {
 	const navigate = useNavigate();
 
 	const stripe = useStripe();
 	const elements = useElements();
+
+	const symbol = getCurrencySymbol(payment?.currency) || '$';
+	const url = `/success?amount=${payment?.amountToPay}&orderId=${order?._id}&checkoutType=${order?.checkoutType}&currency=${symbol}`;
 
 	const handlePayment = async () => {
 		if (!stripe || !elements) return;
@@ -38,12 +43,7 @@ function StripePaymentForm({
 			}
 
 			if (paymentIntent?.status === 'succeeded') {
-				console.log('Payment success 🎉', paymentIntent);
 				toast.success('Payment success 🎉');
-				const url =
-					checkoutType === 'user-checkout'
-						? '/settings?currentSettings=orders'
-						: '/';
 				navigate(url);
 			}
 		} catch {

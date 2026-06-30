@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from '../../../layouts/toast/toast-handler';
+import { CHECKOUT_TYPES } from '../../../utilities/app-const';
 
 const useGetMyOrdersQuery = (params = {}) => {
 	return useQuery({
@@ -30,15 +31,29 @@ const useGetOrdersQuery = (params = {}) => {
 	});
 };
 
-const useGetOrderByIdQuery = (id) => {
+const useGetOrderByIdQuery = (id, options = {}) => {
 	return useQuery({
-		queryKey: ['orders', id],
+		queryKey: ['order', id],
 		queryFn: () =>
 			axiosCall({
 				url: `/api/orders/${id}`,
 				method: 'GET',
 			}),
-		enabled: !!id,
+		enabled: !!id && (options.enabled ?? true),
+		refetchOnWindowFocus: false,
+		retry: false,
+	});
+};
+
+const useGetOrderByIdPublicQuery = (id, options = {}) => {
+	return useQuery({
+		queryKey: ['order-public', id],
+		queryFn: () =>
+			axiosCall({
+				url: `/api/orders/${id}/public`,
+				method: 'GET',
+			}),
+		enabled: !!id && (options.enabled ?? true),
 		refetchOnWindowFocus: false,
 		retry: false,
 	});
@@ -141,6 +156,17 @@ const useCancelOrderMutation = () => {
 	});
 };
 
+const useGetOrderQuery = (id, checkoutType) => {
+	const isUserCheckout = checkoutType === CHECKOUT_TYPES.USER;
+	const userQuery = useGetOrderByIdQuery(id, {
+		enabled: isUserCheckout,
+	});
+	const guestQuery = useGetOrderByIdPublicQuery(id, {
+		enabled: !isUserCheckout,
+	});
+	return isUserCheckout ? userQuery : guestQuery;
+};
+
 export {
 	useGetMyOrdersQuery,
 	useGetOrdersQuery,
@@ -148,6 +174,7 @@ export {
 	useConfirmCheckoutMutation,
 	useCheckoutMutation,
 	useGetOrderByIdQuery,
+	useGetOrderByIdPublicQuery,
 	useCancelOrderMutation,
 };
 
@@ -155,6 +182,8 @@ const OrderServices = {
 	getMy: useGetMyOrdersQuery,
 	getAll: useGetOrdersQuery,
 	getOne: useGetOrderByIdQuery,
+	getOnePublic: useGetOrderByIdPublicQuery,
+	useGetOrder: useGetOrderQuery,
 	updateStatus: useUpdateOrderStatusMutation,
 	cancel: useCancelOrderMutation,
 };
