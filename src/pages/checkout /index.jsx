@@ -24,10 +24,15 @@ import { useSelector, useDispatch } from 'react-redux';
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function Index() {
+	const query = new URLSearchParams(location.search);
+	
 	const { theme } = useSelector((state) => state.themes);
+
 	const { orderId } = useParams();
 
-	const { data, isPending } = OrderServices.getOne(orderId);
+	const checkoutType = query.get('checkoutType');
+
+	const { data, isPending } = OrderServices.useGetOrder(orderId, checkoutType);
 
 	const { order, payment } = data || {};
 
@@ -134,7 +139,8 @@ function Index() {
 										setError={setError}
 										PayNowBtn={PayNowBtn}
 										BubbleSlide={BubbleSlide}
-										checkoutType={order?.checkoutType}
+										order={order}
+										payment={payment}
 									/>
 								</PaymentArea>
 							</Elements>

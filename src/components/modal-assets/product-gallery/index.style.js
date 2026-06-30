@@ -12,11 +12,9 @@ export const GalleryWrapper = styled.div`
 	header {
 		height: 70px;
 		padding-inline: 20px;
-
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-
 		color: white;
 	}
 
@@ -56,6 +54,14 @@ export const MainImage = styled.div`
 		height: 100%;
 		border-radius: inherit;
         cursor: zoom-in;
+	}
+
+	@media (max-width: 720px) {
+		flex: unset;
+		aspect-ratio: 1/1.09;
+		max-width: unset;
+		width: 80%;
+		margin-block: auto;
 	}
 `;
 
