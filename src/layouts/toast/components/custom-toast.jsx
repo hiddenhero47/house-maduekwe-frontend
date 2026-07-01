@@ -1,15 +1,16 @@
 import React from 'react';
 import { IoClose } from 'react-icons/io5';
-import {
-	HiCheckCircle,
-	HiExclamationCircle,
-} from 'react-icons/hi';
+import { HiCheckCircle, HiExclamationCircle } from 'react-icons/hi';
 import { BiSolidInfoSquare } from 'react-icons/bi';
 import { HiExclamationTriangle } from 'react-icons/hi2';
 import { ToastWrapper, IconHolder, ProgressBar } from './custom-toast.style';
 import { ThemeProvider } from 'styled-components';
 import { colors } from '../../../utilities/colors';
 import { useSelector } from 'react-redux';
+import { RxTokens } from 'react-icons/rx';
+
+import AppLogo from '../../../assets/images/app-logo.svg?react';
+import { VectorIcon } from '../../../components/icon-components/index.style';
 
 const config = {
 	success: {
@@ -52,11 +53,14 @@ function CustomToast({
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ToastWrapper $color={item.color}>
 				<div className="flex">
-					<IconHolder $color={item.color}>{item.icon}</IconHolder>
+					<IconHolder $color={item.color}>
+						<VectorIcon width="18px" height="18px" vector={AppLogo} />
+					</IconHolder>
 
 					<div className="flex flex-col">
 						<div className="content">
-							<div className="title font-sans">{item.title}</div>
+							{/* <div className="title font-sans">{item.title}</div> */}
+							<div className="title font-sans">Hello</div>
 
 							<div className="message font-sans">{message}</div>
 						</div>
