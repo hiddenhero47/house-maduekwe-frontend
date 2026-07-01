@@ -104,14 +104,14 @@ export const IconHolder = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgb(22, 163, 74, 0.05);
-	border: 2px solid rgb(22, 163, 74, 0.5);
+	background: rgb(6, 223, 115, 0.05);
+	border: 2px solid rgb(6, 223, 115, 0.5);
 	margin-bottom: 25px;
 	animation: ${pop} 0.5s ease;
 
 	svg {
 		font-size: 60px;
-		color: #16a34a;
+		color: #06df73;
 	}
 
 	@media (max-width: 500px) {
