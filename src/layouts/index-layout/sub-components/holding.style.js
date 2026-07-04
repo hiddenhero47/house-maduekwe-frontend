@@ -289,6 +289,61 @@ export const GuestCheckoutStage = styled.div`
 		display: flex;
 		transform: rotate(180deg);
 	}
+
+	.pending_order {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		padding: 14px 16px;
+		margin-top: -4px;
+
+		border-radius: 10px;
+		border: 1px solid ${({ theme }) => theme.form.blue};
+
+		background: ${({ theme }) =>
+			theme.mode === 'dark' ? 'rgba(0,136,232,.08)' : 'rgba(0,136,232,.06)'};
+
+		cursor: pointer;
+		transition: 0.25s ease;
+
+		&:hover {
+			transform: translateY(-1px);
+			background: ${({ theme }) =>
+				theme.mode === 'dark' ? 'rgba(0,136,232,.13)' : 'rgba(0,136,232,.1)'};
+		}
+
+		.pending_order_text {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			text-align: left;
+			gap: 3px;
+
+			strong {
+				font-size: 14px;
+				font-weight: 600;
+				color: ${({ theme }) => theme.mainBody.text};
+			}
+
+			span {
+				font-size: 12px;
+				color: ${({ theme }) => theme.mainBody.sbText};
+			}
+		}
+
+		.arrow {
+			font-size: 18px;
+			color: ${({ theme }) => theme.form.blue};
+			flex-shrink: 0;
+			transition: 0.25s ease;
+		}
+
+		&:hover .arrow {
+			transform: translateX(4px);
+		}
+	}
 `;
 
 export const MyForm = styled.form`
@@ -452,7 +507,7 @@ export const AddToCartBtn = styled.button`
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		font-size: 14px;
+		font-size: 15px;
 		font-weight: 600;
 		visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
 	}
