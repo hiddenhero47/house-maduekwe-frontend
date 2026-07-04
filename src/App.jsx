@@ -20,6 +20,7 @@ import Authentication from './pages/auth';
 import Checkout from './pages/checkout ';
 import ResetPassword from './pages/reset-password';
 import Success from './pages/success';
+import GuestOrder from './pages/guest-order';
 // Dashboard pages
 import Overview from './pages-dashboard/home';
 import Product from './pages-dashboard/products';
@@ -53,6 +54,7 @@ function App() {
 								<Route path="/products/*" element={<ShopeItems />} />
 								<Route path="/checkout/:orderId" element={<Checkout />} />
 								<Route path="/success" element={<Success />} />
+								<Route path="/guest-order" element={<GuestOrder />} />
 							</Route>
 
 							<Route path="/admin" element={<DashboardLayout />}>
