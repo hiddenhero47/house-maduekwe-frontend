@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import {
@@ -122,6 +122,8 @@ function Holding() {
 
 	// Guest checkout section
 
+	const [errOrderId, setErrOrderId] = useState(null);
+
 	const initialValues = {
 		consigneesName: '',
 		email: '',
@@ -175,6 +177,12 @@ function Holding() {
 				modalHoldingRef.current?.close();
 				navigate(`/checkout/${orderId}?checkoutType=${CHECKOUT_TYPES.GUEST}`);
 			},
+			onError: (error) => {
+				const err = error?.response?.data;
+				if (err?.code === 'GUEST_PENDING_ORDER' || err?.data) {
+					setErrOrderId(err?.data._id);
+				}
+			},
 		});
 	};
 
@@ -207,7 +215,10 @@ function Holding() {
 		<Modal.Center
 			width="fit-content"
 			maxWidth="500px"
-			onClose={() => dispatch(closeMenu())}
+			onClose={() => {
+				dispatch(closeMenu());
+				setErrOrderId(null);
+			}}
 			onOpen={() => {}}
 			refName={modalHoldingRef}
 			animation={true}
@@ -414,6 +425,28 @@ function Holding() {
 									/>
 								</div>
 							</div>
+
+							{errOrderId && (
+								<button
+									type="button"
+									className="pending_order"
+									onClick={() => {
+										navigate(
+											`/guest-order?orderId=${errOrderId}&email=${encodeURIComponent(
+												email
+											)}`
+										);
+										modalHoldingRef.current?.close();
+									}}
+								>
+									<div className="pending_order_text">
+										<strong>You already have a pending order.</strong>
+										<span>Continue where you left off.</span>
+									</div>
+
+									<FaArrowRightLong className="arrow" />
+								</button>
+							)}
 
 							<div className="flex flex-col w-full">
 								<button

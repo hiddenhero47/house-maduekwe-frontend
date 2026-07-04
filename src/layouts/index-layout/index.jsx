@@ -111,7 +111,7 @@ function IndexLayout() {
 	}, [location.pathname]);
 
 	const isExcluded = () => {
-		const list = ['/checkout/:orderId', '/success'];
+		const list = ['/checkout/:orderId', '/success', 'guest-order'];
 		if (!list.length) return false;
 		return list.some((route) =>
 			matchPath({ path: route, end: true }, location.pathname)

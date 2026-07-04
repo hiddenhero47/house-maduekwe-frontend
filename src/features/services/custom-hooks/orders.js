@@ -167,6 +167,52 @@ const useGetOrderQuery = (id, checkoutType) => {
 	return isUserCheckout ? userQuery : guestQuery;
 };
 
+const useCancelExpiredOrdersAdminMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (data) =>
+			axiosCall({
+				url: '/api/orders/cancel-expired',
+				method: 'PATCH',
+				data,
+			}),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['orders'],
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['orders', 'me'],
+			});
+
+			toast.success('Expired orders cancelled successfully');
+		},
+	});
+};
+
+const useCancelExpiredGuestOrdersMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (data) =>
+			axiosCall({
+				url: '/api/orders/guest/cancel-expired',
+				method: 'PATCH',
+				data,
+			}),
+
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['order-public'],
+			});
+
+			toast.success('Order was cancelled successfully');
+		},
+	});
+};
+
 export {
 	useGetMyOrdersQuery,
 	useGetOrdersQuery,
@@ -176,6 +222,8 @@ export {
 	useGetOrderByIdQuery,
 	useGetOrderByIdPublicQuery,
 	useCancelOrderMutation,
+	useCancelExpiredOrdersAdminMutation,
+	useCancelExpiredGuestOrdersMutation,
 };
 
 const OrderServices = {
@@ -186,6 +234,8 @@ const OrderServices = {
 	useGetOrder: useGetOrderQuery,
 	updateStatus: useUpdateOrderStatusMutation,
 	cancel: useCancelOrderMutation,
+	cancelExpired: useCancelExpiredOrdersAdminMutation,
+	cancelExpiredGuest: useCancelExpiredGuestOrdersMutation,
 };
 
 const CheckoutServices = {
