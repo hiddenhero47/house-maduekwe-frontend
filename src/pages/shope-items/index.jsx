@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { Container, FilterBtn, NewArrivalsBtn } from './elements/index.style';
 import {
 	ProductHeaderBgD,
@@ -20,6 +20,7 @@ import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import FilterProductDisplay from '../../components/modal-assets/filter-modal/filter&product/filter&product';
 import BubbleSlide from '../../components/loaders/bubbles/BubbleSlide';
 import { getPeriod } from '../../utilities/basic-functions';
+import { runProductTour } from '../../features/app-tour/tours-slice/product-tour';
 
 function Index() {
 	const theme = useTheme();
@@ -128,6 +129,16 @@ function Index() {
 
 		setSearchParams(params);
 	};
+
+	useEffect(() => {
+		if (!isPending && products.length > 0) {
+			const timer = setTimeout(() => {
+				runProductTour();
+			}, 500);
+
+			return () => clearTimeout(timer);
+		}
+	}, [isPending, products.length]);
 
 	return (
 		<Container className="Y_scroll_style">

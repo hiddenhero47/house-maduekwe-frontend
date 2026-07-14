@@ -1,0 +1,105 @@
+.driver-popover {
+	background: var(--mainBody-container);
+	color: var(--mainBody-text);
+	border: 1px solid var(--mainBody-line);
+	border-radius: 12px;
+	padding: 14px;
+	box-shadow:
+		0 14px 36px rgba(0, 0, 0, 0.16),
+		0 2px 6px rgba(0, 0, 0, 0.08);
+	font-family: Outfit, sans-serif;
+	min-width: 300px;
+	max-width: 360px;
+}
+
+.driver-popover-title {
+	color: var(--mainBody-text);
+	font-size: 17px;
+	font-weight: 700;
+	margin-bottom: 8px;
+}
+
+.driver-popover-description {
+	color: var(--mainBody-sbText);
+	font-size: 13px;
+	line-height: 1.6;
+	margin-bottom: 0;
+}
+
+.driver-popover-progress-text {
+	color: var(--mainBody-sbText);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.4px;
+}
+
+.driver-popover-arrow {
+	color: var(--mainBody-container);
+}
+
+.driver-popover-footer {
+	margin-top: 14px;
+	padding-top: 12px;
+	border-top: 1px solid var(--mainBody-line);
+}
+
+.driver-popover-prev-btn {
+	background: transparent !important;
+	color: var(--mainBody-text) !important;
+	border: 1px solid var(--mainBody-line) !important;
+	border-radius: 999px !important;
+	padding: 7px 16px !important;
+	text-shadow: none !important;
+	transition: all 0.2s ease;
+}
+
+.driver-popover-prev-btn:hover,
+.driver-popover-prev-btn:focus,
+.driver-popover-prev-btn:active {
+	background: var(--mainBody-background) !important;
+	color: var(--mainBody-text) !important;
+	border-color: var(--intro-logo) !important;
+	box-shadow: none !important;
+	transform: translateY(-1px);
+}
+
+.driver-popover-next-btn {
+	background: var(--intro-logo) !important;
+	color: #fff !important;
+	border: none !important;
+	border-radius: 999px !important;
+	padding: 7px 18px !important;
+	text-shadow: none !important;
+	transition: all 0.2s ease;
+}
+
+.driver-popover-next-btn:hover,
+.driver-popover-next-btn:focus,
+.driver-popover-next-btn:active {
+	background: var(--intro-logo) !important;
+	color: #fff !important;
+	filter: brightness(1.08);
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+	transform: translateY(-1px);
+}
+
+.driver-popover-close-btn {
+	color: var(--mainBody-sbText);
+	font-size: 20px;
+	transition: all 0.2s ease;
+}
+
+.driver-popover-close-btn:hover {
+	color: var(--mainBody-text);
+	transform: rotate(90deg);
+}
+
+.driver-popover button {
+	text-shadow: none !important;
+	outline: none;
+}
+
+.driver-active-element {
+	border-radius: 12px;
+	transition: all 0.25s ease;
+}

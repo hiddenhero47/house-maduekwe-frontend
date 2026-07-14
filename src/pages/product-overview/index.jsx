@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
 	Container,
@@ -25,6 +25,7 @@ import { Skeleton } from '../../components/loaders/skeleton/skeleton.style';
 import { NoDataIcon } from '../../components/icon-components/empty';
 import { ItemStatusType } from '../../utilities/app-const';
 import ProductGallery from '../../components/modal-assets/product-gallery';
+import { runHoldButtonTour } from '../../features/app-tour/tours-slice/product-overview-tour';
 
 function Index() {
 	const navigate = useNavigate();
@@ -75,6 +76,14 @@ function Index() {
 	const openGallery = () => {
 		galleryRef.current?.open();
 	};
+
+	useEffect(() => {
+		if (isPending || !product?._id) return;
+
+		const timer = setTimeout(runHoldButtonTour, 500);
+
+		return () => clearTimeout(timer);
+	}, [isPending, product?._id]);
 
 	return (
 		<Container className="Y_scroll_style">

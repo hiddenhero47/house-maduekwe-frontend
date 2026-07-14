@@ -28,6 +28,7 @@ import {
 import { toast } from '../../layouts/toast/toast-handler';
 
 function ShopItem({
+	id = '',
 	useBackground = true,
 	width,
 	height,
@@ -55,12 +56,12 @@ function ShopItem({
 	const holding = () => {
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
-			toast.warning('size not selected');
+			toast.warning('Size not selected');
 			return;
 		}
 
 		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('color not selected');
+			toast.warning('Color not selected');
 			return;
 		}
 		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
@@ -110,12 +111,12 @@ function ShopItem({
 
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
-			toast.warning('size not selected');
+			toast.warning('Size not selected');
 			return;
 		}
 
 		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('color not selected');
+			toast.warning('Color not selected');
 			return;
 		}
 
@@ -388,6 +389,7 @@ function ShopItem({
 
 	return (
 		<ShopItemWrapper
+			id={id}
 			$useBackground={useBackground}
 			width={width}
 			height={height}
@@ -407,7 +409,11 @@ function ShopItem({
 			) : (
 				<ShopItemContent>
 					<div className="display_unit">
-						<button id="addToHolding" onClick={() => holding()}>
+						<button
+							id={id ? `${id}_holding` : ''}
+							className="add_to_holding"
+							onClick={() => holding()}
+						>
 							<i>
 								<FaBasketShopping />
 							</i>
@@ -444,18 +450,18 @@ function ShopItem({
 							</ModalSlider>
 						</div>
 
-						<button onClick={() => slideOn(-1)} id="arrowsLeft">
+						<button onClick={() => slideOn(-1)} className="arrows_left">
 							<i>
 								<HiMiniArrowSmallLeft />
 							</i>
 						</button>
-						<button onClick={() => slideOn(1)} id="arrowsRight">
+						<button onClick={() => slideOn(1)} className="arrows_right">
 							<i>
 								<HiMiniArrowSmallRight />
 							</i>
 						</button>
 					</div>
-					<Controller id="displayController">
+					<Controller className="display_controller">
 						<div className="display_navigator">
 							{productDisplay.map((x, i) => (
 								<button

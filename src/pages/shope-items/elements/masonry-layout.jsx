@@ -51,6 +51,7 @@ function MasonryLayout({ data = [], isLoading = false }) {
 			{data.map((item, i) => (
 				<MasonryItem key={item?._id || i}>
 					<ShopItem
+					    id={`shopItem${i}`}
 						isLoading={false}
 						product={item}
 						width="100%"
