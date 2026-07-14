@@ -424,6 +424,38 @@ export const AddressBox = styled.div`
 		font-size: 13px;
 		color: ${({ theme }) => theme?.mainBody.sbText};
 	}
+
+	.address_content {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 12px;
+		width: 100%;
+	}
+
+	.edit_btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		border: none;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--mainBody-sbText);
+		cursor: pointer;
+		transition: 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.edit_btn:hover {
+		background: var(--mainBody-hover);
+		color: var(--mainBody-text);
+	}
+
+	.edit_btn svg {
+		font-size: 18px;
+	}
 `;
 
 export const ToggleBtn = styled.button`

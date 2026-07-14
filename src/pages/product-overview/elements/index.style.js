@@ -453,6 +453,14 @@ export const HoldBtn = styled.button`
 	align-items: center;
 	font-family: Inter;
 
+	@media (min-width: 361px) and (max-width: 500px) {
+		font-size: 0.78rem;
+	}
+
+	@media (max-width: 360px) {
+		font-size: 0.69rem;
+	}
+
 	/* Smooth hover animation */
 	transition: all 0.25s ease;
 
@@ -467,11 +475,19 @@ export const HoldBtn = styled.button`
 	i:first-child {
 		font-size: 1.125rem;
 		margin-right: 0.25rem;
+
+		@media (max-width: 360px) {
+			font-size: 0.93rem;
+		}
 	}
 
 	i:last-child {
 		font-size: 1rem;
 		margin-left: 0.25rem;
+
+		@media (max-width: 360px) {
+			font-size: 0.83rem;
+		}
 	}
 
 	/* HOVER EFFECT */

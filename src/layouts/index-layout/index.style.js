@@ -37,6 +37,7 @@ export const Navigation = styled.nav`
 		font-weight: 600;
 		font-size: clamp(19px, 2vw, 23px);
 		color: ${({ theme }) => theme?.mainBody.text};
+		cursor: pointer;
 
 		@media (max-width: 500px) {
 			font-size: clamp(16px, 1.5vw, 23px);

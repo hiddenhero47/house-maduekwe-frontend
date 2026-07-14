@@ -40,6 +40,7 @@ import { IoIosInformationCircle } from 'react-icons/io';
 import { toast } from '../../layouts/toast/toast-handler';
 import { FaLocationDot } from 'react-icons/fa6';
 import CreateAddress from '../../components/modal-assets/address/create-address';
+import EditAddress from '../../components/modal-assets/address/edit-address';
 import { useSelector, useDispatch } from 'react-redux';
 import CustomInput from '../../components/form-components/input/custom-input';
 import { openMenu, removeFromHoldings } from '../../store/slice/holding';
@@ -48,6 +49,7 @@ import {
 	checkoutValidationSchema,
 } from '../../features/validations/checkout-validation';
 import { CHECKOUT_TYPES } from '../../utilities/app-const';
+import { FiEdit2 } from 'react-icons/fi';
 
 function Index() {
 	const navigate = useNavigate();
@@ -212,7 +214,9 @@ function Index() {
 				{
 					onSuccess: (response) => {
 						const orderId = response?.order?._id;
-						navigate(`/checkout/${orderId}?checkoutType=${CHECKOUT_TYPES.USER}`);
+						navigate(
+							`/checkout/${orderId}?checkoutType=${CHECKOUT_TYPES.USER}`
+						);
 					},
 				}
 			);
@@ -222,6 +226,13 @@ function Index() {
 	const modalRef = useRef(null);
 	const openModal = () => {
 		modalRef.current?.open();
+	};
+
+	const [editInfo, setEditInfo] = useState(null);
+	const modalRefEdit = useRef(null);
+	const openEditModal = (info) => {
+		setEditInfo(info);
+		modalRefEdit.current?.open();
 	};
 
 	const selectPlaceholder = (data) => {
@@ -519,11 +530,27 @@ function Index() {
 										$isSelected={selectedAddr === addr._id}
 										onClick={() => setSelectedAddr(addr._id)}
 									>
-										<p className="full_address">{addr.fullAddress}</p>
+										<div className="address_content">
+											<div>
+												<p className="full_address">{addr.fullAddress}</p>
 
-										<div className="meta">
-											<span>State: {addr.state}</span>
-											<span>City: {addr.city}</span>
+												<div className="meta">
+													<span>State: {addr.state}</span>
+													<span>City: {addr.city}</span>
+												</div>
+											</div>
+
+											<button
+												type="button"
+												className="edit_btn"
+												onClick={(e) => {
+													e.stopPropagation();
+													openEditModal(addr);
+												}}
+												aria-label="Edit address"
+											>
+												<FiEdit2 />
+											</button>
 										</div>
 									</AddressBox>
 								))}
@@ -600,6 +627,14 @@ function Index() {
 				ref={modalRef}
 				openModal={openModal}
 				closeModal={() => modalRef.current?.close()}
+			/>
+
+			<EditAddress
+				ref={modalRefEdit}
+				openModal={openModal}
+				closeModal={() => modalRefEdit.current?.close()}
+				address={editInfo}
+				clean={() => setEditInfo(null)}
 			/>
 		</Container>
 	);
