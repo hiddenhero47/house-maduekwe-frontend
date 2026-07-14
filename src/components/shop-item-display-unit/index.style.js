@@ -93,15 +93,15 @@ export const ShopItemContent = styled.div`
 	}
 
 	/* 👇 Buttons default state (hidden + slightly moved) */
-	#addToHolding,
-	#arrowsLeft,
-	#arrowsRight {
+	.add_to_holding,
+	.arrows_left,
+	.arrows_right {
 		opacity: 0;
 		transition: all 0.4s ease;
 		pointer-events: none; /* avoid accidental clicks when hidden */
 	}
 
-	#addToHolding {
+	.add_to_holding {
 		z-index: 5;
 		position: absolute;
 		top: 0;
@@ -113,8 +113,8 @@ export const ShopItemContent = styled.div`
 		transform: translateX(-10px); /* 👈 slide from left */
 	}
 
-	#arrowsLeft,
-	#arrowsRight {
+	.arrows_left,
+	.arrows_right {
 		z-index: 5;
 		position: absolute;
 		top: 50%;
@@ -123,49 +123,56 @@ export const ShopItemContent = styled.div`
 		font-size: 1.5rem;
 	}
 
-	#arrowsLeft {
+	.arrows_left {
 		left: 0;
 		margin-left: 5%;
 		transform: translate(-10px, -50%); /* 👈 slide from left */
 	}
 
-	#arrowsRight {
+	.arrows_right {
 		right: 0;
 		margin-right: 5%;
 		transform: translate(10px, -50%); /* 👉 slide from right */
 	}
 
 	/* 👇 On hover, make them appear + slide in smoothly */
-	&:hover #addToHolding,
-	&:hover #arrowsLeft,
-	&:hover #arrowsRight {
+	&:hover .add_to_holding,
+	&:hover .arrows_left,
+	&:hover .arrows_right {
 		opacity: 1;
 		transform: translate(0, -50%);
 		pointer-events: auto;
 	}
 
-	&:hover #addToHolding {
+	.add_to_holding.show {
+		opacity: 1;
+		transform: translate(0, -50%);
+		transform: translateX(0);
+		pointer-events: auto;
+	}
+
+	&:hover .add_to_holding {
 		transform: translateX(0);
 	}
 
-	#addToHolding {
+	.add_to_holding {
 		transition-delay: 0.05s;
 	}
-	#arrowsLeft {
+	.arrows_left {
 		transition-delay: 0.1s;
 	}
-	#arrowsRight {
+	.arrows_right {
 		transition-delay: 0.15s;
 	}
 
 	/* 🪄 Responsive tweaks when width <= 250px */
 	@container (max-width: 250px) {
-		#addToHolding {
+		.add_to_holding {
 			font-size: 1rem;
 		}
 
-		#arrowsLeft,
-		#arrowsRight {
+		.arrows_left,
+		.arrows_right {
 			font-size: 1rem;
 		}
 	}

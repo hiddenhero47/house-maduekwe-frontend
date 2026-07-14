@@ -80,12 +80,12 @@ function Details({
 	const holding = () => {
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
-			toast.warning('size not selected');
+			toast.warning('Size not selected');
 			return;
 		}
 
 		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('color not selected');
+			toast.warning('Color not selected');
 			return;
 		}
 
@@ -143,12 +143,12 @@ function Details({
 
 		const attributeGroup = groupAttributesByType(product?.attributes);
 		if (!attribute.currentSize) {
-			toast.warning('size not selected');
+			toast.warning('Size not selected');
 			return;
 		}
 
 		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('color not selected');
+			toast.warning('Color not selected');
 			return;
 		}
 
@@ -281,11 +281,11 @@ function Details({
 			</div>
 
 			<div className="mt-5 flex justify-between items-center">
-				<HoldBtn onClick={() => holding()}>
+				<HoldBtn id="holdForGuestCheckout" onClick={() => holding()}>
 					<i>
 						<FaShoppingBasket />
 					</i>
-					Hold Item
+					Hold for Guest Checkout
 					<i>
 						<IoIosArrowForward />
 					</i>

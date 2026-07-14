@@ -111,7 +111,12 @@ function IndexLayout() {
 	}, [location.pathname]);
 
 	const isExcluded = () => {
-		const list = ['/checkout/:orderId', '/success', 'guest-order'];
+		const list = [
+			'/checkout/:orderId',
+			'/success',
+			'/guest-order',
+			'/about-us',
+		];
 		if (!list.length) return false;
 		return list.some((route) =>
 			matchPath({ path: route, end: true }, location.pathname)
@@ -153,7 +158,11 @@ function IndexLayout() {
 							</div>
 						</div>
 
-						<h3 id="navTitle" className="mx-[auto] intro-y">
+						<h3
+							id="navTitle"
+							className="mx-[auto] intro-y"
+							onClick={() => navigate('/')}
+						>
 							HOUSE MADUEKWE
 						</h3>
 

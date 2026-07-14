@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ToolBarWrapper } from './holding.style';
 import { MdSell } from 'react-icons/md';
+import { runHoldingToolbarTour } from '../../../features/app-tour/tours-slice/holding-toolbar-tour';
 
 export default function ToolBar({ layoutRef, nos, openHoldings }) {
 	const toolbarRef = useRef(null);
@@ -124,11 +125,19 @@ export default function ToolBar({ layoutRef, nos, openHoldings }) {
 			window.removeEventListener('touchmove', handleTouchMove);
 			window.removeEventListener('touchend', handleTouchEnd);
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [dragging, layoutRef]);
 
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			runHoldingToolbarTour();
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, []);
 	return (
 		<ToolBarWrapper
+			id="holdingToolbar"
 			$dragging={dragging}
 			ref={toolbarRef}
 			$x={pos.x}
