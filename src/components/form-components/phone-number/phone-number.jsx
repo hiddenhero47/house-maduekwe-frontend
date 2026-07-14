@@ -124,7 +124,7 @@ const PhoneInput = ({
 					name={name}
 					onBlur={onBlur}
 					type="tel"
-					autoComplete="tel"
+					// autoComplete="tel"
 					value={codes.phone ? `${codes.phone} ${number}` : number || ''}
 					onChange={(e) => handleNumberInput(e.target.value)}
 					placeholder={placeholder}
