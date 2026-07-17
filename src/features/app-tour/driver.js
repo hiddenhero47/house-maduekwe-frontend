@@ -4,6 +4,9 @@ import './driver-theme.css';
 
 let activeDriver = null;
 const tourQueue = [];
+let suppressPersist = false;
+
+console.log(suppressPersist, 'suppressPersist');
 
 export const runTour = ({ tourKey, steps, options = {} }) => {
 	if (!tourKey) {
@@ -47,7 +50,10 @@ const startTour = ({ tourKey, steps, options }) => {
 
 		onDestroyed: () => {
 			try {
-				updateTourGuide(tourKey);
+				if (!suppressPersist) {
+					updateTourGuide(tourKey);
+				}
+				suppressPersist = false;
 				options.onDestroyed?.();
 			} finally {
 				activeDriver = null;
@@ -99,4 +105,10 @@ export const updateTourGuide = (key, value = true) => {
 			[key]: value,
 		})
 	);
+};
+
+export const closeActiveTour = ({ persist = true } = {}) => {
+	suppressPersist = !persist;
+	activeDriver?.destroy();
+	suppressPersist = false;
 };

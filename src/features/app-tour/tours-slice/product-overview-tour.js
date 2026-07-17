@@ -9,7 +9,7 @@ export const runHoldButtonTour = () => {
 		},
 		steps: [
 			{
-				element: '#holdForGuestCheckout',
+				element: '#addToHoldingBtn',
 				popover: {
 					title: 'Hold for Guest Checkout',
 					description: `Click this button to save the selected product for Guest Checkout. 

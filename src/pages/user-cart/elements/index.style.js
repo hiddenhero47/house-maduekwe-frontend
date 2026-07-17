@@ -219,6 +219,14 @@ export const Item = styled.div`
 		overflow: hidden;
 		transition: transform 0.25s ease;
 
+		@media (min-width: 401px) and (max-width: 489px) {
+			width: 40%;
+		}
+
+		@media (max-width: 400px) {
+			width: 50%;
+		}
+
 		&:hover {
 			transform: scale(1.03);
 		}
