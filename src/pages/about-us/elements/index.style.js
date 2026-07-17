@@ -51,6 +51,18 @@ export const Hero = styled.div`
 		border-radius: 14px;
 		overflow: hidden;
 		min-height: 280px;
+
+		@media (min-width: 769px) and (max-width: 1111px) {
+			min-height: unset;
+			aspect-ratio: 1.6;
+			width: 100%;
+		}
+
+		@media (max-width: 768px) {
+			min-height: unset;
+			aspect-ratio: 1.6;
+			max-height: 280px;
+		}
 	}
 
 	.hero-image img {

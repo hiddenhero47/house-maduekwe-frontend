@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
 	ColorCircle,
@@ -27,6 +27,8 @@ import {
 	attributesError,
 } from '../../../utilities/basic-functions';
 import { useNavigate } from 'react-router-dom';
+import { runHoldButtonTour } from '../../../features/app-tour/tours-slice/product-overview-tour';
+import { getTourGuides } from '../../../features/app-tour/driver';
 
 function Details({
 	product,
@@ -35,6 +37,7 @@ function Details({
 	setIndex,
 	quantity,
 	setQuantity,
+	isLoading,
 }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -191,6 +194,29 @@ function Details({
 		}
 	};
 
+	useEffect(() => {
+		if (isLoading || !product?._id) return;
+
+		const guides = getTourGuides();
+
+		if (guides['product-hold-button-v1']) return;
+
+		const timer = setTimeout(() => {
+			const btn = document.querySelector('#addToHoldingBtn');
+
+			btn?.scrollIntoView({
+				behavior: 'smooth',
+				block: 'center',
+			});
+
+			setTimeout(() => {
+				runHoldButtonTour();
+			}, 800); // Wait for the scroll to finish
+		}, 800); // Give the user time to see the page first
+
+		return () => clearTimeout(timer);
+	}, [isLoading, product?._id]);
+
 	return (
 		<DetailsWrapper>
 			<div className="flex justify-between w-full items-center mb-6 text-[var(--mainBody-text)]">
@@ -281,7 +307,7 @@ function Details({
 			</div>
 
 			<div className="mt-5 flex justify-between items-center">
-				<HoldBtn id="holdForGuestCheckout" onClick={() => holding()}>
+				<HoldBtn type="button" id="addToHoldingBtn" onClick={() => holding()}>
 					<i>
 						<FaShoppingBasket />
 					</i>
