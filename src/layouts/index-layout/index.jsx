@@ -16,6 +16,7 @@ import TwoFaModal from '../../components/modal-assets/2fa-modal/index';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 import { openMenu } from '../../store/slice/holding';
 import CartServices from '../../features/services/custom-hooks/cart';
+import { closeActiveTour } from '../../features/app-tour/driver';
 
 // shop-item
 
@@ -43,7 +44,23 @@ function IndexLayout() {
 
 	const location = useLocation();
 
-	const showIntro = location.pathname === '/';
+	let referrer = document.referrer;
+
+	const isFirstEntryToSite = () => {
+		if (!referrer) return false;
+
+		const currentOrigin = window.location.origin;
+		const isFirst = !referrer.startsWith(currentOrigin)
+
+		referrer = currentOrigin;
+
+		return isFirst;
+	};
+
+	console.log(referrer, 'referrer');
+	
+
+	const showIntro = location.pathname === '/' ? isFirstEntryToSite() : false;
 
 	const [aftermath, setAftermath] = useState(!showIntro);
 	const [useIntro, setUseIntro] = useState(showIntro);
@@ -102,6 +119,9 @@ function IndexLayout() {
 
 	useEffect(() => {
 		const path = location.pathname;
+		// Close any active tour when changing pages.
+		closeActiveTour({ persist: false });
+		// Save the last public route.
 		if (
 			!path.startsWith('/authentication') &&
 			!path.startsWith('/reset-password')
@@ -199,7 +219,7 @@ function IndexLayout() {
 
 				<Outlet context={{ aftermath }} />
 
-				{!!holdings.length && show && !isExcluded() && (
+				{!!holdings.length && show && !isExcluded() && aftermath && (
 					<ToolBar
 						layoutRef={layoutRef}
 						nos={holdings.length}
