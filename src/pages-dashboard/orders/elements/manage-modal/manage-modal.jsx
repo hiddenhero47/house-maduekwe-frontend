@@ -25,7 +25,7 @@ function ManageModal({ id }) {
 	const { mutate: changeStatus, isPending } = OrderServices.updateStatus();
 
 	const { mutate: cancelOrder, isPending: isCanceling } =
-			OrderServices.cancel();
+		OrderServices.cancel();
 
 	const modalRef = useRef(null);
 	const openModal = () => {
@@ -50,12 +50,15 @@ function ManageModal({ id }) {
 		}
 
 		if (values.status === ORDER_STATUS.CANCELLED) {
-			return cancelOrder({id}, {
-				onSuccess: () => {
-					resetForm();
-					closeModal?.();
-				},
-			});
+			return cancelOrder(
+				{ id },
+				{
+					onSuccess: () => {
+						resetForm();
+						closeModal?.();
+					},
+				}
+			);
 		}
 
 		changeStatus(
