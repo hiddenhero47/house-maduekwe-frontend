@@ -48,7 +48,8 @@ function Index() {
 
 	const { data: itemGroups = [], pagination } = data || {};
 
-	const videoOne = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
+	// const videoOne = 'https://res.cloudinary.com/ctguffdy/video/upload/v1784499287/VIDEO-ONE_tnrmxn.mp4';
+	const videoOne = 'https://res.cloudinary.com/ctguffdy/video/upload/sp_auto/v1784499287/VIDEO-ONE_tnrmxn.m3u8';
 	const videoTwo = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
 
 	const normalizeItems = (items) => {
@@ -251,7 +252,7 @@ function Index() {
 					<div className="w-full h-full relative rounded-[inherit]">
 						<VideoWrapper $isLoading={!isVideoReadyB}>
 							<MyVideo
-								videoSrc={videoTwo}
+								videoSrc={videoOne}
 								isPreloaded
 								autoPlay
 								onStartNoSound
