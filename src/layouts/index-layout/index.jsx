@@ -44,21 +44,28 @@ function IndexLayout() {
 
 	const location = useLocation();
 
-	let referrer = document.referrer;
-
 	const isFirstEntryToSite = () => {
-		if (!referrer) return false;
+		// If we've already checked in this browser tab/session,
+		// do not show the intro again.
+		if (sessionStorage.getItem('siteEntered')) {
+			return false;
+		}
 
+		const referrer = document.referrer;
 		const currentOrigin = window.location.origin;
-		const isFirst = !referrer.startsWith(currentOrigin)
 
-		referrer = currentOrigin;
+		// User came from outside if:
+		// - there is no referrer (direct visit), OR
+		// - the referrer is not your own site.
+		const cameFromOutside = !referrer || !referrer.startsWith(currentOrigin);
 
-		return isFirst;
+		// Mark that the user has entered the site for this session.
+		if (cameFromOutside) {
+			sessionStorage.setItem('siteEntered', 'true');
+		}
+
+		return cameFromOutside;
 	};
-
-	console.log(referrer, 'referrer');
-	
 
 	const showIntro = location.pathname === '/' ? isFirstEntryToSite() : false;
 

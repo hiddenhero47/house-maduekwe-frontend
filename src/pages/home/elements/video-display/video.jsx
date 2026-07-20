@@ -15,6 +15,7 @@ import {
 	MediaMuteButton,
 	MediaFullscreenButton,
 } from 'media-chrome/react';
+import Hls from "hls.js";
 
 function MyVideo({
 	videoSrc,
@@ -59,6 +60,20 @@ function MyVideo({
 		}
 	};
 
+	useEffect(() => {
+		const video = videoRef.current;
+
+		if (Hls.isSupported()) {
+			const hls = new Hls();
+			hls.loadSource(videoSrc);
+			hls.attachMedia(video);
+
+			return () => hls.destroy();
+		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			video.src = videoSrc;
+		}
+	}, [videoSrc]);
+
 	return (
 		<VideoContainer className="video_wrapper">
 			{isLoading ? (
@@ -80,7 +95,7 @@ function MyVideo({
 						ref={videoRef}
 						slot="media"
 						src={videoSrc}
-						preload="auto"
+						preload="metadata"
 						fetchPriority="high"
 						autoPlay={autoPlay}
 						muted={onStartNoSound}
