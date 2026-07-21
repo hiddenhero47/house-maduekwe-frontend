@@ -11,11 +11,25 @@ const currencies = currenciesJson;
 const normalize = (val) => val?.toString();
 
 // Country
-export const getCountryOptions = () =>
-	countries.countries.map((country) => ({
-		label: `${country.flag_emoji} ${country.name}`,
-		value: normalize(country.sort_name),
-	}));
+export const getCountryOptions = (acceptedCountries = []) => {
+	const hasFilter =
+		Array.isArray(acceptedCountries) && acceptedCountries.length > 0;
+
+	const acceptedSet = new Set(
+		acceptedCountries.map((code) => normalize(code)?.toUpperCase())
+	);
+
+	return countries.countries
+		.filter((country) => {
+			if (!hasFilter) return true;
+
+			return acceptedSet.has(normalize(country.sort_name)?.toUpperCase());
+		})
+		.map((country) => ({
+			label: `${country.flag_emoji} ${country.name}`,
+			value: normalize(country.sort_name),
+		}));
+};
 
 export const getCountryByCode = (countryCode) =>
 	countries.countries.find(

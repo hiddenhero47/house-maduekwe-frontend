@@ -25,12 +25,16 @@ import UserServices from '../../../../../features/services/custom-hooks/user';
 import BubbleSlide from '../../../../../components/loaders/bubbles/BubbleSlide';
 import { convertFileToBase64 } from '../../../../../utilities/basic-functions';
 import { getFromLocalStorage } from '../../../../../utilities/basic-functions';
+import {
+	getTourGuides,
+	TOUR_STORAGE_KEY,
+} from '../../../../../features/app-tour/driver';
 
 function UserDetails() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
-	
+
 	const initialValues = {
 		name: user?.name || '',
 		phoneNumber: {
@@ -77,11 +81,14 @@ function UserDetails() {
 	const { name, phoneNumber, image } = values;
 
 	const logoutUser = async () => {
-		const appThemes = getFromLocalStorage("appThemes") || "light";
+		const appThemes = getFromLocalStorage('appThemes') || 'light';
+		const guides = getTourGuides();
 		await navigate('/');
 		dispatch(logout());
-		localStorage.clear();
-        dispatch(setTheme(appThemes));
+		dispatch(setTheme(appThemes));
+		if (Object.keys(guides).length > 0) {
+			localStorage.setItem(TOUR_STORAGE_KEY, JSON.stringify(guides));
+		}
 	};
 
 	const onChangeFile = (e) => {
@@ -96,7 +103,7 @@ function UserDetails() {
 		if (user?.avatar?.url) return user.avatar?.url;
 		return null;
 	};
-	
+
 	return (
 		<UserDetailsWrapper
 			$isAdmin={

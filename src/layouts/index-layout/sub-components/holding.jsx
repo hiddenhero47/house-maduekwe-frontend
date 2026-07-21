@@ -21,6 +21,7 @@ import {
 import { attributeType } from '../../../utilities/app-const';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import { CheckoutServices } from '../../../features/services/custom-hooks/orders';
+import ExportFeeServices from '../../../features/services/custom-hooks/export-fee';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '../../toast/toast-handler';
@@ -77,6 +78,7 @@ function Holding() {
 
 			setTimeout(() => {
 				navigate('/authentication');
+				dispatch(closeMenu());
 			}, 1500);
 
 			return;
@@ -135,6 +137,9 @@ function Holding() {
 		stateLine: '',
 		fullAddress: '',
 	};
+
+	const { data: acceptedCountries = ['US'], isLoading: isLoadingAccCount } =
+		ExportFeeServices.getAcceptedCountries();
 
 	const onSubmit = (values, { resetForm }) => {
 		const payload = holdings.map((item) => ({
@@ -324,11 +329,16 @@ function Holding() {
 											onBlur={handleBlur}
 											isError={touched.country && errors.country}
 											errormessage={errors.country}
-											placeholder="Select country"
-											options={getCountryOptions()}
+											placeholder={
+												isLoadingAccCount
+													? 'Loading countries...'
+													: 'Select country'
+											}
+											options={getCountryOptions(acceptedCountries)}
 											paddingX="14px"
 											paddingY="9px"
 											useBackground
+											disabled={isLoadingAccCount}
 										/>
 									</div>
 

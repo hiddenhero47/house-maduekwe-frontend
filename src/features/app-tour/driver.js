@@ -83,7 +83,7 @@ export const getFromLocalStorage = (value) => {
 	return localStorage.getItem(value);
 };
 
-const TOUR_STORAGE_KEY = 'app-tour-guides';
+export const TOUR_STORAGE_KEY = 'app-tour-guides';
 
 export const getTourGuides = () => {
 	try {
