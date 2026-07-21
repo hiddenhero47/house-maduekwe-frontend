@@ -25,6 +25,10 @@ import {
 	groupedVariantsChecker,
 	attributesError,
 } from '../../utilities/basic-functions';
+import {
+	handleHolding,
+	handleCartServer,
+} from '../../utilities/product-services';
 import { toast } from '../../layouts/toast/toast-handler';
 
 function ShopItem({
@@ -54,103 +58,27 @@ function ShopItem({
 	});
 
 	const holding = () => {
-		const attributeGroup = groupAttributesByType(product?.attributes);
-		if (!attribute.currentSize) {
-			toast.warning('Size not selected');
-			return;
-		}
-
-		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('Color not selected');
-			return;
-		}
-		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
-		const selectedAttributes = [
-			...(selectedColor ? [selectedColor] : []),
-			...(attribute.currentSize ? [attribute.currentSize] : []),
-		];
-
-		const check = groupedVariantsChecker({
-			selectedAttributes,
-			shopItem: product,
+		handleHolding({
+			product,
+			attribute,
 			quantity: 1,
+			dispatch,
+			addToHoldingsAction: addToHoldings,
+			afterSuccess: () => dispatch(resetDrag()),
 		});
-
-		if (!check.ok) {
-			if (check.reason === 'invalid_combination') {
-				toast.warning('This combination is not available');
-			} else if (check.reason === 'insufficient_stock') {
-				toast.warning(`Only ${check.available} left in stock`);
-			} else {
-				toast.warning('Out of stock');
-			}
-			return;
-		}
-
-		const selectedItem = {
-			shopItem: product,
-			quantity: 1,
-			selectedAttributes: selectedAttributes,
-		};
-
-		console.log('📦 Add to holding', selectedItem);
-		dispatch(resetDrag()); // ♻️ reset drag after holding
-		dispatch(addToHoldings(selectedItem));
 	};
 
 	const cartServer = () => {
-		if (!activeUser) {
-			toast.info('Please log in to add items to your cart');
-
-			setTimeout(() => {
-				navigate('/authentication');
-			}, 1500);
-
-			return;
-		}
-
-		const attributeGroup = groupAttributesByType(product?.attributes);
-		if (!attribute.currentSize) {
-			toast.warning('Size not selected');
-			return;
-		}
-
-		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('Color not selected');
-			return;
-		}
-
-		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
-		const selectedAttributes = [
-			...(selectedColor ? [selectedColor] : []),
-			...(attribute.currentSize ? [attribute.currentSize] : []),
-		];
-
-		const check = groupedVariantsChecker({
-			selectedAttributes,
-			shopItem: product,
+		handleCartServer({
+			product,
+			attribute,
 			quantity: 1,
+			activeUser,
+			navigate,
+			dispatch,
+			afterSuccess: (selectedItem) => endDrag({ data: selectedItem }),
+			holding, // pass callback
 		});
-
-		if (!check.ok) {
-			if (check.reason === 'invalid_combination') {
-				toast.warning('This combination is not available');
-			} else if (check.reason === 'insufficient_stock') {
-				toast.warning(`Only ${check.available} left in stock`);
-			} else {
-				toast.warning('Out of stock');
-			}
-			return;
-		}
-
-		const selectedItem = {
-			shopItem: product?._id,
-			quantity: 1,
-			selectedAttributes: selectedAttributes,
-		};
-
-		console.log('🛒 Add to cart', selectedItem);
-		dispatch(endDrag({ data: selectedItem })); // ✅ mark drag as ended
 	};
 
 	// 🧠 Start dragging (only if mouse is held down)

@@ -20,6 +20,7 @@ import {
 	getCitiesOptions,
 } from '../../../utilities/city-state-country';
 import AddressServices from '../../../features/services/custom-hooks/addresses';
+import ExportFeeServices from '../../../features/services/custom-hooks/export-fee';
 
 function EditAddress({ ref, closeModal, address, clear }) {
 	// ✅ Memoized initial values (same pattern as category)
@@ -36,6 +37,9 @@ function EditAddress({ ref, closeModal, address, clear }) {
 		}),
 		[address]
 	);
+
+	const { data: acceptedCountries = ['US'], isLoading } =
+		ExportFeeServices.getAcceptedCountries();
 
 	const { mutate: updateAddress, isPending } = AddressServices.update();
 
@@ -118,11 +122,14 @@ function EditAddress({ ref, closeModal, address, clear }) {
 									onBlur={handleBlur}
 									isError={touched.country && errors.country}
 									errormessage={errors.country}
-									placeholder="Select country"
-									options={getCountryOptions() || []}
+									placeholder={
+										isLoading ? 'Loading countries...' : 'Select country'
+									}
+									options={getCountryOptions(acceptedCountries) || []}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
+									disabled={isLoading}
 								/>
 							</div>
 

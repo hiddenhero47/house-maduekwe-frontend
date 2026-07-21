@@ -29,6 +29,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { runHoldButtonTour } from '../../../features/app-tour/tours-slice/product-overview-tour';
 import { getTourGuides } from '../../../features/app-tour/driver';
+import {
+	handleHolding,
+	handleCartServer,
+} from '../../../utilities/product-services';
 
 function Details({
 	product,
@@ -81,48 +85,13 @@ function Details({
 	const rating = product?.rating || 4;
 
 	const holding = () => {
-		const attributeGroup = groupAttributesByType(product?.attributes);
-		if (!attribute.currentSize) {
-			toast.warning('Size not selected');
-			return;
-		}
-
-		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('Color not selected');
-			return;
-		}
-
-		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
-		const selectedAttributes = [
-			...(selectedColor ? [selectedColor] : []),
-			...(attribute.currentSize ? [attribute.currentSize] : []),
-		];
-
-		const check = groupedVariantsChecker({
-			selectedAttributes,
-			shopItem: product,
+		handleHolding({
+			product,
+			attribute,
 			quantity,
+			dispatch,
+			addToHoldingsAction: addToHoldings,
 		});
-
-		if (!check.ok) {
-			if (check.reason === 'invalid_combination') {
-				toast.warning('This combination is not available');
-			} else if (check.reason === 'insufficient_stock') {
-				toast.warning(`Only ${check.available} left in stock`);
-			} else {
-				toast.warning('Out of stock');
-			}
-			return;
-		}
-
-		const selectedItem = {
-			shopItem: product,
-			quantity: 1,
-			selectedAttributes,
-		};
-
-		console.log('📦 Add to holding', selectedItem);
-		dispatch(addToHoldings(selectedItem));
 	};
 
 	const increaseQuantity = (value = 1) => {
@@ -134,64 +103,15 @@ function Details({
 	};
 
 	const cartServer = () => {
-		if (!activeUser) {
-			toast.info('Please log in to add items to your cart');
-
-			setTimeout(() => {
-				navigate('/authentication');
-			}, 1500);
-
-			return;
-		}
-
-		const attributeGroup = groupAttributesByType(product?.attributes);
-		if (!attribute.currentSize) {
-			toast.warning('Size not selected');
-			return;
-		}
-
-		if (!attribute.currentColor && attributeGroup.color.length > 1) {
-			toast.warning('Color not selected');
-			return;
-		}
-
-		const selectedColor = attribute.currentColor ?? attributeGroup?.color?.[0];
-		const selectedAttributes = [
-			...(selectedColor ? [selectedColor] : []),
-			...(attribute.currentSize ? [attribute.currentSize] : []),
-		];
-
-		const check = groupedVariantsChecker({
-			selectedAttributes,
-			shopItem: product,
+		handleCartServer({
+			product,
+			attribute,
 			quantity,
+			activeUser,
+			navigate,
+			addToCart,
+			holding, // pass callback
 		});
-
-		if (!check.ok) {
-			if (check.reason === 'invalid_combination') {
-				toast.warning('This combination is not available');
-			} else if (check.reason === 'insufficient_stock') {
-				toast.warning(`Only ${check.available} left in stock`);
-			} else {
-				toast.warning('Out of stock');
-			}
-			return;
-		}
-
-		const selectedItem = {
-			shopItem: product?._id,
-			quantity: quantity,
-			selectedAttributes: selectedAttributes,
-		};
-
-		const isValidData =
-			selectedItem &&
-			typeof selectedItem === 'object' &&
-			Object.keys(selectedItem).length > 0;
-
-		if (isValidData) {
-			addToCart({ itemList: [selectedItem] });
-		}
 	};
 
 	useEffect(() => {
