@@ -16,6 +16,20 @@ const useGetExportFeesQuery = (active) => {
 	});
 };
 
+const useGetAcceptedCountriesQuery = () => {
+  return useQuery({
+    queryKey: ['accepted-countries'],
+    queryFn: () =>
+      axiosCall({
+        url: '/api/export-fees/accepted-countries',
+        method: 'GET',
+      }),
+    staleTime: 1000 * 60 * 60, // cache for 1 hour
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+};
+
 const useCreateExportFeeMutation = () => {
 	const queryClient = useQueryClient();
 
@@ -96,6 +110,7 @@ export {
 	useUpdateExportFeeMutation,
 	useDisableExportFeeMutation,
 	useDeleteExportFeePermanentlyMutation,
+	useGetAcceptedCountriesQuery,
 };
 
 const ExportFeeServices = {
@@ -104,6 +119,7 @@ const ExportFeeServices = {
 	update: useUpdateExportFeeMutation,
 	disable: useDisableExportFeeMutation,
 	deletePermanent: useDeleteExportFeePermanentlyMutation,
+	getAcceptedCountries: useGetAcceptedCountriesQuery,
 };
 
 export default ExportFeeServices;

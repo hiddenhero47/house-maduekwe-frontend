@@ -20,6 +20,7 @@ import {
 	getCitiesOptions,
 } from '../../../utilities/city-state-country';
 import AddressServices from '../../../features/services/custom-hooks/addresses';
+import ExportFeeServices from '../../../features/services/custom-hooks/export-fee';
 
 function CreateAddress({ ref, openModal, closeModal }) {
 	const initialValues = {
@@ -32,6 +33,9 @@ function CreateAddress({ ref, openModal, closeModal }) {
 		description: '',
 		isDefault: false,
 	};
+
+	const { data: acceptedCountries = ['US'], isLoading } =
+		ExportFeeServices.getAcceptedCountries();
 
 	const { mutate: createAddress, isPending } = AddressServices.create();
 
@@ -83,8 +87,8 @@ function CreateAddress({ ref, openModal, closeModal }) {
 					<div>
 						<h3>Add New Address</h3>
 						<p>
-							Add a delivery address. You can set one address as your
-							default for faster checkout.
+							Add a delivery address. You can set one address as your default
+							for faster checkout.
 						</p>
 					</div>
 
@@ -113,11 +117,14 @@ function CreateAddress({ ref, openModal, closeModal }) {
 									onBlur={handleBlur}
 									isError={touched.country && errors.country}
 									errormessage={errors.country}
-									placeholder="Select country"
-									options={getCountryOptions() || []}
+									placeholder={
+										isLoading ? 'Loading countries...' : 'Select country'
+									}
+									options={getCountryOptions(acceptedCountries) || []}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
+									disabled={isLoading}
 								/>
 							</div>
 
