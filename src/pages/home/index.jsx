@@ -321,11 +321,11 @@ function Index() {
 							Blog
 						</a>
 
-						<Link to="/about-us" className="font-sans">
+						<Link to="/terms-and-conditions" className="font-sans">
 							Terms and Condition
 						</Link>
 
-						<Link to="/about-us" className="font-sans">
+						<Link to="/privacy-policy" className="font-sans">
 							Privacy Policy
 						</Link>
 
