@@ -9,6 +9,16 @@
     </url>
 
     <url>
+        <loc>https://housemaduekwe.com/privacy-policy</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://housemaduekwe.com/terms-and-conditions</loc>
+        <priority>0.6</priority>
+    </url>
+
+    <url>
         <loc>https://housemaduekwe.com/about-us</loc>
         <priority>0.8</priority>
     </url>
