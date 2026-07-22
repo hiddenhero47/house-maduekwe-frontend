@@ -21,6 +21,8 @@ import Checkout from './pages/checkout ';
 import ResetPassword from './pages/reset-password';
 import Success from './pages/success';
 import GuestOrder from './pages/guest-order';
+import PrivacyPolicy from './pages/private-policy';
+import TermsAndConditions from './pages/terms-and-condition';
 // Dashboard pages
 import Overview from './pages-dashboard/home';
 import Product from './pages-dashboard/products';
@@ -55,6 +57,11 @@ function App() {
 								<Route path="/checkout/:orderId" element={<Checkout />} />
 								<Route path="/success" element={<Success />} />
 								<Route path="/guest-order" element={<GuestOrder />} />
+								<Route path="/privacy-policy" element={<PrivacyPolicy />} />
+								<Route
+									path="/terms-and-conditions"
+									element={<TermsAndConditions />}
+								/>
 							</Route>
 
 							<Route path="/admin" element={<DashboardLayout />}>
