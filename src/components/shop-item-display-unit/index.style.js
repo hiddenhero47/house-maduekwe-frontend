@@ -168,12 +168,12 @@ export const ShopItemContent = styled.div`
 	/* 🪄 Responsive tweaks when width <= 250px */
 	@container (max-width: 250px) {
 		.add_to_holding {
-			font-size: 1rem;
+			font-size: 1.4rem;
 		}
 
 		.arrows_left,
 		.arrows_right {
-			font-size: 1rem;
+			font-size: 1.4rem;
 		}
 	}
 `;
@@ -328,10 +328,26 @@ export const Color = styled.button`
 	border: 1.5px solid
 		${({ theme, $value }) =>
 			theme.mode === 'dark' ? lighten($value, 20) : darken($value, 20)};
-	transform: scale(${({ $active }) => ($active ? 0.9 : 1)});
+	border: ${({ theme, $active, $value }) => {
+		if ($active) return `1.5px solid ${theme?.mainBody?.sbText}`;
+		if (theme.mode === 'dark') return `1.5px solid ${lighten($value, 20)}`;
+		return `1.5px solid ${darken($value, 20)}`;
+	}};
 	transition:
 		transform 0.15s ease,
 		border-color 0.3s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+
+	span {
+		display: ${({ $active }) => ($active ? 'flex' : 'none')};
+		color: ${({ $value }) => ($value === '#ffffff' ? '#000' : '#fff')};
+		font-size: 10px;
+		font-weight: bold;
+		position: absolute;
+	}
 
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 1.33vmin;
@@ -355,12 +371,21 @@ export const Size = styled.button`
 	font-family: Inter;
 	font-weight: 900;
 	line-height: 0px;
-	color: ${({ theme }) => theme?.mainBody.sbText};
+
+	color: ${({ $active, theme }) =>
+		$active ? theme.mainBody.background : theme.mainBody.sbText};
+
 	border: ${({ theme, $active, $isError }) => {
+		if ($isError && $active) return `1.5px solid ${theme?.form.error}`;
 		if ($isError) return `1px solid ${theme?.form.error}`;
 		if ($active) return `1px solid ${theme?.mainBody.text}`;
 		return `1px solid ${theme?.mainBody.sbKitText}`;
 	}};
+
+	background: ${({ $active, theme }) =>
+		$active ? theme.mainBody.text : 'transparent'};
+
+	transition: all 0.2s ease;
 
 	@supports not (aspect-ratio: 1 / 1) {
 		width: 2.33vmin;
