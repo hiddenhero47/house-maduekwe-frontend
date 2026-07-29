@@ -29,8 +29,10 @@ import {
 	getTourGuides,
 	TOUR_STORAGE_KEY,
 } from '../../../../../features/app-tour/driver';
+import { useQueryClient } from '@tanstack/react-query';
 
 function UserDetails() {
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
@@ -85,6 +87,7 @@ function UserDetails() {
 		const guides = getTourGuides();
 		await navigate('/');
 		dispatch(logout());
+		queryClient.invalidateQueries();
 		dispatch(setTheme(appThemes));
 		if (Object.keys(guides).length > 0) {
 			localStorage.setItem(TOUR_STORAGE_KEY, JSON.stringify(guides));
