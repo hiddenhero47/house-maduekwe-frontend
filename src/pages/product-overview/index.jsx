@@ -14,6 +14,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { IoIosArrowForward } from 'react-icons/io';
 import ModalSlider from '../../components/sliders/modal-slider/index';
+import SwipeSlider from "../../components/sliders/swipe-slider/index";
 import { HiMiniArrowSmallLeft, HiMiniArrowSmallRight } from 'react-icons/hi2';
 import { LuFullscreen } from 'react-icons/lu';
 import Details from './elements/details';
@@ -165,12 +166,13 @@ function Index() {
 									<span>SOLD OUT</span>
 								</SoldOut>
 
-								<ModalSlider currentIndex={index}>
+								<SwipeSlider currentIndex={index} setCurrentIndex={setIndex}>
 									{productDisplay.map((image, i) => (
-										<div key={i} className="imageHolder">
+										<div key={i} className="imageHolder bg-[var(--showcaseBox-background)]">
 											<Image
 												src={image?.url}
 												alt="Error"
+												draggable="false"
 												onLoad={(e) => {
 													const img = e.currentTarget;
 													const ratio = img.naturalWidth / img.naturalHeight;
@@ -180,7 +182,7 @@ function Index() {
 											/>
 										</div>
 									))}
-								</ModalSlider>
+								</SwipeSlider>
 
 								<div id="imageNavigation">
 									{productDisplay.map((image, i) => (

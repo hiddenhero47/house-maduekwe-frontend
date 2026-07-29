@@ -428,7 +428,9 @@ function ShopItem({
 													attr?.Attribute?.display ===
 													attribute?.currentColor?.Attribute?.display
 												}
-											/>
+											>
+												<span>✓</span>
+											</Color>
 										))}
 									</div>
 									<div className="size">

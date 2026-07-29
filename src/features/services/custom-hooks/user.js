@@ -277,7 +277,7 @@ const useResetPasswordMutation = () => {
 
 		onSuccess: (data) => {
 			toast.success(data?.message || 'Password reset successfully');
-			navigate('/authentication/sign-in');
+			navigate('/authentication');
 		},
 	});
 };
