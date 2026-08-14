@@ -18,6 +18,7 @@ import { addToHoldings } from '../../../store/slice/holding';
 import { IoIosAdd } from 'react-icons/io';
 import { RiSubtractLine } from 'react-icons/ri';
 import { ensureUser } from '../../../store/slice/auth';
+import { addToLocalCart } from '../../../store/slice/local-cart';
 import CartServices from '../../../features/services/custom-hooks/cart';
 import { toast } from '../../../layouts/toast/toast-handler';
 import BubbleSlide from '../../../components/loaders/bubbles/BubbleSlide';
@@ -91,6 +92,8 @@ function Details({
 			quantity,
 			dispatch,
 			addToHoldingsAction: addToHoldings,
+			activeUser,
+			navigate: () => navigate('/authentication'),
 		});
 	};
 
@@ -110,6 +113,7 @@ function Details({
 			activeUser,
 			navigate,
 			addToCart,
+			addToLocalCart: (selectedItem) => dispatch(addToLocalCart(selectedItem)),
 			holding, // pass callback
 		});
 	};
@@ -231,7 +235,8 @@ function Details({
 					<i>
 						<FaShoppingBasket />
 					</i>
-					Hold for Guest Checkout
+					{/* Hold for Guest Checkout */}
+					Add to Holdings
 					<i>
 						<IoIosArrowForward />
 					</i>

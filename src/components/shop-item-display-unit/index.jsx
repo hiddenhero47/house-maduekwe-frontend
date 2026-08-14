@@ -20,6 +20,7 @@ import { attributeType, ItemStatusType } from '../../utilities/app-const';
 import { useDispatch, useSelector } from 'react-redux';
 import { startDrag, endDrag, resetDrag } from '../../store/slice/drag-board';
 import { addToHoldings } from '../../store/slice/holding';
+import { addToLocalCart } from '../../store/slice/local-cart';
 import {
 	groupAttributesByType,
 	groupedVariantsChecker,
@@ -65,6 +66,8 @@ function ShopItem({
 			dispatch,
 			addToHoldingsAction: addToHoldings,
 			afterSuccess: () => dispatch(resetDrag()),
+			activeUser,
+			navigate: () => navigate('/authentication'),
 		});
 	};
 
@@ -77,6 +80,10 @@ function ShopItem({
 			navigate,
 			dispatch,
 			afterSuccess: (selectedItem) => endDrag({ data: selectedItem }),
+			addToLocalCart: (selectedItem) => {
+				dispatch(addToLocalCart(selectedItem));
+				dispatch(resetDrag());
+			},
 			holding, // pass callback
 		});
 	};

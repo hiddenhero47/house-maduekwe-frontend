@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { colors } from '../../utilities/colors';
 import { useSelector, useDispatch } from 'react-redux';
 import ScrollToTop from '../scroll-to-top';
+import LocalCartProvider from '../local-cart-provider';
 import { LayoutWrapper, Navigation, CartBtn } from './index.style';
 import Intro from '../app-intros/intro';
 import { HiMenuAlt3 } from 'react-icons/hi';
@@ -18,12 +19,15 @@ import { openMenu } from '../../store/slice/holding';
 import CartServices from '../../features/services/custom-hooks/cart';
 import { closeActiveTour } from '../../features/app-tour/driver';
 
-// shop-item
-
 function IndexLayout() {
 	const { theme } = useSelector((state) => state.themes);
 	const { holdings, show } = useSelector((state) => state.holdings);
 	const { data, dragType, dragEnd } = useSelector((state) => state.dragBoard);
+	const { items: localCartItems } = useSelector((state) => state.localCart);
+	const { user } = useSelector((state) => state.auth);
+
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -150,6 +154,8 @@ function IndexLayout() {
 		);
 	};
 
+	const appCartCount = activeUser ? count : localCartItems.length;
+
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />
@@ -209,9 +215,9 @@ function IndexLayout() {
 									<FaCartShopping />
 								</i>
 
-								{count > 0 && (
+								{appCartCount > 0 && (
 									<span className="cart_badge">
-										{count > 99 ? '99+' : count}
+										{appCartCount > 99 ? '99+' : appCartCount}
 									</span>
 								)}
 							</CartBtn>
@@ -249,6 +255,8 @@ function IndexLayout() {
 			</Modal.Left>
 
 			<Holding />
+
+			<LocalCartProvider />
 
 			<TwoFaModal />
 		</ThemeProvider>

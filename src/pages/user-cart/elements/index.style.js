@@ -42,7 +42,7 @@ export const Container = styled.div`
 		flex-direction: column;
 
 		@media (min-width: 952px) and (max-width: 1600px) {
-			transform: translateY(-40px);
+			transform: ${({ $activeUser }) => ($activeUser ? 'translateY(-40px)' : '')};
 		}
 	}
 

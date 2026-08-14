@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
 	Container,
 	Item,
@@ -50,6 +50,10 @@ import {
 } from '../../features/validations/checkout-validation';
 import { CHECKOUT_TYPES } from '../../utilities/app-const';
 import { FiEdit2 } from 'react-icons/fi';
+import {
+	removeFromLocalCart,
+	openGuestCheckout,
+} from '../../store/slice/local-cart';
 
 function Index() {
 	const navigate = useNavigate();
@@ -57,9 +61,16 @@ function Index() {
 	const dispatch = useDispatch();
 
 	const { holdings } = useSelector((state) => state.holdings);
+	const { items: localCartItems } = useSelector((state) => state.localCart);
+	const { user } = useSelector((state) => state.auth);
+
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
 
 	const { data, isPending, isFetching } = CartServices.get();
 	const { itemList: cartItems = [] } = data || {};
+
+	const cartList = activeUser ? cartItems || [] : localCartItems || [];
 
 	const { mutate: removeFromCart, isPending: isRemoving } =
 		CartServices.remove();
@@ -107,6 +118,14 @@ function Index() {
 		if (!id) return;
 		setLoadingId(id);
 		removeFromCart({ itemIds: [id] });
+	};
+
+	const handleRemoveItem = (item) => {
+		if (activeUser) {
+			removeItem(item?._id);
+			return;
+		}
+		dispatch(removeFromLocalCart({ tempId: item?.tempId }));
 	};
 
 	const getImage = (currentItem) => {
@@ -252,10 +271,57 @@ function Index() {
 		dispatch(removeFromHoldings({ tempId }));
 	};
 
+	const localCartSummary = useMemo(() => {
+		if (activeUser || !localCartItems?.length) {
+			return {
+				itemCount: 0,
+				subtotal: 0,
+				totalVat: 0,
+				orderTotal: 0,
+				currency: '',
+			};
+		}
+
+		let subtotal = 0;
+		let totalVat = 0;
+		let itemCount = 0;
+
+		const currency = localCartItems[0]?.shopItem?.currency || '';
+
+		localCartItems.forEach((item) => {
+			const product = item?.shopItem;
+
+			const price = Number(product?.price) || 0;
+			const quantity = Number(item?.quantity) || 0;
+			const vat = Number(product?.vat) || 0;
+			const discount = Number(product?.discount) || 0;
+
+			// Discount is treated as a percentage.
+			const discountedPrice =
+				discount > 0 ? price - (price * discount) / 100 : price;
+
+			const itemSubtotal = discountedPrice * quantity;
+			const itemVat = (itemSubtotal * vat) / 100;
+
+			subtotal += itemSubtotal;
+			totalVat += itemVat;
+			itemCount += quantity;
+		});
+
+		return {
+			itemCount,
+			subtotal,
+			totalVat,
+			orderTotal: subtotal + totalVat,
+			currency,
+		};
+	}, [activeUser, localCartItems]);
+
 	return (
 		<Container
 			className="Y_scroll_style"
 			$isPendingOrder={checkoutData?.isPendingOrder}
+			$activeUser={activeUser}
 		>
 			<h1 className="text-[30px] font-normal font-[Audiowide] pt-[20px] mb-[50px]">
 				Shopping Cart
@@ -284,14 +350,13 @@ function Index() {
 				<div id="cartItems">
 					<ul role="list">
 						<CartLoader
-							isLoading={isPending && isFetching}
-							data={cartItems || []}
+							isLoading={activeUser && isPending && isFetching}
+							data={cartList || []}
 						/>
-						{cartItems &&
-							!isPending &&
-							!isFetching &&
-							cartItems?.length > 0 &&
-							cartItems?.map((item, index) => {
+						{cartList &&
+							((!isPending && !isFetching) || !activeUser) &&
+							cartList?.length > 0 &&
+							cartList?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({
 									shopItem: item?.shopItem,
 									selectedAttributes: item?.selectedAttributes,
@@ -299,9 +364,11 @@ function Index() {
 									stockInfo: checkoutData?.stock || [],
 								});
 
+								const itemId = activeUser ? item?._id : item?.tempId;
+
 								return (
 									<li
-										key={item?._id || index}
+										key={itemId || index}
 										className="py-[30px] border-b border-b-[var(--mainBody-line)]"
 									>
 										<Item $unavailable={stockDetails?.status}>
@@ -356,35 +423,43 @@ function Index() {
 												<div className="flex justify-between w-full items-center">
 													<p className="flex items-center gap-[10px]">
 														Qty {item?.quantity}{' '}
-														<span className="w-[2px] rounded-full h-[25px] bg-[var(--mainBody-line)]" />
-														<ToggleBtn
-															onClick={() => toggleExclude(item?._id)}
-															$isExcluded={excludedItems.includes(item?._id)}
-														>
-															{excludedItems.includes(item?._id) ? (
-																<i>
-																	<CgRadioCheck />
-																</i>
-															) : (
-																<i>
-																	<CgRadioChecked />
-																</i>
-															)}
-														</ToggleBtn>
+														{activeUser && (
+															<>
+																<span className="w-[2px] rounded-full h-[25px] bg-[var(--mainBody-line)]" />
+																<ToggleBtn
+																	onClick={() => toggleExclude(item?._id)}
+																	$isExcluded={excludedItems.includes(
+																		item?._id
+																	)}
+																>
+																	{excludedItems.includes(item?._id) ? (
+																		<i>
+																			<CgRadioCheck />
+																		</i>
+																	) : (
+																		<i>
+																			<CgRadioChecked />
+																		</i>
+																	)}
+																</ToggleBtn>
+															</>
+														)}
 													</p>
 
 													<button
-														disabled={isRemoving}
+														disabled={activeUser && isRemoving}
 														type="button"
 														className="text-[15px] text-[var(--intro-logo)]"
-														onClick={() => removeItem(item?._id)}
+														onClick={() => handleRemoveItem(item)}
 													>
 														Remove
 													</button>
 												</div>
 											</div>
 											<ItemLoader
-												$isLoading={isRemoving && item?._id === loadingId}
+												$isLoading={
+													activeUser && isRemoving && item?._id === loadingId
+												}
 											>
 												<Spinner thin="50px" />
 											</ItemLoader>
@@ -470,157 +545,238 @@ function Index() {
 				</div>
 
 				<div id="cartSummary">
-					<CustomerName>
-						<h3>Consignee's Name</h3>
+					{activeUser ? (
+						<>
+							<CustomerName>
+								<h3>Consignee's Name</h3>
 
-						<CustomInput
-							id="name"
-							name="name"
-							value={consignee?.name || ''}
-							onChange={(e) => onChangeConsignee(e.target.value)}
-							// onBlur={() =>
-							// 	setConsignee((prev) => ({ ...prev, touched: true }))
-							// }
-							// isError={consignee.touched && consignee.isError}
-							// errormessage={'Invalid consignee name'}
-							placeholder="Enter Your Full Name, Fist & Last"
-							paddingX="14px"
-							paddingY="9px"
-							useBackground
-						/>
-					</CustomerName>
+								<CustomInput
+									id="name"
+									name="name"
+									value={consignee?.name || ''}
+									onChange={(e) => onChangeConsignee(e.target.value)}
+									placeholder="Enter Your Full Name, Fist & Last"
+									paddingX="14px"
+									paddingY="9px"
+									useBackground
+								/>
+							</CustomerName>
 
-					<AddressSelect
-						$isLoading={IsLoadingAddr}
-						$isEmpty={!addresses?.length}
-					>
-						<h3 className="flex items-center justify-between">
-							Delivery Address
-							{checkoutData?.order?.shippingFee && (
-								<span>
-									Fee:{' '}
-									{getCurrencySymbol(checkoutData?.payment?.currency) || '$'}
-									{checkoutData?.order?.shippingFee}
-								</span>
-							)}
-						</h3>
+							<AddressSelect
+								$isLoading={IsLoadingAddr}
+								$isEmpty={!addresses?.length}
+							>
+								<h3 className="flex items-center justify-between">
+									Delivery Address
+									{checkoutData?.order?.shippingFee && (
+										<span>
+											Fee:{' '}
+											{getCurrencySymbol(checkoutData?.payment?.currency) ||
+												'$'}
+											{checkoutData?.order?.shippingFee}
+										</span>
+									)}
+								</h3>
 
-						{IsLoadingAddr && (
-							<div className="h-[50px]">
-								<div className="loading_overlay">
-									<Spinner thin="45px" />
-								</div>
-							</div>
-						)}
-
-						{!IsLoadingAddr && !addresses?.length && (
-							<div className="empty_state">
-								<p>No saved addresses found.</p>
-								<AddBtn type="button" onClick={openModal}>
-									Add address <FaLocationDot />
-								</AddBtn>
-							</div>
-						)}
-
-						{!IsLoadingAddr && addresses?.length > 0 && (
-							<div className="address_list scroll_style">
-								{addresses.map((addr) => (
-									<AddressBox
-										key={addr._id}
-										$isSelected={selectedAddr === addr._id}
-										onClick={() => setSelectedAddr(addr._id)}
-									>
-										<div className="address_content">
-											<div>
-												<p className="full_address">{addr.fullAddress}</p>
-
-												<div className="meta">
-													<span>State: {addr.state}</span>
-													<span>City: {addr.city}</span>
-												</div>
-											</div>
-
-											<button
-												type="button"
-												className="edit_btn"
-												onClick={(e) => {
-													e.stopPropagation();
-													openEditModal(addr);
-												}}
-												aria-label="Edit address"
-											>
-												<FiEdit2 />
-											</button>
+								{IsLoadingAddr && (
+									<div className="h-[50px]">
+										<div className="loading_overlay">
+											<Spinner thin="45px" />
 										</div>
-									</AddressBox>
-								))}
-							</div>
-						)}
-					</AddressSelect>
-
-					<SummaryContainer>
-						<div className="w-full flex flex-col">
-							<h3 className="mb-[24px] font-semibold text-[18px] note flex items-center justify-between">
-								Order summary
-								{isConfirming && (
-									<BubbleSlide color="var(--mainBody-text)" height="20px" />
-								)}
-							</h3>
-
-							<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] note_sc">
-								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									Subtotal
-								</p>
-								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
-									{checkoutData?.order?.totalAmount || ''}
-								</p>
-							</div>
-
-							<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
-								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									Tax estimate
-								</p>
-								<p className="text-[15px] text-[var(--mainBody-sbText)]">
-									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
-									{checkoutData?.order?.totalVat || ''}
-								</p>
-							</div>
-
-							<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
-								<p>Order total</p>
-								<p>
-									{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
-									{checkoutData?.payment?.amountToPay || ''}
-								</p>
-							</div>
-
-							<Footer>
-								<CheckoutBtn
-									className="btn"
-									type="button"
-									onClick={checkoutCart}
-									$isLoading={isCheckingOut}
-								>
-									<div className="content">Checkout</div>
-									<div className="loader">
-										<BubbleSlide color="var(--addToCart-text)" height="20px" />
 									</div>
-								</CheckoutBtn>
+								)}
 
-								<button
-									type="button"
-									onClick={() => navigate('/products')}
-									className="btn btn_continue"
-								>
-									Continue Shopping{' '}
-									<i>
-										<FaArrowRightLong />
-									</i>
-								</button>
-							</Footer>
-						</div>
-					</SummaryContainer>
+								{!IsLoadingAddr && !addresses?.length && (
+									<div className="empty_state">
+										<p>No saved addresses found.</p>
+										<AddBtn type="button" onClick={openModal}>
+											Add address <FaLocationDot />
+										</AddBtn>
+									</div>
+								)}
+
+								{!IsLoadingAddr && addresses?.length > 0 && (
+									<div className="address_list scroll_style">
+										{addresses.map((addr) => (
+											<AddressBox
+												key={addr._id}
+												$isSelected={selectedAddr === addr._id}
+												onClick={() => setSelectedAddr(addr._id)}
+											>
+												<div className="address_content">
+													<div>
+														<p className="full_address">{addr.fullAddress}</p>
+
+														<div className="meta">
+															<span>State: {addr.state}</span>
+															<span>City: {addr.city}</span>
+														</div>
+													</div>
+
+													<button
+														type="button"
+														className="edit_btn"
+														onClick={(e) => {
+															e.stopPropagation();
+															openEditModal(addr);
+														}}
+														aria-label="Edit address"
+													>
+														<FiEdit2 />
+													</button>
+												</div>
+											</AddressBox>
+										))}
+									</div>
+								)}
+							</AddressSelect>
+
+							<SummaryContainer>
+								<div className="w-full flex flex-col">
+									<h3 className="mb-[24px] font-semibold text-[18px] note flex items-center justify-between">
+										Order summary
+										{isConfirming && (
+											<BubbleSlide color="var(--mainBody-text)" height="20px" />
+										)}
+									</h3>
+
+									<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] note_sc">
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											Subtotal
+										</p>
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+											{checkoutData?.order?.totalAmount || ''}
+										</p>
+									</div>
+
+									<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											Tax estimate
+										</p>
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+											{checkoutData?.order?.totalVat || ''}
+										</p>
+									</div>
+
+									<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
+										<p>Order total</p>
+										<p>
+											{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+											{checkoutData?.payment?.amountToPay || ''}
+										</p>
+									</div>
+
+									<Footer>
+										<CheckoutBtn
+											className="btn"
+											type="button"
+											onClick={checkoutCart}
+											$isLoading={isCheckingOut}
+										>
+											<div className="content">Checkout</div>
+											<div className="loader">
+												<BubbleSlide
+													color="var(--addToCart-text)"
+													height="20px"
+												/>
+											</div>
+										</CheckoutBtn>
+
+										<button
+											type="button"
+											onClick={() => navigate('/products')}
+											className="btn btn_continue"
+										>
+											Continue Shopping{' '}
+											<i>
+												<FaArrowRightLong />
+											</i>
+										</button>
+									</Footer>
+								</div>
+							</SummaryContainer>
+						</>
+					) : (
+						<SummaryContainer>
+							<div className="w-full flex flex-col">
+								<h3 className="mb-[24px] font-semibold text-[18px] note flex items-center justify-between">
+									Order summary
+								</h3>
+
+								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] note_sc">
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										Items
+									</p>
+
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										{localCartSummary.itemCount}
+									</p>
+								</div>
+
+								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										Subtotal
+									</p>
+
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										{getCurrencySymbol(localCartSummary.currency) || ''}{' '}
+										{localCartSummary.subtotal.toFixed(2)}
+									</p>
+								</div>
+
+								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										Tax estimate
+									</p>
+
+									<p className="text-[15px] text-[var(--mainBody-sbText)]">
+										{getCurrencySymbol(localCartSummary.currency) || ''}{' '}
+										{localCartSummary.totalVat.toFixed(2)}
+									</p>
+								</div>
+
+								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
+									<p>Order total</p>
+
+									<p>
+										{getCurrencySymbol(localCartSummary.currency) || ''}{' '}
+										{localCartSummary.orderTotal.toFixed(2)}
+									</p>
+								</div>
+
+								<Footer>
+									<CheckoutBtn
+										className="btn"
+										type="button"
+										onClick={() => dispatch(openGuestCheckout())}
+									>
+										<div className="content">Checkout as Guest</div>
+									</CheckoutBtn>
+
+									<button
+										type="button"
+										className="btn btn_continue"
+										onClick={() => navigate('/authentication')}
+									>
+										<div className="content">Login to unlock more features</div>
+									</button>
+
+									<button
+										type="button"
+										onClick={() => navigate('/products')}
+										className="btn btn_continue"
+									>
+										Continue Shopping{' '}
+										<i>
+											<FaArrowRightLong />
+										</i>
+									</button>
+								</Footer>
+							</div>
+						</SummaryContainer>
+					)}
 				</div>
 			</div>
 			<CreateAddress
