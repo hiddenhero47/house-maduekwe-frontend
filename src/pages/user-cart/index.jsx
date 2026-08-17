@@ -158,8 +158,10 @@ function Index() {
 	}, [IsLoadingAddr, addresses, selectedAddr]);
 
 	useEffect(() => {
-		if (!data?.itemList?.length || !selectedAddr) return;
-
+		if (!data?.itemList?.length || !selectedAddr) {
+			setCheckoutData({});
+			return;
+		}
 		// 1️⃣ Get all cart item IDs
 		const allItemIds = data.itemList.map((item) => item._id);
 
@@ -167,19 +169,23 @@ function Index() {
 		const finalItemIds = allItemIds.filter((id) => !excludedItems.includes(id));
 
 		// 3️⃣ Only confirm if there are items left
-		if (finalItemIds.length > 0) {
-			confirmCheckout(
-				{
-					itemList: finalItemIds,
-					selectedAddress: selectedAddr,
-				},
-				{
-					onSuccess: (response) => {
-						setCheckoutData(response);
-					},
-				}
-			);
+		// Nothing left to checkout
+		if (!finalItemIds.length) {
+			setCheckoutData({});
+			return;
 		}
+
+		confirmCheckout(
+			{
+				itemList: finalItemIds,
+				selectedAddress: selectedAddr,
+			},
+			{
+				onSuccess: (response) => {
+					setCheckoutData(response);
+				},
+			}
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data, selectedAddr, excludedItems]);
 
@@ -350,11 +356,11 @@ function Index() {
 				<div id="cartItems">
 					<ul role="list">
 						<CartLoader
-							isLoading={activeUser && isPending && isFetching}
+							isLoading={activeUser ? isPending || isFetching : false}
 							data={cartList || []}
 						/>
 						{cartList &&
-							((!isPending && !isFetching) || !activeUser) &&
+							(!isPending || !activeUser) &&
 							cartList?.length > 0 &&
 							cartList?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({

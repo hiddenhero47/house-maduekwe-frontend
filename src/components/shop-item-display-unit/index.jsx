@@ -10,6 +10,7 @@ import {
 	Size,
 	Image,
 	SoldOut,
+	CartBtn,
 } from './index.style';
 import { MdOutlineError } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +33,7 @@ import {
 } from '../../utilities/product-services';
 import { TiShoppingCart } from 'react-icons/ti';
 import { toast } from '../../layouts/toast/toast-handler';
+import CartServices from '../../features/services/custom-hooks/cart';
 
 function ShopItem({
 	id = '',
@@ -53,6 +55,8 @@ function ShopItem({
 	const activeUser =
 		user && typeof user === 'object' && Object.keys(user).length > 0;
 
+	const { mutate: addToCart, isPending } = CartServices.add();
+
 	const [attribute, configAttribute] = useState({
 		currentDisplay: null,
 		currentSize: null,
@@ -72,19 +76,33 @@ function ShopItem({
 		});
 	};
 
-	const cartServer = () => {
+	const cartServer = ({ isDrag = true }) => {
+		if (isDrag) {
+			handleCartServer({
+				product,
+				attribute,
+				quantity: 1,
+				activeUser,
+				navigate,
+				dispatch,
+				afterSuccess: (selectedItem) => endDrag({ data: selectedItem }),
+				addToLocalCart: (selectedItem) => {
+					dispatch(addToLocalCart(selectedItem));
+					dispatch(resetDrag());
+				},
+				holding, // pass callback
+			});
+			return;
+		}
+
 		handleCartServer({
 			product,
 			attribute,
 			quantity: 1,
 			activeUser,
 			navigate,
-			dispatch,
-			afterSuccess: (selectedItem) => endDrag({ data: selectedItem }),
-			addToLocalCart: (selectedItem) => {
-				dispatch(addToLocalCart(selectedItem));
-				dispatch(resetDrag());
-			},
+			addToCart,
+			addToLocalCart: (selectedItem) => dispatch(addToLocalCart(selectedItem)),
 			holding, // pass callback
 		});
 	};
@@ -168,7 +186,7 @@ function ShopItem({
 		// 	holding();
 		// }
 		if (cart && dropTarget && cart.contains(dropTarget)) {
-			cartServer();
+			cartServer({ isDrag: true });
 		} else {
 			dispatch(resetDrag());
 		}
@@ -261,7 +279,7 @@ function ShopItem({
 		// 	holding();
 		// }
 		if (cart && dropTarget && cart.contains(dropTarget)) {
-			cartServer();
+			cartServer({ isDrag: true });
 		} else dispatch(resetDrag());
 	};
 
@@ -373,15 +391,16 @@ function ShopItem({
 							</i>
 						</button> */}
 
-						<button
+						<CartBtn
 							id={id ? `${id}_cart` : ''}
-							className="add_to_cart"
-							onClick={() => cartServer()}
+							className={isPending ? 'show add_to_cart' : 'add_to_cart'}
+							onClick={() => cartServer({ isDrag: false })}
+							$isLoading={isPending}
 						>
 							<i>
 								<TiShoppingCart />
 							</i>
-						</button>
+						</CartBtn>
 
 						<SoldOut
 							$isSoldOut={

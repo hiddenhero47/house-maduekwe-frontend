@@ -22,21 +22,24 @@ const LocalCartProvider = () => {
 	const activeUser =
 		user && typeof user === 'object' && Object.keys(user).length > 0;
 
-	const { mutate: addToCart, isPending } = CartServices.add();
+	const { mutateAsync: addToCart, isPending } = CartServices.add();
 
 	const openModal = () => {
 		modalRef.current?.open();
 	};
 
-	const cartServer = () => {
-		const payload = items.map((item) => ({
-			shopItem: item?.shopItem._id,
+	const syncingRef = useRef(false);
+
+	const cartServer = async (localItems) => {
+		if (syncingRef.current) return;
+
+		const payload = localItems.map((item) => ({
+			shopItem: item?.shopItem?._id,
 			quantity: item?.quantity,
 			selectedAttributes: item?.selectedAttributes,
 		}));
 
 		const isValidData =
-			payload &&
 			Array.isArray(payload) &&
 			payload.length > 0 &&
 			payload.every(
@@ -46,21 +49,24 @@ const LocalCartProvider = () => {
 					item.quantity > 0
 			);
 
-		if (isValidData) {
-			addToCart(
-				{ itemList: [...payload] },
-				{
-					onSuccess: () => {
-						dispatch(clearLocalCart());
-					},
-				}
-			);
+		if (!isValidData) return;
+
+		syncingRef.current = true;
+
+		try {
+			await addToCart({ itemList: payload });
+			dispatch(clearLocalCart());
+
+			syncingRef.current = false;
+		} catch (error) {
+			syncingRef.current = false;
 		}
 	};
 
 	useEffect(() => {
 		if (!activeUser || !items.length || isPending) return;
-		cartServer();
+
+		cartServer(items);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeUser, items]);
 

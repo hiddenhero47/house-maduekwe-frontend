@@ -85,9 +85,10 @@ const localCartSlice = createSlice({
 
 		// 🧹 Clear all local cart items
 		clearLocalCart: (state) => {
+			console.log('clearing local cart');
+			
 			state.items = [];
-
-			saveLocalCart([]);
+			localStorage.removeItem(LOCAL_CART_STORAGE_KEY);
 		},
 
 		// Open / close / toggle guest checkout

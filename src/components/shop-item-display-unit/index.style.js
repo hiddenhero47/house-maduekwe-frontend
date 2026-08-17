@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const ShopItemWrapper = styled.div`
 	width: ${(props) =>
@@ -58,6 +58,22 @@ export const ErrorWrapper = styled.div`
 	gap: 5px;
 	color: ${({ theme }) => theme.mainBody.text};
 	font-size: 14px;
+`;
+
+const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+`;
+
+export const CartBtn = styled.button`
+	${({ $isLoading }) =>
+		$isLoading &&
+		css`
+			i svg {
+				animation: ${bounce} 0.6s ease-in-out infinite;
+				transform-origin: center;
+			}
+		`}
 `;
 
 export const ShopItemContent = styled.div`
@@ -151,7 +167,8 @@ export const ShopItemContent = styled.div`
 		pointer-events: auto;
 	}
 
-	.add_to_holding.show, .add_to_cart.show {
+	.add_to_holding.show,
+	.add_to_cart.show {
 		opacity: 1;
 		transform: translate(0, -50%);
 		transform: translateX(0);
