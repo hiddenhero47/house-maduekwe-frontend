@@ -177,7 +177,7 @@ function Index() {
 						</div>
 
 						<div className="row">
-							<span className="label">VAT (8%)</span>
+							<span className="label">Tax</span>
 							<span className="value">
 								{getCurrencySymbol(payment?.currency) || '$'}{' '}
 								{order?.totalVat || 'Nill'}

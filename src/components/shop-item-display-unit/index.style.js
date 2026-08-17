@@ -93,6 +93,7 @@ export const ShopItemContent = styled.div`
 	}
 
 	/* 👇 Buttons default state (hidden + slightly moved) */
+	.add_to_cart,
 	.add_to_holding,
 	.arrows_left,
 	.arrows_right {
@@ -101,6 +102,7 @@ export const ShopItemContent = styled.div`
 		pointer-events: none; /* avoid accidental clicks when hidden */
 	}
 
+	.add_to_cart,
 	.add_to_holding {
 		z-index: 5;
 		position: absolute;
@@ -111,6 +113,10 @@ export const ShopItemContent = styled.div`
 		left: 0;
 		margin-left: calc(3% + 8px);
 		transform: translateX(-10px); /* 👈 slide from left */
+	}
+
+	.add_to_cart {
+		font-size: 1.6rem;
 	}
 
 	.arrows_left,
@@ -136,6 +142,7 @@ export const ShopItemContent = styled.div`
 	}
 
 	/* 👇 On hover, make them appear + slide in smoothly */
+	&:hover .add_to_cart,
 	&:hover .add_to_holding,
 	&:hover .arrows_left,
 	&:hover .arrows_right {
@@ -144,7 +151,7 @@ export const ShopItemContent = styled.div`
 		pointer-events: auto;
 	}
 
-	.add_to_holding.show {
+	.add_to_holding.show, .add_to_cart.show {
 		opacity: 1;
 		transform: translate(0, -50%);
 		transform: translateX(0);
@@ -152,6 +159,10 @@ export const ShopItemContent = styled.div`
 	}
 
 	&:hover .add_to_holding {
+		transform: translateX(0);
+	}
+
+	&:hover .add_to_cart {
 		transform: translateX(0);
 	}
 
@@ -171,6 +182,10 @@ export const ShopItemContent = styled.div`
 			font-size: 1.4rem;
 		}
 
+		.add_to_cart {
+			font-size: 1.4rem;
+		}
+
 		.arrows_left,
 		.arrows_right {
 			font-size: 1.4rem;
@@ -183,6 +198,14 @@ export const Controller = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+
+	@media (min-width: 451px) and (max-width: 500px) {
+		height: clamp(25px, 30%, 70px);
+	}
+
+	@media (max-width: 450px) {
+		height: clamp(25px, 30%, 68px);
+	}
 
 	.display_navigator {
 		width: 100%;

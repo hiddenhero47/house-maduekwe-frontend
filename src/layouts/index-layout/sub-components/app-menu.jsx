@@ -124,26 +124,24 @@ function LeftMenu({ closeMe, openHolding }) {
 				</div>
 
 				{/* Holdings toggle */}
-				{activeUser && (
-					<div className="w-[95%] flex items-center justify-between mt-[18px]">
-						<div className="flex items-center gap-[8px]">
-							<i className="text-[19px] text-[var(--menu-icon)]">
-								<FaBasketShopping />
-							</i>
+				{/* <div className="w-[95%] flex items-center justify-between mt-[18px]">
+					<div className="flex items-center gap-[8px]">
+						<i className="text-[19px] text-[var(--menu-icon)]">
+							<FaBasketShopping />
+						</i>
 
-							<span className="text-[13px] font-medium text-[var(--menu-text)]">
-								Show Holdings
-							</span>
-						</div>
-
-						<button
-							onClick={() => dispatch(toggleHoldings())}
-							className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
-						>
-							{show ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
-						</button>
+						<span className="text-[13px] font-medium text-[var(--menu-text)]">
+							Show Holdings
+						</span>
 					</div>
-				)}
+
+					<button
+						onClick={() => dispatch(toggleHoldings())}
+						className="text-[25px] text-[var(--intro-logo)] hover:scale-110 active:scale-95 transition-transform"
+					>
+						{show ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
+					</button>
+				</div> */}
 			</UserSection>
 
 			<MenuSection>

@@ -7,6 +7,7 @@ import {
 	DetailsWrapper,
 	HoldBtn,
 	Increment,
+	QuantityTag,
 } from './index.style';
 import { FaStar, FaRegStar } from 'react-icons/fa';
 import { attributeType } from '../../../utilities/app-const';
@@ -34,6 +35,7 @@ import {
 	handleHolding,
 	handleCartServer,
 } from '../../../utilities/product-services';
+import { IoShirt } from "react-icons/io5";
 
 function Details({
 	product,
@@ -118,28 +120,28 @@ function Details({
 		});
 	};
 
-	useEffect(() => {
-		if (isLoading || !product?._id) return;
+	// useEffect(() => {
+	// 	if (isLoading || !product?._id) return;
 
-		const guides = getTourGuides();
+	// 	const guides = getTourGuides();
 
-		if (guides['product-hold-button-v1']) return;
+	// 	if (guides['product-hold-button-v1']) return;
 
-		const timer = setTimeout(() => {
-			const btn = document.querySelector('#addToHoldingBtn');
+	// 	const timer = setTimeout(() => {
+	// 		const btn = document.querySelector('#addToHoldingBtn');
 
-			btn?.scrollIntoView({
-				behavior: 'smooth',
-				block: 'center',
-			});
+	// 		btn?.scrollIntoView({
+	// 			behavior: 'smooth',
+	// 			block: 'center',
+	// 		});
 
-			setTimeout(() => {
-				runHoldButtonTour();
-			}, 800); // Wait for the scroll to finish
-		}, 800); // Give the user time to see the page first
+	// 		setTimeout(() => {
+	// 			runHoldButtonTour();
+	// 		}, 800); // Wait for the scroll to finish
+	// 	}, 800); // Give the user time to see the page first
 
-		return () => clearTimeout(timer);
-	}, [isLoading, product?._id]);
+	// 	return () => clearTimeout(timer);
+	// }, [isLoading, product?._id]);
 
 	return (
 		<DetailsWrapper>
@@ -231,16 +233,28 @@ function Details({
 			</div>
 
 			<div className="mt-5 flex justify-between items-center">
-				<HoldBtn type="button" id="addToHoldingBtn" onClick={() => holding()}>
+				{/* <HoldBtn type="button" id="addToHoldingBtn" onClick={() => holding()}>
 					<i>
 						<FaShoppingBasket />
 					</i>
-					{/* Hold for Guest Checkout */}
 					Add to Holdings
 					<i>
 						<IoIosArrowForward />
 					</i>
-				</HoldBtn>
+				</HoldBtn> */}
+
+				<QuantityTag
+					type="button"
+					onClick={() => holding()}
+				>
+					<i className='pb-[1px]'>
+						<IoShirt />
+					</i>
+					Change Quantity
+					<i>
+						<IoIosArrowForward />
+					</i>
+				</QuantityTag>
 
 				<Increment>
 					<button

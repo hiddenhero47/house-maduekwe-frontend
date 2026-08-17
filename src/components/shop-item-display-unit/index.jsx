@@ -30,6 +30,7 @@ import {
 	handleHolding,
 	handleCartServer,
 } from '../../utilities/product-services';
+import { TiShoppingCart } from 'react-icons/ti';
 import { toast } from '../../layouts/toast/toast-handler';
 
 function ShopItem({
@@ -96,9 +97,11 @@ function ShopItem({
 		e.preventDefault();
 
 		const target = e.currentTarget; // ✅ save the reference before timeout
-		const holdDelay = 120;
+		const holdDelay = 190;
+		let redirect = true;
 
 		const timeoutId = setTimeout(() => {
+			redirect = false;
 			setIsDragging(true);
 			startPos.current = { x: e.clientX, y: e.clientY };
 			const rect = target.getBoundingClientRect();
@@ -128,7 +131,10 @@ function ShopItem({
 			ghostRef.current = ghost;
 		}, holdDelay);
 
-		const cancelHold = () => clearTimeout(timeoutId);
+		const cancelHold = () => {
+			clearTimeout(timeoutId);
+			if (redirect) navigate(`/overview/${product._id}`);
+		};
 		window.addEventListener('mouseup', cancelHold, { once: true });
 	};
 
@@ -156,10 +162,15 @@ function ShopItem({
 
 		const dropTarget = document.elementFromPoint(e.clientX, e.clientY);
 		const cart = document.getElementById('myCart');
+		// if (cart && dropTarget && cart.contains(dropTarget)) {
+		// 	cartServer();
+		// } else if (startPos.current.y - e.clientY > 150) {
+		// 	holding();
+		// }
 		if (cart && dropTarget && cart.contains(dropTarget)) {
 			cartServer();
-		} else if (startPos.current.y - e.clientY > 150) {
-			holding();
+		} else {
+			dispatch(resetDrag());
 		}
 	};
 
@@ -174,9 +185,11 @@ function ShopItem({
 		if (e.target.tagName !== 'IMG') return;
 
 		const target = e.currentTarget;
-		const holdDelay = 380;
+		const holdDelay = 190;
+		let redirect = true;
 
 		const timeoutId = setTimeout(() => {
+			redirect = false;
 			setIsDragging(true);
 			startPos.current = { x: touch.clientX, y: touch.clientY };
 
@@ -204,7 +217,10 @@ function ShopItem({
 			ghostRef.current = ghost;
 		}, holdDelay);
 
-		const cancelHold = () => clearTimeout(timeoutId);
+		const cancelHold = () => {
+			clearTimeout(timeoutId);
+			if (redirect) navigate(`/overview/${product._id}`);
+		};
 		window.addEventListener('touchend', cancelHold, { once: true });
 	};
 
@@ -239,11 +255,14 @@ function ShopItem({
 		const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
 		const cart = document.getElementById('myCart');
 
+		// if (cart && dropTarget && cart.contains(dropTarget)) {
+		// 	cartServer();
+		// } else if (startPos.current.y - touch.clientY > 150) {
+		// 	holding();
+		// }
 		if (cart && dropTarget && cart.contains(dropTarget)) {
 			cartServer();
-		} else if (startPos.current.y - touch.clientY > 150) {
-			holding();
-		}
+		} else dispatch(resetDrag());
 	};
 
 	// 📱 Touch cancel (interruptions like scroll, notification bar pull, gesture nav)
@@ -344,13 +363,23 @@ function ShopItem({
 			) : (
 				<ShopItemContent>
 					<div className="display_unit">
-						<button
+						{/* <button
 							id={id ? `${id}_holding` : ''}
 							className="add_to_holding"
 							onClick={() => holding()}
 						>
 							<i>
 								<FaBasketShopping />
+							</i>
+						</button> */}
+
+						<button
+							id={id ? `${id}_cart` : ''}
+							className="add_to_cart"
+							onClick={() => cartServer()}
+						>
+							<i>
+								<TiShoppingCart />
 							</i>
 						</button>
 

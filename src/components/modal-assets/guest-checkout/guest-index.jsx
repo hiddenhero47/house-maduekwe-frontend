@@ -115,6 +115,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 		city,
 		zipCode,
 		fullAddress,
+		stateLine,
 	} = values;
 
 	return (
@@ -126,10 +127,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 					<p>Provide your delivery information to continue as a guest.</p>
 				</div>
 
-				<IoClose
-					className="closeBtn"
-					onClick={() =>close()}
-				/>
+				<IoClose className="closeBtn" onClick={() => close()} />
 			</div>
 
 			<MyForm onSubmit={submitForm}>
@@ -302,6 +300,24 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 							paddingY="9px"
 							useBackground
 							minHeight="90px"
+						/>
+					</div>
+
+					<div className="form_control">
+						<label>Apartment</label>
+
+						<CustomInput
+							id="stateLine"
+							name="stateLine"
+							value={stateLine}
+							onChange={handleChange}
+							onBlur={handleBlur}
+							isError={touched.stateLine && errors.stateLine}
+							errormessage={errors.stateLine}
+							placeholder="Optional"
+							paddingX="14px"
+							paddingY="9px"
+							useBackground
 						/>
 					</div>
 				</div>
