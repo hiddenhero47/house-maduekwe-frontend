@@ -41,7 +41,7 @@ const useCreateStripeIntentMutation = () => {
 				data,
 			}),
 		onSuccess: () => {
-			toast.success('Stripe payment intent created successfully');
+			// toast.success('Stripe payment intent created successfully');
 			queryClient.invalidateQueries({
 				queryKey: ['payments', 'me'],
 			});

@@ -17,6 +17,7 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 import auth from './slice/auth';
 import themes from './slice/app-theme';
 import holdings from "./slice/holding";
+import localCart from "./slice/local-cart";
 import dragBoard from "./slice/drag-board";
 import twoFaHandler from "./slice/2fa-handler";
 
@@ -27,6 +28,7 @@ const appReducer = combineReducers({
 	holdings,
 	dragBoard,
 	twoFaHandler,
+	localCart,
 });
 
 // Create a no-op storage for environments without `window` (e.g., server-side rendering)
@@ -53,7 +55,7 @@ const persistConfig = {
 	key: 'root',
 	version: 1,
 	storage,
-	blacklist: ['other', 'dragBoard', 'holdings', "twoFaHandler"], // Specify state slices to exclude from persistence
+	blacklist: ['other', 'dragBoard', 'holdings', "twoFaHandler", "localCart"], // Specify state slices to exclude from persistence
 };
 
 // Root reducer with logout handling

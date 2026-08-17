@@ -17,6 +17,8 @@ const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(' ') || [
 	'PATCH',
 ];
 
+const TOAST_ERROR_BLACKLIST = ['/cart', '/cart/count'];
+
 console.log(BASE_URL);
 
 const successResponseHandler = (res) => {
@@ -29,6 +31,13 @@ const errorResponseHandler = (error) => {
 		error.response?.data ||
 		error.message ||
 		'An unknown error occurred';
+
+	const requestUrl = error.config?.url || '';
+
+	// Skip toast for specific endpoints
+	const shouldSkipToast = TOAST_ERROR_BLACKLIST.some((path) =>
+		requestUrl.includes(path)
+	);
 
 	if (
 		error.response.status === 400 &&
@@ -43,6 +52,10 @@ const errorResponseHandler = (error) => {
 			error.is2FARequired = true;
 			return Promise.reject(error);
 		}
+	}
+
+	if (shouldSkipToast) {
+		return Promise.reject(error);
 	}
 
 	toast.error(message.toString());

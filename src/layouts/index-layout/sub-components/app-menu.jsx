@@ -38,6 +38,9 @@ function LeftMenu({ closeMe, openHolding }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const activeUser =
+		user && typeof user === 'object' && Object.keys(user).length > 0;
+
 	const showHeader = (u) => {
 		const { role, email } = u;
 		if (!role || !email) return 'experience more with us';
@@ -121,7 +124,7 @@ function LeftMenu({ closeMe, openHolding }) {
 				</div>
 
 				{/* Holdings toggle */}
-				<div className="w-[95%] flex items-center justify-between mt-[18px]">
+				{/* <div className="w-[95%] flex items-center justify-between mt-[18px]">
 					<div className="flex items-center gap-[8px]">
 						<i className="text-[19px] text-[var(--menu-icon)]">
 							<FaBasketShopping />
@@ -138,7 +141,7 @@ function LeftMenu({ closeMe, openHolding }) {
 					>
 						{show ? <MdOutlineToggleOn /> : <MdOutlineToggleOff />}
 					</button>
-				</div>
+				</div> */}
 			</UserSection>
 
 			<MenuSection>

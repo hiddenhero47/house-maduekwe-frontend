@@ -37,7 +37,7 @@ const generateTempId = () =>
 
 const initialState = {
 	holdings: loadHoldings(),
-	show: true,
+	show: false,
 	isOpen: false,
 	stage: 'display',
 };

@@ -65,6 +65,8 @@ export const handleHolding = ({
 	dispatch,
 	addToHoldingsAction,
 	afterSuccess,
+	activeUser,
+	navigate,
 }) => {
 	const result = validateProductSelection({
 		product,
@@ -80,7 +82,14 @@ export const handleHolding = ({
 		selectedAttributes: result.selectedAttributes,
 	};
 
-	dispatch(addToHoldingsAction(selectedItem));
+	if (activeUser) dispatch(addToHoldingsAction(selectedItem));
+
+	if (!activeUser && navigate) {
+		toast.info('Please log in to add items to your cart');
+		setTimeout(() => {
+			navigate();
+		}, 2000);
+	}
 
 	if (afterSuccess) afterSuccess(selectedItem);
 
@@ -97,20 +106,11 @@ export const handleCartServer = ({
 	activeUser,
 	navigate,
 	addToCart,
+	addToLocalCart,
 	dispatch,
 	afterSuccess,
 	holding, // callback
 }) => {
-	if (!activeUser) {
-		toast.info('User not logged in, moving item to holding');
-
-		setTimeout(() => {
-			holding(); // call the component-specific holding logic
-		}, 2000);
-
-		return;
-	}
-
 	const result = validateProductSelection({
 		product,
 		attribute,
@@ -120,13 +120,18 @@ export const handleCartServer = ({
 	if (!result.ok) return;
 
 	const selectedItem = {
-		shopItem: product?._id,
+		shopItem: !activeUser ? product : product?._id,
 		quantity,
 		selectedAttributes: result.selectedAttributes,
 	};
 
-	if (addToCart) {
+	if (addToCart && activeUser) {
 		addToCart({ itemList: [selectedItem] });
+	}
+
+	if (addToLocalCart && !activeUser) {
+		addToLocalCart(selectedItem);
+		return selectedItem;
 	}
 
 	if (dispatch && afterSuccess) {

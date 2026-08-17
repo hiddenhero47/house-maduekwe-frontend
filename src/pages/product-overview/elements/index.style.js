@@ -508,6 +508,53 @@ export const HoldBtn = styled.button`
 	}
 `;
 
+export const QuantityTag = styled.p`
+	margin-bottom: 0.75rem; /* mb-3 */
+	margin-right: auto;
+	font-size: 0.875rem; /* text-sm */
+	color: ${({ theme }) => theme.mainBody.sbText};
+	display: flex;
+	align-items: center;
+	font-family: Inter;
+
+	@media (min-width: 361px) and (max-width: 500px) {
+		font-size: 0.78rem;
+	}
+
+	@media (max-width: 360px) {
+		font-size: 0.69rem;
+	}
+
+	/* Smooth hover animation */
+	transition: all 0.25s ease;
+
+	i {
+		display: flex;
+		align-items: center;
+		transition:
+			transform 0.25s ease,
+			opacity 0.25s ease;
+	}
+
+	i:first-child {
+		font-size: 1.125rem;
+		margin-right: 0.25rem;
+
+		@media (max-width: 360px) {
+			font-size: 0.93rem;
+		}
+	}
+
+	i:last-child {
+		font-size: 1rem;
+		margin-left: 0.25rem;
+
+		@media (max-width: 360px) {
+			font-size: 0.83rem;
+		}
+	}
+`;
+
 export const Increment = styled.div`
 	display: flex;
 	align-items: center;
