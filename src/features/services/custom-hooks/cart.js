@@ -56,7 +56,7 @@ const useAddToCartMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
 			queryClient.invalidateQueries({ queryKey: ['cart-count'] });
-			toast.success('🛒 Item added to cart');
+			// toast.success('🛒 Item added to cart');
 		},
 	});
 };
@@ -76,7 +76,7 @@ const useRemoveFromCartMutation = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
 			queryClient.invalidateQueries({ queryKey: ['cart-count'] });
-			toast.success('Item removed from cart');
+			// toast.success('Item removed from cart');
 		},
 	});
 };
