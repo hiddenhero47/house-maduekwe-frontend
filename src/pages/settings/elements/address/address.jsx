@@ -88,8 +88,8 @@ function Address() {
 							Cell: ({ value }) => <span className="nowrap">{value}</span>,
 						},
 						{
-							Header: () => 'State Line',
-							accessor: 'stateLine',
+							Header: () => 'Apartments',
+							accessor: 'addressLine2',
 							Cell: ({ value }) => <span className="nowrap">{value}</span>,
 						},
 						{

@@ -360,7 +360,7 @@ function Index() {
 							data={cartList || []}
 						/>
 						{cartList &&
-							(!isPending || !activeUser) &&
+							((!isPending && !isFetching) || !activeUser) &&
 							cartList?.length > 0 &&
 							cartList?.map((item, index) => {
 								const stockDetails = getUnavailableInfo({
@@ -554,7 +554,7 @@ function Index() {
 					{activeUser ? (
 						<>
 							<CustomerName>
-								<h3>Consignee's Name</h3>
+								<h3>Full Name</h3>
 
 								<CustomInput
 									id="name"
@@ -678,7 +678,13 @@ function Index() {
 										<CheckoutBtn
 											className="btn"
 											type="button"
-											onClick={checkoutCart}
+											onClick={() => {
+												if (cartItems?.length > 0) {
+													checkoutCart();
+													return;
+												}
+												toast.warning('Empty Cart');
+											}}
 											$isLoading={isCheckingOut}
 										>
 											<div className="content">Checkout</div>
@@ -756,7 +762,13 @@ function Index() {
 									<CheckoutBtn
 										className="btn"
 										type="button"
-										onClick={() => dispatch(openGuestCheckout())}
+										onClick={() => {
+											if (localCartItems?.length > 0) {
+												dispatch(openGuestCheckout());
+												return;
+											}
+											toast.warning('Empty Cart');
+										}}
 									>
 										<div className="content">Checkout as Guest</div>
 									</CheckoutBtn>

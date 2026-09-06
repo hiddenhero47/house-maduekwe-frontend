@@ -6,8 +6,6 @@ let activeDriver = null;
 const tourQueue = [];
 let suppressPersist = false;
 
-console.log(suppressPersist, 'suppressPersist');
-
 export const runTour = ({ tourKey, steps, options = {} }) => {
 	if (!tourKey) {
 		throw new Error('runTour: "tourKey" is required.');

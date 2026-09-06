@@ -19,8 +19,6 @@ const CRUD_TYPE = import.meta.env.VITE_AXIOS_CRUD_TYPE?.trim()?.split(' ') || [
 
 const TOAST_ERROR_BLACKLIST = ['/cart', '/cart/count'];
 
-console.log(BASE_URL);
-
 const successResponseHandler = (res) => {
 	return res;
 };

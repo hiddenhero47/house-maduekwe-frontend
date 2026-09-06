@@ -133,10 +133,18 @@ function IndexLayout() {
 		// Close any active tour when changing pages.
 		closeActiveTour({ persist: false });
 		// Save the last public route.
-		if (
-			!path.startsWith('/authentication') &&
-			!path.startsWith('/reset-password')
-		) {
+
+		const excludedRoutes = [
+			'/authentication',
+			'/reset-password',
+			'/guest-order',
+		];
+
+		const shouldSaveRoute = !excludedRoutes.some((route) =>
+			path.startsWith(route)
+		);
+
+		if (shouldSaveRoute) {
 			sessionStorage.setItem('lastRoute', path);
 		}
 	}, [location.pathname]);
