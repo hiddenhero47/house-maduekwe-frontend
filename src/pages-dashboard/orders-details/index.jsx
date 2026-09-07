@@ -25,7 +25,6 @@ function Index() {
 	const { order, payment } = data || {};
 
 	console.log(order);
-	
 
 	const getImage = (currentItem) => {
 		const grouped =
@@ -76,16 +75,29 @@ function Index() {
 					<Section>
 						<div className="cubicle">
 							<h3 className="section_title">Customer</h3>
-							<p className="section_Value">{order?.userEmail}</p>
+							<p className="section_Value">
+								<span className="text-[var(--mainBody-sbKitText)]">Name :</span>{' '}
+								{order?.consigneesName} <br />{' '}
+								<span className="text-[var(--mainBody-sbKitText)]">
+									Email :
+								</span>{' '}
+								{order?.user?.email}
+							</p>
 						</div>
 
 						<div className="cubicle">
-							<h3 className="section_title">Shipping Address</h3>
-							<p className="section_Value">
-								{order?.address?.fullAddress} {order?.address?.city}
+							<h3 className="section_title">Shipping address</h3>
+							<p className="section_Value capitalize">
+								{order?.address?.fullAddress}
+								{'. '}
 								<br />
-								{order?.address?.state},{' '}
-								{getCountryByCode(order?.address?.country)?.name}
+								{order?.address?.addressLine2}.
+							</p>
+
+							<p className="text-[var(--mainBody-sbKitText)]">
+								{order?.address?.city} {order?.address?.state}
+								{', '}
+								<span>{getCountryByCode(order?.address?.country)?.name}</span>.
 							</p>
 						</div>
 					</Section>

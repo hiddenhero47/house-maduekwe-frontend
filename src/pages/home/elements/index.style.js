@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import promotionImage from '../../../assets/images/promotion.png';
 import underground from '../../../assets/images/underground.png';
 import fastLife from '../../../assets/images/fast-life.png';
+import newTestImage from '../../../assets/images/new.jpg';
 
 export const Container = styled.div`
 	display: flex;

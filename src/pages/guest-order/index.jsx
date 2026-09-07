@@ -85,7 +85,9 @@ function Index() {
 										type="button"
 										$variant="danger"
 										$isLoading={isCanceling}
-										onClick={() => cancelOrder({email: order?.userEmail || email})}
+										onClick={() =>
+											cancelOrder({ email: order?.userEmail || email })
+										}
 									>
 										<div className="content">Cancel</div>
 
@@ -127,36 +129,45 @@ function Index() {
 
 						<Section>
 							<div className="cubicle">
-								<h3 className="section_title">Consignee</h3>
-
-								<p className="section_Value">{order?.consigneesName}</p>
+								<h3 className="section_title">Customer</h3>
+								
+								<p className="section_Value">
+									<span className="text-[var(--mainBody-sbKitText)]">
+										Name :
+									</span>{' '}
+									{order?.consigneesName} <br />{' '}
+									<span className="text-[var(--mainBody-sbKitText)]">
+										Email :
+									</span>{' '}
+									{order?.userEmail}
+								</p>
 							</div>
 
 							<div className="cubicle">
-								<h3 className="section_title">Email</h3>
+								<h3 className="section_title">Shipping Address</h3>
 
-								<p className="section_Value">{order?.email}</p>
-							</div>
+								<p className="section_Value capitalize">
+									{order?.address?.fullAddress}
+									{'. '}
+									<br />
+									{order?.address?.addressLine2}.
+								</p>
 
-							<div className="cubicle">
-								<h3 className="section_title">Phone</h3>
-
-								<p className="section_Value">{order?.phoneNumber || 'N/A'}</p>
+								<p className="text-[var(--mainBody-sbKitText)]">
+									{order?.address?.city} {order?.address?.state}
+									{', '}
+									<span>{getCountryByCode(order?.address?.country)?.name}</span>
+									.
+								</p>
 							</div>
 						</Section>
 
 						<Section>
 							<div className="cubicle">
-								<h3 className="section_title">Shipping Address</h3>
+								<h3 className="section_title">Phone</h3>
 
-								<p className="section_Value capitalize">
-									{order?.address?.fullAddress} {order?.address?.city}
-									<br />
-									<span className="text-[var(--mainBody-sbKitText)]">
-										{order?.address?.state}
-										{', '}
-										{getCountryByCode(order?.address?.country)?.name}
-									</span>
+								<p className="section_Value">
+									{order?.extraInfo?.phoneNumber || 'N/A'}
 								</p>
 							</div>
 						</Section>

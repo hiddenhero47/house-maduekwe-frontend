@@ -35,7 +35,8 @@ import {
 	handleHolding,
 	handleCartServer,
 } from '../../../utilities/product-services';
-import { IoShirt } from "react-icons/io5";
+import { IoShirt } from 'react-icons/io5';
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
 function Details({
 	product,
@@ -190,7 +191,11 @@ function Details({
 								onClick={() => setColor(attr)}
 								$color={colorValue}
 								$active={isActive}
-							/>
+							>
+								<span>
+									<IoCheckmarkDoneSharp />
+								</span>
+							</ColorCircle>
 						);
 					})}
 				</div>
@@ -243,11 +248,8 @@ function Details({
 					</i>
 				</HoldBtn> */}
 
-				<QuantityTag
-					type="button"
-					onClick={() => holding()}
-				>
-					<i className='pb-[1px]'>
+				<QuantityTag type="button" onClick={() => holding()}>
+					<i className="pb-[1px]">
 						<IoShirt />
 					</i>
 					Change Quantity
