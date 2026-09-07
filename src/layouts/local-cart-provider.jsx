@@ -54,7 +54,7 @@ const LocalCartProvider = () => {
 		syncingRef.current = true;
 
 		try {
-			await addToCart({ itemList: payload });
+			await addToCart({ itemList: payload, ignoreError: true });
 			dispatch(clearLocalCart());
 
 			syncingRef.current = false;

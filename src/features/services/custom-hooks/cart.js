@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosCall } from '../index-client';
 import { toast } from '../../../layouts/toast/toast-handler';
 import { useSelector } from 'react-redux';
+import { getErrorMessage } from '../../../utilities/basic-functions';
 
 // Get cart
 const useGetCartQuery = () => {
@@ -46,17 +47,24 @@ const useAddToCartMutation = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: (data) =>
+		mutationFn: ({ itemList, ignoreError = false }) =>
 			axiosCall({
 				url: '/api/cart',
 				method: 'POST',
-				data,
+				data: { itemList },
 			}),
 
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['cart'] });
 			queryClient.invalidateQueries({ queryKey: ['cart-count'] });
 			// toast.success('🛒 Item added to cart');
+		},
+		onError: (error, variables) => {
+			const { ignoreError = false } = variables;
+			const message = getErrorMessage(error);
+			if (!ignoreError) {
+				toast.error(message);
+			}
 		},
 	});
 };

@@ -88,14 +88,22 @@ function DashboardLayout() {
 
 	useEffect(() => {
 		const path = location.pathname;
-		if (
-			!path.startsWith('/authentication') &&
-			!path.startsWith('/reset-password')
-		) {
+
+		const excludedRoutes = [
+			'/authentication',
+			'/reset-password',
+			'/guest-order',
+		];
+
+		const shouldSaveRoute = !excludedRoutes.some((route) =>
+			path.startsWith(route)
+		);
+
+		if (shouldSaveRoute) {
 			sessionStorage.setItem('lastRoute', path);
 		}
 	}, [location.pathname]);
-
+	
 	return (
 		<ThemeProvider theme={{ mode: theme, ...colors[theme] }}>
 			<ScrollToTop />

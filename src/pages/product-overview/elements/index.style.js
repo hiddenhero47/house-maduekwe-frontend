@@ -363,6 +363,17 @@ export const ColorCircle = styled.button`
 	transition:
 		outline 0.2s ease,
 		outline-offset 0.2s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+
+	span {
+		display: ${({ $active }) => ($active ? 'flex' : 'none')};
+		color: ${({ $color }) => ($color === '#ffffff' ? '#000' : lighten($color, 20))};
+		font-weight: bold;
+		position: absolute;
+	}
 `;
 
 export const SizeButton = styled.button`

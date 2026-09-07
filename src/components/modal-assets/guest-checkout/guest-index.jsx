@@ -39,7 +39,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 		state: '',
 		city: '',
 		zipCode: '',
-		stateLine: '',
+		addressLine2: '',
 		fullAddress: '',
 	};
 
@@ -70,6 +70,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 			'city',
 			'zipCode',
 			'fullAddress',
+			'addressLine2',
 		]);
 
 		const guestData = { consigneesName, email, address, itemList: payload };
@@ -115,7 +116,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 		city,
 		zipCode,
 		fullAddress,
-		stateLine,
+		addressLine2,
 	} = values;
 
 	return (
@@ -295,7 +296,7 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 							onBlur={handleBlur}
 							isError={touched.fullAddress && errors.fullAddress}
 							errormessage={errors.fullAddress}
-							placeholder="Street name, house number, apartment, etc."
+							placeholder="Street name, house number, etc."
 							paddingX="14px"
 							paddingY="9px"
 							useBackground
@@ -307,14 +308,14 @@ const GuestCheckout = ({ items = [], close, onBack, resetFunc }) => {
 						<label>Apartment</label>
 
 						<CustomInput
-							id="stateLine"
-							name="stateLine"
-							value={stateLine}
+							id="addressLine2"
+							name="addressLine2"
+							value={addressLine2}
 							onChange={handleChange}
 							onBlur={handleBlur}
-							isError={touched.stateLine && errors.stateLine}
-							errormessage={errors.stateLine}
-							placeholder="Optional"
+							isError={touched.addressLine2 && errors.addressLine2}
+							errormessage={errors.addressLine2}
+							placeholder="Optional (e.g. Apartment 4B)"
 							paddingX="14px"
 							paddingY="9px"
 							useBackground

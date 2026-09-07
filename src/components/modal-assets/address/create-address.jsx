@@ -28,7 +28,7 @@ function CreateAddress({ ref, openModal, closeModal }) {
 		state: '',
 		city: '',
 		zipCode: '',
-		stateLine: '',
+		addressLine2: '',
 		fullAddress: '',
 		description: '',
 		isDefault: false,
@@ -70,7 +70,7 @@ function CreateAddress({ ref, openModal, closeModal }) {
 		description,
 		isDefault,
 		zipCode,
-		stateLine,
+		addressLine2,
 	} = values;
 	return (
 		<Modal.Center
@@ -184,30 +184,13 @@ function CreateAddress({ ref, openModal, closeModal }) {
 								/>
 							</div>
 						</div>
-
-						<div className="form_control">
-							<label>State Line</label>
-							<CustomInput
-								id="stateLine"
-								name="stateLine"
-								value={stateLine}
-								onChange={handleChange}
-								onBlur={handleBlur}
-								isError={touched.stateLine && errors.stateLine}
-								errormessage={errors.stateLine}
-								placeholder="State Line (e.g. Mason-Dixon line)"
-								paddingX="14px"
-								paddingY="9px"
-								useBackground
-							/>
-						</div>
 					</div>
 
 					{/* ADDRESS SECTION */}
 					<div className="section">
 						<h4>Address Information</h4>
 
-						<div className="form_control mb-[5px]">
+						<div className="form_control mb-[7px]">
 							<label>Full Address</label>
 							<CustomTextarea
 								id="fullAddress"
@@ -215,11 +198,28 @@ function CreateAddress({ ref, openModal, closeModal }) {
 								value={fullAddress}
 								onChange={handleChange}
 								onBlur={handleBlur}
-								placeholder="Street name, house number, apartment, etc."
+								placeholder="Street name, house number, etc."
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
 								minHeight="70px"
+							/>
+						</div>
+
+						<div className="form_control mb-[9px]">
+							<label>Apartment</label>
+							<CustomInput
+								id="addressLine2"
+								name="addressLine2"
+								value={addressLine2}
+								onChange={handleChange}
+								onBlur={handleBlur}
+								isError={touched.addressLine2 && errors.addressLine2}
+								errormessage={errors.addressLine2}
+								placeholder="Optional (e.g. Apartment 4B)"
+								paddingX="14px"
+								paddingY="9px"
+								useBackground
 							/>
 						</div>
 

@@ -442,3 +442,20 @@ export const pickNonEmptyValues = (values, keys) => {
 		return result;
 	}, {});
 };
+
+export const getErrorMessage = (error) => {
+	let message =
+		error.response?.data?.message ||
+		error.response?.data ||
+		error.message ||
+		'An unknown error occurred';
+
+	if (
+		error.response.status === 400 &&
+		error.response?.data?.message === 'Validation failed'
+	) {
+		message = error.response?.data?.errors[0];
+	}
+
+	return message;
+};
