@@ -1,13 +1,27 @@
-import React, { useState, useRef } from 'react';
-import { Container } from './elements/index.style';
-import { toast } from '../../layouts/toast/toast-handler';
+import React from 'react';
+import { Container, PanelGrid } from './elements/index.style';
+import OverviewTiles from './elements/overview-tiles';
+import SalesChart from './elements/sales-chart';
+import CheckoutBreakdown from './elements/checkout-breakdown';
+import OrderStatusPanel from './elements/order-status-panel';
+import TopSellingPanel from './elements/top-selling-panel';
 
 function Index() {
 	return (
-		<Container className="text-mainBody-yellow">
-			<p>Index home</p>
+		<Container>
+			<h1>Dashboard Overview</h1>
 
-			<button onClick={() => toast.success('Successfully')}>test toast</button>
+			<OverviewTiles />
+
+			<PanelGrid>
+				<SalesChart />
+				<CheckoutBreakdown />
+			</PanelGrid>
+
+			<PanelGrid>
+				<OrderStatusPanel />
+				<TopSellingPanel />
+			</PanelGrid>
 		</Container>
 	);
 }
