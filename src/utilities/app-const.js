@@ -34,6 +34,17 @@ export const CHECKOUT_TYPES = {
 
 export const WEIGHT_UNITS = ['kg', 'g', 'lb', 'oz'];
 
+export const SHIPPING_PROVIDERS = {
+	INTERNAL: 'internal',
+	SHOPIFY: 'shopify',
+	DHL: 'dhl',
+	FEDEX: 'fedex',
+};
+
+// Only providers actually registered on the backend — mirrors
+// server-src/models/shippingSettingsModel.js's ENABLED_SHIPPING_PROVIDERS.
+export const ENABLED_SHIPPING_PROVIDERS = [SHIPPING_PROVIDERS.INTERNAL];
+
 export const SHIPMENT_STATUS = {
 	PENDING: 'pending',
 	LABEL_CREATED: 'label_created',

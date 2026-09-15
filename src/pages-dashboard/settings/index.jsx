@@ -9,7 +9,7 @@ import {
 } from './elements/index.style';
 import CustomTable from '../../components/table_components/basicTableOne';
 import { NoDataIcon } from '../../components/icon-components/empty';
-import { FaShippingFast } from 'react-icons/fa';
+import { FaShippingFast, FaTruckLoading } from 'react-icons/fa';
 import { MdOutlinePayment } from 'react-icons/md';
 import ExportFeeServices from '../../features/services/custom-hooks/export-fee';
 import PaymentProviderServices from '../../features/services/custom-hooks/payment-providers';
@@ -19,6 +19,7 @@ import CreateExportFee from './elements/modal/create-export-fee';
 import EditExportFee from './elements/modal/edit-export-fee';
 import CreateProvider from './elements/modal/create-provider';
 import EditProvider from './elements/modal/edit-provider';
+import ShipmentSettings from './elements/shipment-settings/shipment-settings';
 import ToolKit from '../../components/tool-kit/index-tool-kit';
 import { OptionItem } from '../../components/tool-kit/index-tool-kit.style';
 import { FiEdit2 } from 'react-icons/fi';
@@ -29,6 +30,7 @@ function Index() {
 	const PAGE_SECTIONS = {
 		SHIPPING_FEES: 'shippingFees',
 		PROVIDER: 'provider',
+		SHIPMENT_SETTINGS: 'shipmentSettings',
 	};
 
 	const { mutate: deleteShippers, isPending: isDeletingEx } =
@@ -153,17 +155,30 @@ function Index() {
 						<MdOutlinePayment />
 						Payment Providers
 					</OptionBtn>
+
+					<OptionBtn
+						$active={section === PAGE_SECTIONS.SHIPMENT_SETTINGS}
+						onClick={() => setSection(PAGE_SECTIONS.SHIPMENT_SETTINGS)}
+						className="tabs"
+					>
+						<FaTruckLoading />
+						Shipment Settings
+					</OptionBtn>
 				</div>
 
-				<div className="actions">
-					<CreateBtn type="button" onClick={openModal}>
-						+ New Shipping
-					</CreateBtn>
-					<CreateBtn type="button" onClick={openModalProvider}>
-						+ New Provider
-					</CreateBtn>
-				</div>
+				{section !== PAGE_SECTIONS.SHIPMENT_SETTINGS && (
+					<div className="actions">
+						<CreateBtn type="button" onClick={openModal}>
+							+ New Shipping
+						</CreateBtn>
+						<CreateBtn type="button" onClick={openModalProvider}>
+							+ New Provider
+						</CreateBtn>
+					</div>
+				)}
 			</TabNav>
+
+			{section === PAGE_SECTIONS.SHIPMENT_SETTINGS && <ShipmentSettings />}
 
 			<TableWrapper>
 				{section === 'shippingFees' && (
@@ -173,16 +188,23 @@ function Index() {
 								Header: () => 'Country',
 								accessor: 'country',
 								Cell: ({ value }) => (
-									<span className="font-semibold uppercase">{value}</span>
+									<span className="font-semibold uppercase ml-[5px]">{value}</span>
 								),
 							},
 							{
 								Header: () => 'Default Fee',
 								accessor: 'defaultAmount',
 								Cell: ({ value }) => (
-									<span className="nowrap">
+									<span className="nowrap ml-[5px]">
 										₦{Number(value || 0).toLocaleString()}
 									</span>
+								),
+							},
+							{
+								Header: () => 'Default VAT',
+								accessor: 'defaultVat',
+								Cell: ({ value }) => (
+									<span className="nowrap ml-[5px]">{Number(value || 0)}%</span>
 								),
 							},
 							{

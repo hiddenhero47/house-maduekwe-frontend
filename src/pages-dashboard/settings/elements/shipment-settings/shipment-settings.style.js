@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 
-export const ModalWrapper = styled.div`
-	width: clamp(320px, 92vw, 470px);
+export const ShipmentSettingsWrapper = styled.div`
+	width: 100%;
+	max-width: 720px;
 	background-color: ${({ theme }) => theme?.mainBody?.container};
 	border-radius: 14px;
 	display: flex;
 	flex-direction: column;
 	padding: 28px;
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
-	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
 	color: ${({ theme }) => theme?.mainBody?.text};
 
-	.modal_header {
+	.countian {
+		margin: 60px auto;
+	}
+
+	.header {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
@@ -28,120 +32,60 @@ export const ModalWrapper = styled.div`
 			color: ${({ theme }) => theme.mainBody.sbText};
 			margin-top: 6px;
 			line-height: 1.4;
-		}
-
-		.closeBtn {
-			font-size: 22px;
-			color: ${({ theme }) => theme.mainBody.sbText};
-			cursor: pointer;
-			transition: 0.2s ease;
-
-			&:hover {
-				color: ${({ theme }) => theme.mainBody.text};
-				transform: rotate(90deg);
-			}
+			max-width: 480px;
 		}
 	}
 
-	// add to modal.style
-
-	.state_header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 15px;
-		margin-bottom: 10px;
-
-		p {
-			font-size: 12px;
-			color: ${({ theme }) => theme.mainBody.sbText};
-			margin-top: 3px;
-		}
-
-		@media (max-width: 550px) {
-			flex-direction: column;
-			align-items: flex-start;
-		}
-	}
-
-	.add_btn {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-
-		padding: 9px 12px;
-		border-radius: 8px;
-
-		background: ${({ theme }) => theme.mainBody.toolkitBg};
-		color: ${({ theme }) => theme.mainBody.text};
-
-		font-size: 13px;
-		font-weight: 600;
-
-		transition: 0.2s ease;
-
-		svg {
-			font-size: 18px;
-		}
-
-		&:hover {
-			transform: translateY(-1px);
-			background: ${({ theme }) => theme.mainBody.card};
-		}
-	}
-
-	.states_wrapper {
+	form {
 		display: flex;
 		flex-direction: column;
-		gap: 14px;
+		gap: 22px;
+		margin-top: 8px;
 	}
-
-	.state_card {
-		padding: 14px;
-		border-radius: 12px;
-		border: 1px solid ${({ theme }) => theme.mainBody.line};
-		background: ${({ theme }) => theme.mainBody.toolkitBg};
-
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.remove_btn {
-		display: flex;
-		align-items: center;
-		gap: 5px;
-
-		align-self: flex-end;
-
-		font-size: 12px;
-		font-weight: 600;
-
-		color: #ff5a5a;
-
-		transition: 0.2s ease;
-
-		svg {
-			font-size: 18px;
-		}
-
-		&:hover {
-			transform: translateY(-1px);
-			opacity: 0.8;
-		}
-	}
-`;
-
-export const MyForm = styled.form`
-	display: flex;
-	flex-direction: column;
-	gap: 22px;
-	margin-top: 8px;
 
 	.section {
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
+		padding-top: 18px;
+		border-top: 1px solid ${({ theme }) => theme?.mainBody?.line};
+
+		&:first-child {
+			border-top: none;
+			padding-top: 0;
+		}
+
+		h4 {
+			font-size: 15px;
+			font-weight: 700;
+			color: ${({ theme }) => theme.mainBody.text};
+		}
+
+		> .hint {
+			font-size: 12px;
+			color: ${({ theme }) => theme.mainBody.sbText};
+			margin-top: -8px;
+		}
+	}
+
+	.toggle_row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+
+		label {
+			font-size: 14px;
+			font-weight: 600;
+			color: ${({ theme }) => theme.mainBody.text};
+		}
+
+		.hint {
+			font-size: 12px;
+			color: ${({ theme }) => theme.mainBody.sbText};
+			margin-top: 3px;
+			max-width: 420px;
+		}
 	}
 
 	.grid-2 {
@@ -177,7 +121,11 @@ export const MyForm = styled.form`
 			color: ${({ theme }) => theme?.mainBody?.sbText};
 			font-size: 13px;
 			font-weight: 600;
-			margin-left: 8px;
+			letter-spacing: 0.2px;
+		}
+
+		&:focus-within label {
+			color: ${({ theme }) => theme?.mainBody?.text};
 		}
 	}
 `;
