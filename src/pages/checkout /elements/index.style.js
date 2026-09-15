@@ -107,6 +107,38 @@ export const Summary = styled.div`
 		color: ${({ theme }) => theme.mainBody.sbText};
 	}
 
+	.items_list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		max-height: 320px;
+		overflow-y: auto;
+	}
+
+	.deliver_to {
+		background: ${({ theme }) => theme.mainBody.card};
+		border: 1px solid ${({ theme }) => theme.mainBody.cardLine};
+		border-radius: 10px;
+		padding: 14px 18px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+
+		.label {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: ${({ theme }) => theme.mainBody.sbText};
+		}
+
+		.value {
+			font-size: 14px;
+			color: ${({ theme }) => theme.mainBody.text};
+			line-height: 1.4;
+		}
+	}
+
 	.breakdown {
 		background: ${({ theme }) => theme.mainBody.card};
 		border: 1px solid ${({ theme }) => theme.mainBody.cardLine};
@@ -160,6 +192,95 @@ export const Summary = styled.div`
 		text-align: center;
 		margin-top: 6px;
 	}
+`;
+
+export const OrderItemRow = styled.div`
+	width: 100%;
+	display: flex;
+	align-items: center;
+	padding: 8px;
+	padding-right: 12px;
+	border-radius: 10px;
+	background-color: ${({ theme }) => theme?.mainBody.toolkitBg};
+	border: 1px solid ${({ theme }) => theme?.mainBody.line};
+
+	.imageHolder {
+		width: 48px;
+		height: 48px;
+		border-radius: 8px;
+		overflow: hidden;
+		flex-shrink: 0;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.info {
+		display: flex;
+		flex-direction: column;
+		margin-left: 10px;
+		gap: 2px;
+		color: ${({ theme }) => theme?.mainBody.text};
+		min-width: 0;
+
+		.name {
+			font-size: 14px;
+			font-weight: 600;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.price {
+			font-size: 12.5px;
+			font-weight: 500;
+			color: ${({ theme }) => theme?.mainBody.sbText};
+		}
+	}
+
+	.meta {
+		margin-left: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 6px;
+		flex-shrink: 0;
+		padding-left: 10px;
+
+		.nos {
+			font-size: 13px;
+
+			span {
+				font-size: 12px;
+				color: ${({ theme }) => theme?.intro.logo};
+			}
+		}
+
+		.attrs {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+	}
+`;
+
+export const ItemColor = styled.div`
+	width: 10px;
+	height: 10px;
+	border-radius: 9999px;
+	outline: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	outline-offset: -2px;
+	background-color: ${({ $color }) => $color || 'transparent'};
+`;
+
+export const ItemSize = styled.span`
+	font-size: 11px;
+	font-family: Inter;
+	font-weight: 600;
+	color: ${({ theme }) => theme?.mainBody.text};
 `;
 
 export const ProviderRow = styled.div`

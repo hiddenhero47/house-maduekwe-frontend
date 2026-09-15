@@ -9,6 +9,7 @@ import ShipmentServices from '../../../../features/services/custom-hooks/shipmen
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useTheme } from 'styled-components';
 import { SHIPMENT_STATUS } from '../../../../utilities/app-const';
+import { truncate } from '../../../../utilities/basic-functions';
 
 const SHIPPABLE_ORDER_STATUSES = ['paid', 'processing', 'shipped', 'delivered'];
 
@@ -147,7 +148,13 @@ function ShipmentModal({ orderId, orderStatus }) {
 										{shipment.trackingUrl && (
 											<div className="readonly_row">
 												<span>Tracking URL</span>
-												<span>{shipment.trackingUrl}</span>
+												<a
+													href={shipment.trackingUrl}
+													target="_blank"
+													rel="noreferrer"
+												>
+													{truncate({ str: shipment.trackingUrl, len: 28 })}
+												</a>
 											</div>
 										)}
 									</div>
