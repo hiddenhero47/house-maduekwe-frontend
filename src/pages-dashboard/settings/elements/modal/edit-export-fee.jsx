@@ -21,7 +21,8 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 		() => ({
 			country: data?.country || '',
 			defaultAmount: data?.defaultAmount || '',
-			states: data?.states || [],
+			defaultVat: data?.defaultVat ?? '',
+			states: (data?.states || []).map((s) => ({ ...s, vat: s.vat ?? '' })),
 		}),
 		[data]
 	);
@@ -30,7 +31,15 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 		const payload = {
 			...values,
 			country: values.country?.toUpperCase(),
-			states: values.states.filter((item) => item.state && item.amount !== ''),
+			states: values.states
+				.filter((item) => item.state && item.amount !== '')
+				.map((item) => ({
+					state: item.state,
+					amount: Number(item.amount),
+					...(item.vat !== '' && item.vat != null
+						? { vat: Number(item.vat) }
+						: {}),
+				})),
 		};
 
 		updateExportFee(
@@ -90,7 +99,7 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 					<div className="section">
 						<h4>Country Details</h4>
 
-						<div className="grid-2">
+						<div className="grid-3">
 							<div className="form_control">
 								<label>Country</label>
 
@@ -128,6 +137,24 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 									errormessage={errors.defaultAmount}
 								/>
 							</div>
+
+							<div className="form_control">
+								<label>Default VAT (%)</label>
+
+								<CustomInput
+									type="number"
+									name="defaultVat"
+									value={values.defaultVat}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									placeholder="7.5"
+									paddingX="14px"
+									paddingY="9px"
+									useBackground
+									isError={touched.defaultVat && errors.defaultVat}
+									errormessage={errors.defaultVat}
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -147,6 +174,7 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 										{
 											state: '',
 											amount: '',
+											vat: '',
 										},
 									])
 								}
@@ -159,7 +187,7 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 						<div className="states_wrapper">
 							{values.states?.map((item, index) => (
 								<div key={index} className="state_card">
-									<div className="grid-2">
+									<div className="grid-3">
 										<div className="form_control">
 											<label>State</label>
 
@@ -187,6 +215,22 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												placeholder="2500"
+												paddingX="14px"
+												paddingY="9px"
+												useBackground
+											/>
+										</div>
+
+										<div className="form_control">
+											<label>VAT (%)</label>
+
+											<CustomInput
+												type="number"
+												name={`states.${index}.vat`}
+												value={item.vat}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												placeholder="Optional"
 												paddingX="14px"
 												paddingY="9px"
 												useBackground

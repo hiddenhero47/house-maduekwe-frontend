@@ -137,9 +137,19 @@ export const FilterModalWrapper = styled.div`
 		padding: 6px 0;
 		color: ${({ theme }) => theme.mainBody.sbText};
 
-		span:last-child {
+		span:last-child,
+		a:last-child {
 			color: ${({ theme }) => theme.mainBody.text};
 			font-weight: 600;
+		}
+
+		a:last-child {
+			text-decoration: underline;
+			text-underline-offset: 2px;
+
+			&:hover {
+				opacity: 0.8;
+			}
 		}
 	}
 `;

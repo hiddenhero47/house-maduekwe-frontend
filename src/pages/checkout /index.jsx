@@ -3,6 +3,9 @@ import {
 	Container,
 	Card,
 	Summary,
+	OrderItemRow,
+	ItemColor,
+	ItemSize,
 	ProviderRow,
 	PaymentArea,
 	SaveBtn,
@@ -18,7 +21,12 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useParams } from 'react-router-dom';
 import StripePaymentForm from './elements/stripe/strip-form';
-import { getCurrencySymbol } from '../../utilities/basic-functions';
+import {
+	getCurrencySymbol,
+	groupAttributesByType,
+} from '../../utilities/basic-functions';
+import { attributeType } from '../../utilities/app-const';
+import { getCountryByCode } from '../../utilities/city-state-country';
 import { useSelector, useDispatch } from 'react-redux';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -54,6 +62,27 @@ function Index() {
 			value: prov?.provider,
 		}));
 	}, [providers]);
+
+	const getItemImage = (currentItem) => {
+		const grouped =
+			groupAttributesByType(currentItem?.selectedAttributes || {}) || {};
+
+		const colorList = grouped[attributeType.COLOR] || [];
+
+		return (
+			colorList?.[0]?.images?.[0]?.url ||
+			currentItem?.shopItem?.placeHolder?.url ||
+			currentItem?.shopItem?.imageCatalog?.[0]?.url ||
+			null
+		);
+	};
+
+	const getItemAttrDisplay = (currentItem, key) => {
+		const grouped =
+			groupAttributesByType(currentItem?.selectedAttributes || {}) || {};
+		const attList = grouped[key] || [];
+		return attList[0]?.Attribute.display;
+	};
 
 	const handleCreateIntent = async () => {
 		if (provider !== 'stripe') return;
@@ -158,6 +187,66 @@ function Index() {
 							{order?.items?.length || 'Nill'} items in cart
 						</p>
 					</div>
+
+					<div className="items_list Y_scroll_style">
+						{(order?.items || []).map((item, index) => (
+							<OrderItemRow key={item?.shopItem?._id || index}>
+								<div className="imageHolder">
+									<img src={getItemImage(item)} alt={item?.shopItem?.name} />
+								</div>
+
+								<div className="info">
+									<span className="name">{item?.shopItem?.name}</span>
+									<span className="price">
+										{getCurrencySymbol(item?.shopItem?.currency) || '$'}
+										{item?.shopItem?.price}
+									</span>
+								</div>
+
+								<div className="meta">
+									<div className="nos">
+										{item?.quantity} <span>Qty</span>
+									</div>
+
+									{(getItemAttrDisplay(item, attributeType.SIZE) ||
+										getItemAttrDisplay(item, attributeType.COLOR)) && (
+										<div className="attrs">
+											{getItemAttrDisplay(item, attributeType.SIZE) && (
+												<ItemSize>
+													{getItemAttrDisplay(item, attributeType.SIZE)}
+												</ItemSize>
+											)}
+
+											{getItemAttrDisplay(item, attributeType.COLOR) && (
+												<ItemColor
+													$color={getItemAttrDisplay(item, attributeType.COLOR)}
+												/>
+											)}
+										</div>
+									)}
+								</div>
+							</OrderItemRow>
+						))}
+					</div>
+
+					{order?.address && (
+						<div className="deliver_to">
+							<span className="label">Deliver to</span>
+							<span className="value">
+								{order.address.fullAddress}
+								{order.address.addressLine2
+									? `, ${order.address.addressLine2}`
+									: ''}
+								<br />
+								{[order.address.city, order.address.state]
+									.filter(Boolean)
+									.join(', ')}
+								{', '}
+								{getCountryByCode(order.address.country)?.name ||
+									order.address.country}
+							</span>
+						</div>
+					)}
 
 					<div className="breakdown">
 						<div className="row">

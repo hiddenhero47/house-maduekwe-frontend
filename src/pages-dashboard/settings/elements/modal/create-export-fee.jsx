@@ -21,6 +21,7 @@ function CreateExportFee({ ref, closeModal }) {
 	const initialValues = {
 		country: '',
 		defaultAmount: '',
+		defaultVat: '',
 		states: [],
 	};
 
@@ -28,7 +29,15 @@ function CreateExportFee({ ref, closeModal }) {
 		const payload = {
 			...values,
 			country: values.country?.toUpperCase(),
-			states: values.states.filter((item) => item.state && item.amount !== ''),
+			states: values.states
+				.filter((item) => item.state && item.amount !== '')
+				.map((item) => ({
+					state: item.state,
+					amount: Number(item.amount),
+					...(item.vat !== '' && item.vat != null
+						? { vat: Number(item.vat) }
+						: {}),
+				})),
 		};
 
 		createExportFee(payload, {
@@ -75,7 +84,7 @@ function CreateExportFee({ ref, closeModal }) {
 					<div className="section">
 						<h4>Country Details</h4>
 
-						<div className="grid-2">
+						<div className="grid-3">
 							<div className="form_control">
 								<label>Country</label>
 
@@ -113,6 +122,24 @@ function CreateExportFee({ ref, closeModal }) {
 									errormessage={errors.defaultAmount}
 								/>
 							</div>
+
+							<div className="form_control">
+								<label>Default VAT (%)</label>
+
+								<CustomInput
+									type="number"
+									name="defaultVat"
+									value={values.defaultVat}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									placeholder="7.5"
+									paddingX="14px"
+									paddingY="9px"
+									useBackground
+									isError={touched.defaultVat && errors.defaultVat}
+									errormessage={errors.defaultVat}
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -132,6 +159,7 @@ function CreateExportFee({ ref, closeModal }) {
 										{
 											state: '',
 											amount: '',
+											vat: '',
 										},
 									])
 								}
@@ -144,7 +172,7 @@ function CreateExportFee({ ref, closeModal }) {
 						<div className="states_wrapper">
 							{values.states?.map((item, index) => (
 								<div key={index} className="state_card">
-									<div className="grid-2">
+									<div className="grid-3">
 										<div className="form_control">
 											<label>State</label>
 
@@ -172,6 +200,22 @@ function CreateExportFee({ ref, closeModal }) {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												placeholder="2500"
+												paddingX="14px"
+												paddingY="9px"
+												useBackground
+											/>
+										</div>
+
+										<div className="form_control">
+											<label>VAT (%)</label>
+
+											<CustomInput
+												type="number"
+												name={`states.${index}.vat`}
+												value={item.vat}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												placeholder="Optional"
 												paddingX="14px"
 												paddingY="9px"
 												useBackground
