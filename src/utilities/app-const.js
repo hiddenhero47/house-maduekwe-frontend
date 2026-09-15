@@ -31,3 +31,16 @@ export const CHECKOUT_TYPES = {
 	USER: 'user-checkout',
 	GUEST: 'guest-checkout',
 };
+
+export const WEIGHT_UNITS = ['kg', 'g', 'lb', 'oz'];
+
+export const SHIPMENT_STATUS = {
+	PENDING: 'pending',
+	LABEL_CREATED: 'label_created',
+	PICKED_UP: 'picked_up',
+	IN_TRANSIT: 'in_transit',
+	OUT_FOR_DELIVERY: 'out_for_delivery',
+	DELIVERED: 'delivered',
+	FAILED: 'failed',
+	CANCELLED: 'cancelled',
+};

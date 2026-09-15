@@ -7,7 +7,7 @@ import { IoShirtSharp } from 'react-icons/io5';
 import { IoCreate } from 'react-icons/io5';
 import { FaLayerGroup } from 'react-icons/fa6';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
-import { MdLocalShipping } from 'react-icons/md';
+import { MdLocalShipping, MdOutlineLocalShipping } from 'react-icons/md';
 import { MdPayment } from 'react-icons/md';
 import { TbFlagCancel } from 'react-icons/tb';
 import { IoIosSettings } from 'react-icons/io';
@@ -143,6 +143,24 @@ function SideMenu({ close }) {
 
 									<span className="text-[13px] font-medium text-[var(--menu-text)] font-sans">
 										Orders Placed
+									</span>
+								</div>
+							</Link>
+						</li>
+
+						<li>
+							<Link
+								to="/admin/shipments"
+								onClick={() => close()}
+								className="w-full p-[3%] flex items-center justify-between rounded-[5px]"
+							>
+								<div className="flex items-center gap-[8px]">
+									<i className="text-[19px] text-[var(--menu-icon)]">
+										<MdOutlineLocalShipping />
+									</i>
+
+									<span className="text-[13px] font-medium text-[var(--menu-text)] font-sans">
+										Shipments
 									</span>
 								</div>
 							</Link>

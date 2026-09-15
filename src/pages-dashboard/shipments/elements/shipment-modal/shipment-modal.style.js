@@ -67,30 +67,6 @@ export const FilterModalWrapper = styled.div`
 		}
 	}
 
-	.crater_wrapper {
-		display: flex;
-		gap: 20px;
-
-		@media (max-width: 970px) {
-			flex-direction: column;
-		}
-	}
-
-	.craters {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.form_box {
-		display: flex;
-		gap: 10px;
-
-		@media (max-width: 468px) {
-			flex-wrap: wrap;
-		}
-	}
-
 	.form_control {
 		width: 100%;
 		min-width: 150px;
@@ -142,28 +118,6 @@ export const FilterModalWrapper = styled.div`
 			cursor: pointer;
 			transition: 0.18s ease;
 		}
-
-		.reset_btn {
-			background: ${({ theme }) => theme.filterBtn.background};
-			color: ${({ theme }) => theme.filterBtn.text};
-
-			&:hover {
-				background: ${({ theme }) => theme.filterBtn.hoverBg};
-			}
-		}
-
-		.apply_btn {
-			background: ${({ theme }) =>
-				theme.mode === 'dark' ? '#f1f1f1' : theme.addToCart.background};
-
-			color: ${({ theme }) =>
-				theme.mode === 'dark' ? '#0f0f0f' : theme.formBtn.text};
-
-			&:hover {
-				background: ${({ theme }) =>
-					theme.mode === 'dark' ? '#d9d9d9' : theme.addToCart.hoverBg};
-			}
-		}
 	}
 
 	.shipping_box {
@@ -174,6 +128,19 @@ export const FilterModalWrapper = styled.div`
 		background: ${({ theme }) => theme.mainBody.toolkitBg};
 
 		animation: ${floatFade} 0.25s ease;
+	}
+
+	.readonly_row {
+		display: flex;
+		justify-content: space-between;
+		font-size: 13px;
+		padding: 6px 0;
+		color: ${({ theme }) => theme.mainBody.sbText};
+
+		span:last-child {
+			color: ${({ theme }) => theme.mainBody.text};
+			font-weight: 600;
+		}
 	}
 `;
 
