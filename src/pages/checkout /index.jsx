@@ -183,6 +183,14 @@ function Index() {
 								{order?.totalVat || 'Nill'}
 							</span>
 						</div>
+
+						<div className="row">
+							<span className="label">Product Tax</span>
+							<span className="value">
+								{getCurrencySymbol(payment?.currency) || '$'}{' '}
+								{order?.totalProductTax || 'Nill'}
+							</span>
+						</div>
 					</div>
 
 					<div className="divider" />

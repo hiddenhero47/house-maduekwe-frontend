@@ -59,28 +59,6 @@ const useGetOrderByIdPublicQuery = (id, options = {}) => {
 	});
 };
 
-const useUpdateOrderStatusMutation = () => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: ({ id, data }) =>
-			axiosCall({
-				url: `/api/orders/${id}/status`,
-				method: 'PATCH',
-				data,
-			}),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ['orders'],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ['orders', 'me'],
-			});
-			toast.success('Order status updated');
-		},
-	});
-};
-
 const useConfirmCheckoutMutation = () => {
 	return useMutation({
 		mutationFn: (data) =>
@@ -113,6 +91,20 @@ const useCheckoutMutation = () => {
 		},
 		onError: () => {
 			// toast.error('Checkout failed');
+		},
+	});
+};
+
+const useGuestConfirmCheckoutMutation = () => {
+	return useMutation({
+		mutationFn: (data) =>
+			axiosCall({
+				url: '/api/orders/guest-confirm-checkout',
+				method: 'POST',
+				data,
+			}),
+		onError: () => {
+			toast.error('Failed to confirm checkout');
 		},
 	});
 };
@@ -216,9 +208,10 @@ const useCancelExpiredGuestOrdersMutation = () => {
 export {
 	useGetMyOrdersQuery,
 	useGetOrdersQuery,
-	useUpdateOrderStatusMutation,
 	useConfirmCheckoutMutation,
 	useCheckoutMutation,
+	useGuestConfirmCheckoutMutation,
+	useGuestCheckoutMutation,
 	useGetOrderByIdQuery,
 	useGetOrderByIdPublicQuery,
 	useCancelOrderMutation,
@@ -232,7 +225,6 @@ const OrderServices = {
 	getOne: useGetOrderByIdQuery,
 	getOnePublic: useGetOrderByIdPublicQuery,
 	useGetOrder: useGetOrderQuery,
-	updateStatus: useUpdateOrderStatusMutation,
 	cancel: useCancelOrderMutation,
 	cancelExpired: useCancelExpiredOrdersAdminMutation,
 	cancelExpiredGuest: useCancelExpiredGuestOrdersMutation,
@@ -241,6 +233,7 @@ const OrderServices = {
 const CheckoutServices = {
 	confirm: useConfirmCheckoutMutation,
 	checkout: useCheckoutMutation,
+	guestConfirm: useGuestConfirmCheckoutMutation,
 	guestCheckout: useGuestCheckoutMutation,
 };
 

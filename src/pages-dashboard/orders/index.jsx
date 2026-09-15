@@ -15,8 +15,10 @@ import { NoDataIcon } from '../../components/icon-components/empty';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { OrderServices } from '../../features/services/custom-hooks/orders';
 import { TbPigMoney } from 'react-icons/tb';
-import ManageModal from './elements/manage-modal/manage-modal';
+import ShipmentModal from '../shipments/elements/shipment-modal/shipment-modal';
 import DateFilter from '../../components/modal-assets/filter-modal/date-filter/date-filter';
+
+const CANCELLABLE_STATUSES = ['pending', 'paid', 'processing'];
 
 function Index() {
 	const ORDER_STATUS = {
@@ -54,6 +56,9 @@ function Index() {
 	});
 
 	const { data: orders = [], pagination } = data || {};
+
+	const { mutate: cancelOrder, isPending: isCancelling } =
+		OrderServices.cancel();
 
 	const flipPage = (p) => {
 		searchParams.set('page', p);
@@ -200,9 +205,36 @@ function Index() {
 									),
 								},
 								{
-									Header: () => <span>Manage Status</span>,
+									Header: () => <span>Manage</span>,
 									accessor: 'manage',
-									Cell: ({ row }) => <ManageModal id={row.original._id} />,
+									Cell: ({ row }) => (
+										<div className="flex items-center">
+											<ShipmentModal
+												orderId={row.original._id}
+												orderStatus={row.original.status}
+											/>
+
+											<button
+												className="px-[10px] py-[5px] text-xs font-semibold rounded-md transition-all ml-[10px] disabled:opacity-50 disabled:cursor-not-allowed"
+												style={{ background: 'var(--mainBody-toolkitBg)' }}
+												disabled={
+													isCancelling ||
+													!CANCELLABLE_STATUSES.includes(row.original.status)
+												}
+												onClick={() => {
+													if (
+														window.confirm(
+															'Cancel this order? This cannot be undone.'
+														)
+													) {
+														cancelOrder(row.original._id);
+													}
+												}}
+											>
+												Cancel
+											</button>
+										</div>
+									),
 								},
 							]}
 							dataSource={orders || []}
