@@ -81,7 +81,7 @@ function Index() {
 								<span className="text-[var(--mainBody-sbKitText)]">
 									Email :
 								</span>{' '}
-								{order?.user?.email}
+								{order?.user?.email || order?.userEmail}
 							</p>
 						</div>
 
@@ -95,7 +95,7 @@ function Index() {
 							</p>
 
 							<p className="text-[var(--mainBody-sbKitText)]">
-								{order?.address?.city} {order?.address?.state}
+								{order?.address?.city} {order?.address?.state} {order?.address?.zipCode}
 								{', '}
 								<span>{getCountryByCode(order?.address?.country)?.name}</span>.
 							</p>
