@@ -31,11 +31,13 @@ const errorResponseHandler = (error) => {
 		'An unknown error occurred';
 
 	const requestUrl = error.config?.url || '';
+	const requestMethod = (error.config?.method || '').toLowerCase();
 
-	// Skip toast for specific endpoints
-	const shouldSkipToast = TOAST_ERROR_BLACKLIST.some((path) =>
-		requestUrl.includes(path)
-	);
+	// Skip toast for specific endpoints — includes GET /api/shipments/orders/:id,
+	// whose 404 just means "no shipment yet", a normal state, not an error to surface.
+	const shouldSkipToast =
+		TOAST_ERROR_BLACKLIST.some((path) => requestUrl.includes(path)) ||
+		(requestMethod === 'get' && requestUrl.includes('/api/shipments/orders/'));
 
 	if (
 		error.response.status === 400 &&

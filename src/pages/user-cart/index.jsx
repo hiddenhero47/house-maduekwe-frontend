@@ -235,6 +235,7 @@ function Index() {
 					itemList: finalItemIds,
 					selectedAddress: selectedAddr,
 					consigneesName: consignee.name,
+					checkoutToken: checkoutData?.checkoutToken,
 				},
 				{
 					onSuccess: (response) => {
@@ -277,19 +278,24 @@ function Index() {
 		dispatch(removeFromHoldings({ tempId }));
 	};
 
+	// Rough pre-review estimate for guests only — the authoritative total (including
+	// real destination VAT, which needs an address we don't have yet here) comes
+	// from guestConfirmCheckout once the guest checkout review step runs.
+	// Note: this was always product tax, never destination VAT — ShopItem never
+	// had a real VAT field, just the one now renamed to productTax.
 	const localCartSummary = useMemo(() => {
 		if (activeUser || !localCartItems?.length) {
 			return {
 				itemCount: 0,
 				subtotal: 0,
-				totalVat: 0,
+				totalProductTax: 0,
 				orderTotal: 0,
 				currency: '',
 			};
 		}
 
 		let subtotal = 0;
-		let totalVat = 0;
+		let totalProductTax = 0;
 		let itemCount = 0;
 
 		const currency = localCartItems[0]?.shopItem?.currency || '';
@@ -299,7 +305,7 @@ function Index() {
 
 			const price = Number(product?.price) || 0;
 			const quantity = Number(item?.quantity) || 0;
-			const vat = Number(product?.vat) || 0;
+			const productTax = Number(product?.productTax) || 0;
 			const discount = Number(product?.discount) || 0;
 
 			// Discount is treated as a percentage.
@@ -307,18 +313,18 @@ function Index() {
 				discount > 0 ? price - (price * discount) / 100 : price;
 
 			const itemSubtotal = discountedPrice * quantity;
-			const itemVat = (itemSubtotal * vat) / 100;
+			const itemProductTax = (itemSubtotal * productTax) / 100;
 
 			subtotal += itemSubtotal;
-			totalVat += itemVat;
+			totalProductTax += itemProductTax;
 			itemCount += quantity;
 		});
 
 		return {
 			itemCount,
 			subtotal,
-			totalVat,
-			orderTotal: subtotal + totalVat,
+			totalProductTax,
+			orderTotal: subtotal + totalProductTax,
 			currency,
 		};
 	}, [activeUser, localCartItems]);
@@ -666,6 +672,16 @@ function Index() {
 										</p>
 									</div>
 
+									<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											Product tax
+										</p>
+										<p className="text-[15px] text-[var(--mainBody-sbText)]">
+											{getCurrencySymbol(checkoutData?.payment?.currency) || ''}{' '}
+											{checkoutData?.order?.totalProductTax || ''}
+										</p>
+									</div>
+
 									<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
 										<p>Order total</p>
 										<p>
@@ -740,14 +756,19 @@ function Index() {
 
 								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top note_sc">
 									<p className="text-[15px] text-[var(--mainBody-sbText)]">
-										Tax estimate
+										Product tax estimate
 									</p>
 
 									<p className="text-[15px] text-[var(--mainBody-sbText)]">
 										{getCurrencySymbol(localCartSummary.currency) || ''}{' '}
-										{localCartSummary.totalVat.toFixed(2)}
+										{localCartSummary.totalProductTax.toFixed(2)}
 									</p>
 								</div>
+
+								<p className="text-[12px] text-[var(--mainBody-sbText)] opacity-70">
+									Destination VAT is calculated once you enter your shipping
+									address at checkout.
+								</p>
 
 								<div className="flex justify-between text-base font-medium pt-[10px] mb-[10px] line_top total_sc">
 									<p>Order total</p>

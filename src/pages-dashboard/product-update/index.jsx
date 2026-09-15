@@ -25,7 +25,7 @@ import SearchSelect from '../../components/form-components/select/search-select'
 import CustomFileInput from '../../components/form-components/file/custom-file-input';
 import ImageSelector from '../../components/form-components/image-selector/selector';
 import ChipsInput from '../../components/form-components/chips-input/chips-input';
-import { ItemStatusType } from '../../utilities/app-const';
+import { ItemStatusType, WEIGHT_UNITS } from '../../utilities/app-const';
 import { FaRuler } from 'react-icons/fa6';
 import { FaBrush } from 'react-icons/fa';
 import { FaImages } from 'react-icons/fa6';
@@ -85,7 +85,11 @@ function Index() {
 			status: product?.status || '',
 			description: product?.description || '',
 			price: product?.price || 0,
-			vat: product?.vat || 0,
+			productTax: product?.productTax || 0,
+			weight: {
+				value: product?.weight?.value ?? '',
+				unit: product?.weight?.unit || 'kg',
+			},
 			currency: product?.currency || 'USD',
 			currencySearchValue: '',
 			discount: product?.discount || 0,
@@ -108,7 +112,16 @@ function Index() {
 	);
 
 	const onSubmit = async (values) => {
-		const formData = buildShopItemFormData(values);
+		const payload = {
+			...values,
+			weight: {
+				unit: values.weight?.unit || 'kg',
+				...(values.weight?.value !== '' && values.weight?.value != null
+					? { value: Number(values.weight.value) }
+					: {}),
+			},
+		};
+		const formData = buildShopItemFormData(payload);
 		logFormData(formData);
 		updataProduct(
 			{ data: formData, id: id },
@@ -139,7 +152,8 @@ function Index() {
 		status,
 		description,
 		price,
-		vat,
+		productTax,
+		weight,
 		currency,
 		currencySearchValue,
 		discount,
@@ -485,14 +499,14 @@ function Index() {
 											<label htmlFor="">Product Tax</label>
 											<CustomInput
 												type="number"
-												id="vat"
-												name="vat"
-												value={vat}
+												id="productTax"
+												name="productTax"
+												value={productTax}
 												onChange={handleChange}
 												onBlur={handleBlur}
-												isError={touched.vat && errors.vat}
-												errormessage={errors.vat}
-												placeholder="Value Added Tax"
+												isError={touched.productTax && errors.productTax}
+												errormessage={errors.productTax}
+												placeholder="Special tax for this product"
 												paddingX="14px"
 												paddingY="9px"
 												useBackground
@@ -552,6 +566,44 @@ function Index() {
 												paddingY="9px"
 												useBackground
 											/>
+										</div>
+
+										<div className="form_control">
+											<label htmlFor="">Weight</label>
+											<div className="flex gap-[10px]">
+												<CustomInput
+													type="number"
+													id="weight.value"
+													name="weight.value"
+													value={weight?.value}
+													onChange={handleChange}
+													onBlur={handleBlur}
+													isError={touched.weight?.value && errors.weight?.value}
+													errormessage={errors.weight?.value}
+													placeholder="Package weight"
+													paddingX="14px"
+													paddingY="9px"
+													useBackground
+												/>
+
+												<CustomSelect
+													id="weight.unit"
+													name="weight.unit"
+													value={weight?.unit}
+													handleChange={handleChange}
+													onBlur={handleBlur}
+													isError={touched.weight?.unit && errors.weight?.unit}
+													errormessage={errors.weight?.unit}
+													placeholder="Unit"
+													paddingX="14px"
+													paddingY="9px"
+													useBackground
+													options={WEIGHT_UNITS.map((unit) => ({
+														label: unit,
+														value: unit,
+													}))}
+												/>
+											</div>
 										</div>
 
 										<div className="form_control">

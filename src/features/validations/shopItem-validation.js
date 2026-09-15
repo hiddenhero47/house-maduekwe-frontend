@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ItemStatusType } from '../../utilities/app-const';
+import { ItemStatusType, WEIGHT_UNITS } from '../../utilities/app-const';
 
 // ✅ Regex for Mongo ObjectId (24 hex characters)
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -52,10 +52,20 @@ export const shopItemValidationSchema = Yup.object().shape({
 		.typeError('Price must be a number')
 		.required('Price is required')
 		.min(1,'Price must be at least 1'),
-	vat: Yup.number()
-		.typeError('VAT must be a number')
-		.required('VAT is required')
-		.min(0, 'VAT cannot be negative'),
+	productTax: Yup.number()
+		.typeError('Product Tax must be a number')
+		.required('Product Tax is required')
+		.min(0, 'Product Tax cannot be negative'),
+	weight: Yup.object({
+		value: Yup.number()
+			.transform((value, originalValue) =>
+				originalValue === '' ? undefined : value
+			)
+			.typeError('Weight must be a number')
+			.min(0, 'Weight cannot be negative')
+			.notRequired(),
+		unit: Yup.string().oneOf(WEIGHT_UNITS, 'Invalid weight unit').default('kg'),
+	}),
 	currency: Yup.string()
 		.required('Currency is required')
 		.matches(/^[A-Z]{3}$/, 'Currency must be a valid 3-letter currency code'),

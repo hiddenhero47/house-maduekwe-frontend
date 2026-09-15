@@ -147,6 +147,11 @@ function Index() {
 						</div>
 
 						<div className="cubicle">
+							<h3 className="section_title">Product Tax</h3>
+							<p className="section_Value">{order?.totalProductTax}</p>
+						</div>
+
+						<div className="cubicle">
 							<h3 className="section_title">Shipping Fee</h3>
 							<p className="section_Value">
 								{order?.shippingFee} {payment?.currency}

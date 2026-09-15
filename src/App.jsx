@@ -32,6 +32,7 @@ import ProductGroups from './pages-dashboard/product-groups';
 import ProductClassing from './pages-dashboard/product-classing';
 import Orders from './pages-dashboard/orders';
 import OrdersDetails from './pages-dashboard/orders-details';
+import Shipments from './pages-dashboard/shipments';
 import Payment from './pages-dashboard/payment';
 import Flagged from './pages-dashboard/flagged';
 import Administrator from './pages-dashboard/administrator';
@@ -76,6 +77,7 @@ function App() {
 								/>
 								<Route path="orders" element={<Orders />} />
 								<Route path="orders/:id" element={<OrdersDetails />} />
+								<Route path="shipments" element={<Shipments />} />
 								<Route path="payment-logs" element={<Payment />} />
 								<Route path="flagged-orders" element={<Flagged />} />
 								<Route path="administrate" element={<Administrator />} />
