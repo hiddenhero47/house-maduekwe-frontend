@@ -27,6 +27,46 @@ function ShipmentModal({ orderId, orderStatus }) {
 		ShipmentServices.create();
 	const { mutate: updateStatus, isPending: isUpdating } =
 		ShipmentServices.updateStatus();
+	const { mutate: fetchLabel, isPending: isLoadingLabel } =
+		ShipmentServices.getLabel();
+
+	const hasLabel = shipment?.files?.some((f) => f.kind === 'label');
+
+	const openBlobInNewTab = (blob) => {
+		const url = URL.createObjectURL(blob);
+		window.open(url, '_blank', 'noopener,noreferrer');
+	};
+
+	const downloadBlob = (blob, filename) => {
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = filename;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+	};
+
+	const viewLabel = () => {
+		fetchLabel(
+			{ orderId, download: false },
+			{ onSuccess: openBlobInNewTab }
+		);
+	};
+
+	const downloadLabel = () => {
+		const filename = `label-${shipment?.trackingNumber || orderId}${
+			shipment?.files?.find((f) => f.kind === 'label')?.format
+				? `.${shipment.files.find((f) => f.kind === 'label').format.toLowerCase()}`
+				: ''
+		}`;
+
+		fetchLabel(
+			{ orderId, download: true },
+			{ onSuccess: (blob) => downloadBlob(blob, filename) }
+		);
+	};
 
 	const modalRef = useRef(null);
 	const openModal = () => modalRef.current?.open();
@@ -155,6 +195,30 @@ function ShipmentModal({ orderId, orderStatus }) {
 												>
 													{truncate({ str: shipment.trackingUrl, len: 28 })}
 												</a>
+											</div>
+										)}
+
+										{hasLabel && (
+											<div className="readonly_row">
+												<span>Shipping Label</span>
+												<div className="flex gap-[10px]">
+													<button
+														type="button"
+														className="text-xs font-semibold underline disabled:opacity-50"
+														onClick={viewLabel}
+														disabled={isLoadingLabel}
+													>
+														View / Print
+													</button>
+													<button
+														type="button"
+														className="text-xs font-semibold underline disabled:opacity-50"
+														onClick={downloadLabel}
+														disabled={isLoadingLabel}
+													>
+														Download
+													</button>
+												</div>
 											</div>
 										)}
 									</div>
