@@ -36,7 +36,6 @@ export const WEIGHT_UNITS = ['kg', 'g', 'lb', 'oz'];
 
 export const SHIPPING_PROVIDERS = {
 	INTERNAL: 'internal',
-	SHOPIFY: 'shopify',
 	UPS: 'ups',
 	USPS: 'usps',
 	DHL: 'dhl',
@@ -45,8 +44,6 @@ export const SHIPPING_PROVIDERS = {
 
 // Only providers actually registered on the backend — mirrors
 // server-src/models/shippingSettingsModel.js's ENABLED_SHIPPING_PROVIDERS.
-// Shopify deliberately excluded — it has no external rate-quote API, so it
-// isn't a shipper in this system (see docs/shopify-ups-integration-plan.md).
 export const ENABLED_SHIPPING_PROVIDERS = [
 	SHIPPING_PROVIDERS.INTERNAL,
 	SHIPPING_PROVIDERS.UPS,
