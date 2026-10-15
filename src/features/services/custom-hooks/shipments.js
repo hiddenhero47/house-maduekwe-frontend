@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { axiosCall } from '../index-client';
+import axiosInstance, { axiosCall } from '../index-client';
 import { toast } from '../../../layouts/toast/toast-handler';
 
 const useGetAllShipmentsQuery = (params = {}) => {
@@ -75,11 +75,34 @@ const useUpdateShipmentStatusMutation = () => {
 	});
 };
 
+// Can't go through axiosCall (it always parses JSON) — needs
+// responseType: 'blob', so this calls the underlying axios instance
+// directly. Still goes through the same request interceptor for auth.
+const useGetShipmentLabelMutation = () => {
+	return useMutation({
+		mutationFn: async ({ orderId, download = false }) => {
+			const response = await axiosInstance.get(
+				`/api/shipments/orders/${orderId}/label`,
+				{
+					params: download ? { download: true } : undefined,
+					responseType: 'blob',
+				}
+			);
+
+			return response.data;
+		},
+		onError: () => {
+			toast.error('Failed to load shipment label');
+		},
+	});
+};
+
 export {
 	useGetAllShipmentsQuery,
 	useGetShipmentForOrderQuery,
 	useCreateShipmentMutation,
 	useUpdateShipmentStatusMutation,
+	useGetShipmentLabelMutation,
 };
 
 const ShipmentServices = {
@@ -87,6 +110,7 @@ const ShipmentServices = {
 	getForOrder: useGetShipmentForOrderQuery,
 	create: useCreateShipmentMutation,
 	updateStatus: useUpdateShipmentStatusMutation,
+	getLabel: useGetShipmentLabelMutation,
 };
 
 export default ShipmentServices;

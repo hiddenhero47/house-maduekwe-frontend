@@ -29,6 +29,7 @@ function ShipmentSettings() {
 		activeProvider: data?.activeProvider || 'internal',
 		enabled: data?.enabled ?? true,
 		autoCreateShipment: data?.autoCreateShipment ?? false,
+		fallbackProviders: data?.fallbackProviders || [],
 		originAddress: {
 			country: data?.originAddress?.country || '',
 			state: data?.originAddress?.state || '',
@@ -69,6 +70,7 @@ function ShipmentSettings() {
 			activeProvider: formValues.activeProvider,
 			enabled: formValues.enabled,
 			autoCreateShipment: formValues.autoCreateShipment,
+			fallbackProviders: formValues.fallbackProviders,
 		};
 
 		if (hasAnyOriginField(formValues.originAddress)) {
@@ -93,7 +95,22 @@ function ShipmentSettings() {
 		onSubmit,
 	});
 
-	const { activeProvider, enabled, autoCreateShipment, originAddress } = values;
+	const {
+		activeProvider,
+		enabled,
+		autoCreateShipment,
+		fallbackProviders,
+		originAddress,
+	} = values;
+
+	const toggleFallbackProvider = (provider) => {
+		setFieldValue(
+			'fallbackProviders',
+			fallbackProviders.includes(provider)
+				? fallbackProviders.filter((p) => p !== provider)
+				: [...fallbackProviders, provider]
+		);
+	};
 
 	if (isPending) {
 		return (
@@ -174,6 +191,33 @@ function ShipmentSettings() {
 							useBackground
 						/>
 					</div>
+
+					{ENABLED_SHIPPING_PROVIDERS.length > 1 && (
+						<div className="form_control">
+							<label>Fallback Providers</label>
+							<p className="hint">
+								Tried in the order checked, only when the active provider
+								can't quote a price for a customer's address.
+							</p>
+
+							{ENABLED_SHIPPING_PROVIDERS.filter(
+								(p) => p !== activeProvider
+							).map((provider) => (
+								<div className="toggle_row" key={provider}>
+									<label className="capitalize">{provider}</label>
+
+									<ToggleSwitch className="switch">
+										<input
+											type="checkbox"
+											checked={fallbackProviders.includes(provider)}
+											onChange={() => toggleFallbackProvider(provider)}
+										/>
+										<span className="slider" />
+									</ToggleSwitch>
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 
 				<div className="section">
