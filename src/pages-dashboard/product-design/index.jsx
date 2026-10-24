@@ -23,6 +23,7 @@ import { ItemStatusType, WEIGHT_UNITS } from '../../utilities/app-const';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 import CategoryServices from '../../features/services/custom-hooks/category';
+import PackageServices from '../../features/services/custom-hooks/package';
 import { buildShopItemFormData } from '../../utilities/basic-functions';
 import { shopItemValidationSchema } from '../../features/validations/shopItem-validation';
 import ShopItemServices from '../../features/services/custom-hooks/shop-items';
@@ -33,6 +34,10 @@ function Index() {
 	const navigate = useNavigate();
 
 	const { data: dataCat, isPending: isPendingCat } = CategoryServices.get({
+		limit: 100,
+	});
+
+	const { data: dataPkg, isPending: isPendingPkg } = PackageServices.get({
 		limit: 100,
 	});
 
@@ -50,6 +55,7 @@ function Index() {
 		discount: 0,
 		category: '',
 		categorySearchValue: '',
+		package: '',
 		subCategory: '',
 		quantity: 1,
 		placeHolder: {},
@@ -61,14 +67,16 @@ function Index() {
 	};
 
 	const onSubmit = async (values, { resetForm }) => {
+		const { package: packageId, ...rest } = values;
 		const payload = {
-			...values,
+			...rest,
 			weight: {
 				unit: values.weight?.unit || 'kg',
 				...(values.weight?.value !== '' && values.weight?.value != null
 					? { value: Number(values.weight.value) }
 					: {}),
 			},
+			...(packageId ? { package: packageId } : {}),
 		};
 		const formData = buildShopItemFormData(payload);
 		createProduct(formData, {
@@ -105,6 +113,7 @@ function Index() {
 		discount,
 		category,
 		categorySearchValue,
+		package: packageId,
 		subCategory,
 		quantity,
 		placeHolder,
@@ -137,6 +146,15 @@ function Index() {
 			value: cat?._id,
 		}));
 	}, [dataCat?.data]);
+
+	const packageOptions = useMemo(() => {
+		if (!dataPkg?.data) return [];
+
+		return dataPkg?.data.map((pkg) => ({
+			label: `${pkg?.name} — ${pkg?.length}×${pkg?.width}×${pkg?.height}in`,
+			value: pkg?._id,
+		}));
+	}, [dataPkg?.data]);
 
 	return (
 		<Container>
@@ -421,6 +439,25 @@ function Index() {
 													}))}
 												/>
 											</div>
+										</div>
+
+										<div className="form_control">
+											<label htmlFor="">Packaging</label>
+											<CustomSelect
+												id="package"
+												name="package"
+												value={packageId}
+												handleChange={handleChange}
+												onBlur={handleBlur}
+												isError={touched.package && errors.package}
+												errormessage={errors.package}
+												placeholder="Select a package"
+												paddingX="14px"
+												paddingY="9px"
+												scrollToTop
+												useBackground
+												options={packageOptions || []}
+											/>
 										</div>
 
 										<div className="form_control">
