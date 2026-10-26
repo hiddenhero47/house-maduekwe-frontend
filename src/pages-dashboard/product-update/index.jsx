@@ -118,16 +118,14 @@ function Index() {
 	);
 
 	const onSubmit = async (values) => {
-		const { package: packageId, ...rest } = values;
 		const payload = {
-			...rest,
+			...values,
 			weight: {
 				unit: values.weight?.unit || 'kg',
 				...(values.weight?.value !== '' && values.weight?.value != null
 					? { value: Number(values.weight.value) }
 					: {}),
 			},
-			...(packageId ? { package: packageId } : {}),
 		};
 		const formData = buildShopItemFormData(payload);
 		logFormData(formData);
