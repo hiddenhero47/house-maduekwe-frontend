@@ -40,6 +40,7 @@ import { MdDelete } from 'react-icons/md';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
 import CategoryServices from '../../features/services/custom-hooks/category';
+import PackageServices from '../../features/services/custom-hooks/package';
 import AttributeServices from '../../features/services/custom-hooks/attribute';
 import { shopItemValidationSchema } from '../../features/validations/shopItem-validation';
 import { useParams } from 'react-router-dom';
@@ -75,6 +76,10 @@ function Index() {
 		limit: 100,
 	});
 
+	const { data: dataPkg, isPending: isPendingPkg } = PackageServices.get({
+		limit: 100,
+	});
+
 	const { mutate: updataProduct, isPending: isLoading } =
 		ShopItemServices.update();
 
@@ -95,6 +100,7 @@ function Index() {
 			discount: product?.discount || 0,
 			category: product?.category?._id || '',
 			categorySearchValue: product?.category?.name || '',
+			package: product?.package?._id || '',
 			subCategory: product?.subCategory || '',
 			quantity: product?.quantity || 1,
 			placeHolder: product?.placeHolder || {},
@@ -112,14 +118,16 @@ function Index() {
 	);
 
 	const onSubmit = async (values) => {
+		const { package: packageId, ...rest } = values;
 		const payload = {
-			...values,
+			...rest,
 			weight: {
 				unit: values.weight?.unit || 'kg',
 				...(values.weight?.value !== '' && values.weight?.value != null
 					? { value: Number(values.weight.value) }
 					: {}),
 			},
+			...(packageId ? { package: packageId } : {}),
 		};
 		const formData = buildShopItemFormData(payload);
 		logFormData(formData);
@@ -159,6 +167,7 @@ function Index() {
 		discount,
 		category,
 		categorySearchValue,
+		package: packageId,
 		subCategory,
 		quantity,
 		placeHolder,
@@ -210,6 +219,15 @@ function Index() {
 			value: cat?._id,
 		}));
 	}, [dataCat?.data]);
+
+	const packageOptions = useMemo(() => {
+		if (!dataPkg?.data) return [];
+
+		return dataPkg?.data.map((pkg) => ({
+			label: `${pkg?.name} — ${pkg?.length}×${pkg?.width}×${pkg?.height}in`,
+			value: pkg?._id,
+		}));
+	}, [dataPkg?.data]);
 
 	const colorOptions = useMemo(() => {
 		if (!dataColor?.data) return [];
@@ -604,6 +622,25 @@ function Index() {
 													}))}
 												/>
 											</div>
+										</div>
+
+										<div className="form_control">
+											<label htmlFor="">Packaging</label>
+											<CustomSelect
+												id="package"
+												name="package"
+												value={packageId}
+												handleChange={handleChange}
+												onBlur={handleBlur}
+												isError={touched.package && errors.package}
+												errormessage={errors.package}
+												placeholder="Select a package"
+												paddingX="14px"
+												paddingY="9px"
+												scrollToTop
+												useBackground
+												options={packageOptions || []}
+											/>
 										</div>
 
 										<div className="form_control">
