@@ -212,6 +212,7 @@ function Index() {
 											<ShipmentModal
 												orderId={row.original._id}
 												orderStatus={row.original.status}
+												shippedBy={row.original.shippedBy}
 											/>
 
 											<button
