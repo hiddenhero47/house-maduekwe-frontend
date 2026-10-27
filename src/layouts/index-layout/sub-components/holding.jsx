@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash, FaArrowRightLong } from 'react-icons/fa6';
 import {
@@ -35,11 +35,7 @@ import SearchSelect from '../../../components/form-components/select/search-sele
 import CustomInput from '../../../components/form-components/input/custom-input';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { HiViewGridAdd } from 'react-icons/hi';
-import {
-	getCountryOptions,
-	getStatesOptions,
-	getCitiesOptions,
-} from '../../../utilities/city-state-country';
+import ReferenceServices from '../../../features/services/custom-hooks/reference';
 import {
 	pickNonEmptyValues,
 	getCurrencySymbol,
@@ -137,7 +133,7 @@ function Holding() {
 	const [reviewedSnapshot, setReviewedSnapshot] = useState(null);
 
 	const initialValues = {
-		consigneesName: '',
+		consigneesName: { firstName: '', lastName: '' },
 		email: '',
 		phoneNumber: null,
 		country: '',
@@ -145,10 +141,10 @@ function Holding() {
 		city: '',
 		zipCode: '',
 		stateLine: '',
-		fullAddress: '',
+		addressLine1: '',
 	};
 
-	const { data: acceptedCountries = ['US'], isLoading: isLoadingAccCount } =
+	const { data: acceptedCountries = ['US'] } =
 		ExportFeeServices.getAcceptedCountries();
 
 	const buildGuestData = (formValues, currentExcluded) => {
@@ -166,7 +162,7 @@ function Holding() {
 			'state',
 			'city',
 			'zipCode',
-			'fullAddress',
+			'addressLine1',
 		]);
 
 		const guestData = { consigneesName, email, address, itemList: payload };
@@ -279,8 +275,31 @@ function Holding() {
 		state,
 		city,
 		zipCode,
-		fullAddress,
+		addressLine1,
 	} = values;
+
+	const { data: dataCountries, isPending: isPendingCountries } =
+		ReferenceServices.getCountries();
+	const { data: dataStates } = ReferenceServices.getStates(country);
+	const { data: dataCities } = ReferenceServices.getCities(country, state);
+
+	const countryOptions = useMemo(() => {
+		if (!dataCountries?.data) return [];
+		const accepted = new Set(acceptedCountries.map((c) => c?.toUpperCase()));
+		return dataCountries.data
+			.filter((c) => accepted.has(c.isoCode))
+			.map((c) => ({ label: `${c.flag} ${c.name}`, value: c.isoCode }));
+	}, [dataCountries?.data, acceptedCountries]);
+
+	const stateOptions = useMemo(() => {
+		if (!dataStates?.data) return [];
+		return dataStates.data.map((s) => ({ label: s.name, value: s.isoCode }));
+	}, [dataStates?.data]);
+
+	const cityOptions = useMemo(() => {
+		if (!dataCities?.data) return [];
+		return dataCities.data.map((c) => ({ label: c.name, value: c.name }));
+	}, [dataCities?.data]);
 
 	const reviewCurrency = reviewData?.payment?.currency;
 
@@ -322,21 +341,43 @@ function Holding() {
 								<h4>Personal Information</h4>
 
 								<div className="form_control">
-									<label>Consignee's Full Name</label>
+									<label>Consignee's Name</label>
 
-									<CustomInput
-										id="consigneesName"
-										name="consigneesName"
-										value={consigneesName}
-										onChange={handleChange}
-										onBlur={handleBlur}
-										isError={touched.consigneesName && errors.consigneesName}
-										errormessage={errors.consigneesName}
-										placeholder="John Doe"
-										paddingX="14px"
-										paddingY="9px"
-										useBackground
-									/>
+									<div className="flex gap-[10px]">
+										<CustomInput
+											id="consigneesName.firstName"
+											name="consigneesName.firstName"
+											value={consigneesName?.firstName}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											isError={
+												touched.consigneesName?.firstName &&
+												errors.consigneesName?.firstName
+											}
+											errormessage={errors.consigneesName?.firstName}
+											placeholder="First Name"
+											paddingX="14px"
+											paddingY="9px"
+											useBackground
+										/>
+
+										<CustomInput
+											id="consigneesName.lastName"
+											name="consigneesName.lastName"
+											value={consigneesName?.lastName}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											isError={
+												touched.consigneesName?.lastName &&
+												errors.consigneesName?.lastName
+											}
+											errormessage={errors.consigneesName?.lastName}
+											placeholder="Last Name"
+											paddingX="14px"
+											paddingY="9px"
+											useBackground
+										/>
+									</div>
 								</div>
 
 								<div className="form_control">
@@ -403,15 +444,15 @@ function Holding() {
 											isError={touched.country && errors.country}
 											errormessage={errors.country}
 											placeholder={
-												isLoadingAccCount
+												isPendingCountries
 													? 'Loading countries...'
 													: 'Select country'
 											}
-											options={getCountryOptions(acceptedCountries)}
+											options={countryOptions}
 											paddingX="14px"
 											paddingY="9px"
 											useBackground
-											disabled={isLoadingAccCount}
+											disabled={isPendingCountries}
 										/>
 									</div>
 
@@ -428,7 +469,7 @@ function Holding() {
 											isError={touched.state && errors.state}
 											errormessage={errors.state}
 											placeholder="Select state"
-											options={getStatesOptions(values.country)}
+											options={stateOptions}
 											paddingX="14px"
 											paddingY="9px"
 											useBackground
@@ -449,7 +490,7 @@ function Holding() {
 											isError={touched.city && errors.city}
 											errormessage={errors.city}
 											placeholder="Select city"
-											options={getCitiesOptions(values.country, values.state)}
+											options={cityOptions}
 											paddingX="14px"
 											paddingY="9px"
 											useBackground
@@ -490,17 +531,17 @@ function Holding() {
 								</div> */}
 
 								<div className="form_control">
-									<label>Full Address</label>
+									<label>Street Address</label>
 
 									<CustomTextarea
-										id="fullAddress"
-										name="fullAddress"
-										value={fullAddress}
+										id="addressLine1"
+										name="addressLine1"
+										value={addressLine1}
 										onChange={handleChange}
 										onBlur={handleBlur}
-										isError={touched.fullAddress && errors.fullAddress}
-										errormessage={errors.fullAddress}
-										placeholder="Street name, house number, apartment, etc."
+										isError={touched.addressLine1 && errors.addressLine1}
+										errormessage={errors.addressLine1}
+										placeholder="Street name, house number, etc. — not city/state/zip, those are above"
 										paddingX="14px"
 										paddingY="9px"
 										useBackground

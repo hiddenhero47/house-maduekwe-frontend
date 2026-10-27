@@ -233,7 +233,7 @@ function Index() {
 						<div className="deliver_to">
 							<span className="label">Deliver to</span>
 							<span className="value">
-								{order.address.fullAddress}
+								{order.address.addressLine1}
 								{order.address.addressLine2
 									? `, ${order.address.addressLine2}`
 									: ''}
