@@ -50,6 +50,15 @@ export const ENABLED_SHIPPING_PROVIDERS = [
 	SHIPPING_PROVIDERS.USPS,
 ];
 
+// Providers that self-serve a real tracking number — mirrors each
+// provider's `supportsAutoTracking` export in
+// server-src/providers/shippingProviders/*.js. No manual carrier/tracking
+// number entry needed for these; the dashboard should just trigger creation.
+export const AUTO_TRACKING_PROVIDERS = [
+	SHIPPING_PROVIDERS.UPS,
+	SHIPPING_PROVIDERS.USPS,
+];
+
 export const SHIPMENT_STATUS = {
 	PENDING: 'pending',
 	LABEL_CREATED: 'label_created',

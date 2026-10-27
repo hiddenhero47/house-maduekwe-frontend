@@ -8,12 +8,15 @@ import CustomInput from '../../../../components/form-components/input/custom-inp
 import ShipmentServices from '../../../../features/services/custom-hooks/shipments';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { useTheme } from 'styled-components';
-import { SHIPMENT_STATUS } from '../../../../utilities/app-const';
+import { SHIPMENT_STATUS, AUTO_TRACKING_PROVIDERS } from '../../../../utilities/app-const';
 import { truncate } from '../../../../utilities/basic-functions';
 
 const SHIPPABLE_ORDER_STATUSES = ['paid', 'processing', 'shipped', 'delivered'];
 
-function ShipmentModal({ orderId, orderStatus }) {
+function ShipmentModal({ orderId, orderStatus, shippedBy }) {
+	const isAutoTracking = AUTO_TRACKING_PROVIDERS.includes(
+		shippedBy?.toLowerCase()
+	);
 	const theme = useTheme();
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -84,11 +87,15 @@ function ShipmentModal({ orderId, orderStatus }) {
 		createShipment(
 			{
 				orderId,
-				data: {
-					carrier: values.carrier,
-					trackingNumber: values.trackingNumber,
-					...(values.trackingUrl ? { trackingUrl: values.trackingUrl } : {}),
-				},
+				data: isAutoTracking
+					? {}
+					: {
+							carrier: values.carrier,
+							trackingNumber: values.trackingNumber,
+							...(values.trackingUrl
+								? { trackingUrl: values.trackingUrl }
+								: {}),
+						},
 			},
 			{
 				onSuccess: () => {
@@ -104,7 +111,7 @@ function ShipmentModal({ orderId, orderStatus }) {
 
 		if (hasShipment) {
 			if (!vals.status) validationErrors.status = 'Status is required';
-		} else {
+		} else if (!isAutoTracking) {
 			if (!vals.carrier?.trim())
 				validationErrors.carrier = 'Carrier is required';
 			if (!vals.trackingNumber?.trim())
@@ -161,7 +168,9 @@ function ShipmentModal({ orderId, orderStatus }) {
 							<p>
 								{hasShipment
 									? 'Update the shipment status for this order.'
-									: 'Create a shipment for this paid/processing order.'}
+									: isAutoTracking
+										? `This order ships via ${shippedBy.toUpperCase()} — it'll self-serve a real tracking number and label, no manual entry needed.`
+										: 'Create a shipment for this paid/processing order.'}
 							</p>
 						</div>
 
@@ -245,59 +254,65 @@ function ShipmentModal({ orderId, orderStatus }) {
 									</div>
 								</>
 							) : notFound ? (
-								<div className="section">
-									<div className="form_control">
-										<label className="ml-[10px]">Carrier</label>
+								isAutoTracking ? null : (
+									<div className="section">
+										<div className="form_control">
+											<label className="ml-[10px]">Carrier</label>
 
-										<CustomInput
-											id="carrier"
-											name="carrier"
-											value={carrier}
-											onChange={handleChange}
-											onBlur={handleBlur}
-											isError={touched.carrier && errors.carrier}
-											errormessage={errors.carrier}
-											placeholder="e.g. DHL"
-											paddingX="14px"
-											paddingY="9px"
-											useBackground
-										/>
+											<CustomInput
+												id="carrier"
+												name="carrier"
+												value={carrier}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												isError={touched.carrier && errors.carrier}
+												errormessage={errors.carrier}
+												placeholder="e.g. DHL"
+												paddingX="14px"
+												paddingY="9px"
+												useBackground
+											/>
+										</div>
+
+										<div className="form_control">
+											<label className="ml-[10px]">Tracking Number</label>
+
+											<CustomInput
+												id="trackingNumber"
+												name="trackingNumber"
+												value={trackingNumber}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												isError={
+													touched.trackingNumber && errors.trackingNumber
+												}
+												errormessage={errors.trackingNumber}
+												placeholder="Shipping tracking number"
+												paddingX="14px"
+												paddingY="9px"
+												useBackground
+											/>
+										</div>
+
+										<div className="form_control">
+											<label className="ml-[10px]">
+												Tracking URL (optional)
+											</label>
+
+											<CustomInput
+												id="trackingUrl"
+												name="trackingUrl"
+												value={trackingUrl}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												placeholder="https://..."
+												paddingX="14px"
+												paddingY="9px"
+												useBackground
+											/>
+										</div>
 									</div>
-
-									<div className="form_control">
-										<label className="ml-[10px]">Tracking Number</label>
-
-										<CustomInput
-											id="trackingNumber"
-											name="trackingNumber"
-											value={trackingNumber}
-											onChange={handleChange}
-											onBlur={handleBlur}
-											isError={touched.trackingNumber && errors.trackingNumber}
-											errormessage={errors.trackingNumber}
-											placeholder="Shipping tracking number"
-											paddingX="14px"
-											paddingY="9px"
-											useBackground
-										/>
-									</div>
-
-									<div className="form_control">
-										<label className="ml-[10px]">Tracking URL (optional)</label>
-
-										<CustomInput
-											id="trackingUrl"
-											name="trackingUrl"
-											value={trackingUrl}
-											onChange={handleChange}
-											onBlur={handleBlur}
-											placeholder="https://..."
-											paddingX="14px"
-											paddingY="9px"
-											useBackground
-										/>
-									</div>
-								</div>
+								)
 							) : (
 								<div className="section">
 									<p className="form_note">
@@ -310,7 +325,11 @@ function ShipmentModal({ orderId, orderStatus }) {
 								<div className="actions">
 									<ApplyBtn type="submit" $isLoading={isBusy} disabled={isBusy}>
 										<span className="content">
-											{hasShipment ? 'Update Status' : 'Create Shipment'}
+											{hasShipment
+												? 'Update Status'
+												: isAutoTracking
+													? `Create Shipment via ${shippedBy.toUpperCase()}`
+													: 'Create Shipment'}
 										</span>
 										<div className="loader">
 											<BubbleSlide
