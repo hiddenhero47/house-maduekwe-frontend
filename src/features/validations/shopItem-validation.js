@@ -70,12 +70,7 @@ export const shopItemValidationSchema = Yup.object().shape({
 		.required('Currency is required')
 		.matches(/^[A-Z]{3}$/, 'Currency must be a valid 3-letter currency code'),
 	category: objectIdValidation,
-	package: Yup.string()
-		.transform((value, originalValue) =>
-			originalValue === '' ? undefined : value
-		)
-		.matches(objectIdRegex, 'Invalid ID')
-		.notRequired(),
+	package: objectIdValidation,
 	subCategory: Yup.string(),
 	quantity: Yup.number()
 		.typeError('Quantity must be a number')

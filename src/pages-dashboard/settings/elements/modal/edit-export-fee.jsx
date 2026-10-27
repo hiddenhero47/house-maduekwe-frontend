@@ -7,12 +7,9 @@ import CustomInput from '../../../../components/form-components/input/custom-inp
 import SearchSelect from '../../../../components/form-components/select/search-select';
 import { ModalWrapper, MyForm, SubmitBtn } from './modal.style';
 import ExportFeeServices from '../../../../features/services/custom-hooks/export-fee';
+import ReferenceServices from '../../../../features/services/custom-hooks/reference';
 import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import { TbWorld } from 'react-icons/tb';
-import {
-	getCountryOptions,
-	getStatesOptions,
-} from '../../../../utilities/city-state-country';
 
 function EditExportFee({ ref, closeModal, data, clear }) {
 	const { mutate: updateExportFee, isPending } = ExportFeeServices.update();
@@ -70,6 +67,23 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 		onSubmit,
 	});
 
+	const { data: dataCountries, isPending: isPendingCountries } =
+		ReferenceServices.getCountries();
+	const { data: dataStates } = ReferenceServices.getStates(values.country);
+
+	const countryOptions = useMemo(() => {
+		if (!dataCountries?.data) return [];
+		return dataCountries.data.map((c) => ({
+			label: `${c.flag} ${c.name}`,
+			value: c.isoCode,
+		}));
+	}, [dataCountries?.data]);
+
+	const stateOptions = useMemo(() => {
+		if (!dataStates?.data) return [];
+		return dataStates.data.map((s) => ({ label: s.name, value: s.isoCode }));
+	}, [dataStates?.data]);
+
 	return (
 		<Modal.Center
 			width="fit-content"
@@ -110,11 +124,14 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 									onChange={(e) => setFieldValue('states', [])}
 									handleChange={handleChange}
 									onBlur={handleBlur}
-									placeholder="Select country"
-									options={getCountryOptions() || []}
+									placeholder={
+										isPendingCountries ? 'Loading countries...' : 'Select country'
+									}
+									options={countryOptions}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
+									disabled={isPendingCountries}
 									isError={touched.country && errors.country}
 									errormessage={errors.country}
 								/>
@@ -198,7 +215,7 @@ function EditExportFee({ ref, closeModal, data, clear }) {
 												handleChange={handleChange}
 												onBlur={handleBlur}
 												placeholder="Select state"
-												options={getStatesOptions(values.country) || []}
+												options={stateOptions}
 												paddingX="14px"
 												paddingY="9px"
 												useBackground

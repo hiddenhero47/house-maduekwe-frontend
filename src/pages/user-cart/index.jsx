@@ -89,19 +89,20 @@ function Index() {
 	const [selectedAddr, setSelectedAddr] = useState();
 	const [loadingId, setLoadingId] = useState();
 	const [consignee, setConsignee] = useState({
-		name: '',
-		isError: false,
-		touched: false,
+		firstName: '',
+		lastName: '',
+		firstNameError: false,
+		lastNameError: false,
 	});
 
-	const onChangeConsignee = async (value) => {
+	const onChangeConsigneeField = async (field, value) => {
 		const isValid = await nameValidationSchema.isValid({
 			name: value,
 		});
 		setConsignee((prev) => ({
 			...prev,
-			name: value,
-			isError: !isValid,
+			[field]: value,
+			[`${field}Error`]: !isValid,
 		}));
 	};
 
@@ -203,7 +204,10 @@ function Index() {
 		const isValid = await checkoutValidationSchema.isValid({
 			itemList: finalItemIds,
 			selectedAddress: selectedAddr,
-			consigneesName: consignee.name,
+			consigneesName: {
+				firstName: consignee.firstName,
+				lastName: consignee.lastName,
+			},
 		});
 
 		if (stockIssues.length > 0) {
@@ -234,7 +238,10 @@ function Index() {
 				{
 					itemList: finalItemIds,
 					selectedAddress: selectedAddr,
-					consigneesName: consignee.name,
+					consigneesName: {
+						firstName: consignee.firstName,
+						lastName: consignee.lastName,
+					},
 					checkoutToken: checkoutData?.checkoutToken,
 				},
 				{
@@ -560,18 +567,35 @@ function Index() {
 					{activeUser ? (
 						<>
 							<CustomerName>
-								<h3>Full Name</h3>
+								<h3>Consignee's Name</h3>
 
-								<CustomInput
-									id="name"
-									name="name"
-									value={consignee?.name || ''}
-									onChange={(e) => onChangeConsignee(e.target.value)}
-									placeholder="Enter Your Full Name, Fist & Last"
-									paddingX="14px"
-									paddingY="9px"
-									useBackground
-								/>
+								<div className="flex gap-[10px]">
+									<CustomInput
+										id="firstName"
+										name="firstName"
+										value={consignee?.firstName || ''}
+										onChange={(e) =>
+											onChangeConsigneeField('firstName', e.target.value)
+										}
+										placeholder="First Name"
+										paddingX="14px"
+										paddingY="9px"
+										useBackground
+									/>
+
+									<CustomInput
+										id="lastName"
+										name="lastName"
+										value={consignee?.lastName || ''}
+										onChange={(e) =>
+											onChangeConsigneeField('lastName', e.target.value)
+										}
+										placeholder="Last Name"
+										paddingX="14px"
+										paddingY="9px"
+										useBackground
+									/>
+								</div>
 							</CustomerName>
 
 							<AddressSelect
@@ -617,7 +641,7 @@ function Index() {
 											>
 												<div className="address_content">
 													<div>
-														<p className="full_address">{addr.fullAddress}</p>
+														<p className="full_address">{addr.addressLine1}</p>
 
 														<div className="meta">
 															<span>State: {addr.state}</span>
