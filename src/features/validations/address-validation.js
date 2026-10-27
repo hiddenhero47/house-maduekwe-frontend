@@ -3,7 +3,10 @@ import * as Yup from 'yup';
 export const addressValidationSchema = Yup.object().shape({
 	city: Yup.string().trim().required('Please select a city for your address'),
 
-	state: Yup.string().trim().required('Please select a state for your address'),
+	state: Yup.string()
+		.trim()
+		.uppercase()
+		.required('Please select a state for your address'),
 
 	country: Yup.string()
 		.trim()
@@ -16,9 +19,9 @@ export const addressValidationSchema = Yup.object().shape({
 	zipCode: Yup.string().optional(),
 	stateLine: Yup.string().optional(),
 
-	fullAddress: Yup.string()
+	addressLine1: Yup.string()
 		.trim()
-		.required('Please add your full address description'),
+		.required('Please add your street address'),
 
 	description: Yup.string().trim().optional(),
 

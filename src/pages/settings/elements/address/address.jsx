@@ -93,8 +93,8 @@ function Address() {
 							Cell: ({ value }) => <span className="nowrap">{value}</span>,
 						},
 						{
-							Header: () => 'Full Address',
-							accessor: 'fullAddress',
+							Header: () => 'Street Address',
+							accessor: 'addressLine1',
 							Cell: ({ value }) => (
 								<span className="nowrap" title={value}>
 									{truncate({ str: value, len: 35 })}

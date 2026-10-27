@@ -77,7 +77,8 @@ function Index() {
 							<h3 className="section_title">Customer</h3>
 							<p className="section_Value">
 								<span className="text-[var(--mainBody-sbKitText)]">Name :</span>{' '}
-								{order?.consigneesName} <br />{' '}
+								{order?.consigneesName?.firstName} {order?.consigneesName?.lastName}{' '}
+								<br />{' '}
 								<span className="text-[var(--mainBody-sbKitText)]">
 									Email :
 								</span>{' '}
@@ -88,7 +89,7 @@ function Index() {
 						<div className="cubicle">
 							<h3 className="section_title">Shipping address</h3>
 							<p className="section_Value capitalize">
-								{order?.address?.fullAddress}
+								{order?.address?.addressLine1}
 								{'. '}
 								<br />
 								{order?.address?.addressLine2}.

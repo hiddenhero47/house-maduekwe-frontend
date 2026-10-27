@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useFormik } from 'formik';
 import { ShipmentSettingsWrapper, SubmitBtn } from './shipment-settings.style';
 import { ToggleSwitch } from '../index.style';
@@ -11,11 +11,8 @@ import BubbleSlide from '../../../../components/loaders/bubbles/BubbleSlide';
 import CandleWrapper from '../../../../components/loaders/candles/Candle';
 import { MdLocalShipping } from 'react-icons/md';
 import { ENABLED_SHIPPING_PROVIDERS } from '../../../../utilities/app-const';
-import {
-	getCountryOptions,
-	getStatesOptions,
-	getCitiesOptions,
-} from '../../../../utilities/city-state-country';
+import ReferenceServices from '../../../../features/services/custom-hooks/reference';
+import ExportFeeServices from '../../../../features/services/custom-hooks/export-fee';
 
 const hasAnyOriginField = (addr) =>
 	Object.values(addr || {}).some((v) => typeof v === 'string' && v.trim());
@@ -24,6 +21,8 @@ function ShipmentSettings() {
 	const { data, isPending } = ShippingSettingsServices.get();
 	const { mutate: updateSettings, isPending: isSaving } =
 		ShippingSettingsServices.update();
+	const { data: acceptedCountries = ['US'] } =
+		ExportFeeServices.getAcceptedCountries();
 
 	const initialValues = {
 		activeProvider: data?.activeProvider || 'internal',
@@ -34,7 +33,7 @@ function ShipmentSettings() {
 			country: data?.originAddress?.country || '',
 			state: data?.originAddress?.state || '',
 			city: data?.originAddress?.city || '',
-			fullAddress: data?.originAddress?.fullAddress || '',
+			addressLine1: data?.originAddress?.addressLine1 || '',
 			zipCode: data?.originAddress?.zipCode || '',
 		},
 	};
@@ -51,7 +50,7 @@ function ShipmentSettings() {
 		if (hasAnyOriginField(addr)) {
 			const addrErrors = {};
 
-			['country', 'state', 'city', 'fullAddress'].forEach((field) => {
+			['country', 'state', 'city', 'addressLine1'].forEach((field) => {
 				if (!addr[field]?.trim()) {
 					addrErrors[field] = 'Required once any origin field is set';
 				}
@@ -102,6 +101,32 @@ function ShipmentSettings() {
 		fallbackProviders,
 		originAddress,
 	} = values;
+
+	const { data: dataCountries, isPending: isPendingCountries } =
+		ReferenceServices.getCountries();
+	const { data: dataStates } = ReferenceServices.getStates(originAddress.country);
+	const { data: dataCities } = ReferenceServices.getCities(
+		originAddress.country,
+		originAddress.state
+	);
+
+	const countryOptions = useMemo(() => {
+		if (!dataCountries?.data) return [];
+		const accepted = new Set(acceptedCountries.map((c) => c?.toUpperCase()));
+		return dataCountries.data
+			.filter((c) => accepted.has(c.isoCode))
+			.map((c) => ({ label: `${c.flag} ${c.name}`, value: c.isoCode }));
+	}, [dataCountries?.data, acceptedCountries]);
+
+	const stateOptions = useMemo(() => {
+		if (!dataStates?.data) return [];
+		return dataStates.data.map((s) => ({ label: s.name, value: s.isoCode }));
+	}, [dataStates?.data]);
+
+	const cityOptions = useMemo(() => {
+		if (!dataCities?.data) return [];
+		return dataCities.data.map((c) => ({ label: c.name, value: c.name }));
+	}, [dataCities?.data]);
 
 	const toggleFallbackProvider = (provider) => {
 		setFieldValue(
@@ -240,11 +265,14 @@ function ShipmentSettings() {
 									setFieldValue('originAddress.city', '');
 								}}
 								onBlur={handleBlur}
-								placeholder="Select country"
-								options={getCountryOptions() || []}
+								placeholder={
+									isPendingCountries ? 'Loading countries...' : 'Select country'
+								}
+								options={countryOptions}
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
+								disabled={isPendingCountries}
 								isError={
 									touched.originAddress?.country &&
 									errors.originAddress?.country
@@ -264,7 +292,7 @@ function ShipmentSettings() {
 								onChange={() => setFieldValue('originAddress.city', '')}
 								onBlur={handleBlur}
 								placeholder="Select state"
-								options={getStatesOptions(originAddress.country) || []}
+								options={stateOptions}
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
@@ -285,10 +313,7 @@ function ShipmentSettings() {
 								handleChange={handleChange}
 								onBlur={handleBlur}
 								placeholder="Select city"
-								options={
-									getCitiesOptions(originAddress.country, originAddress.state) ||
-									[]
-								}
+								options={cityOptions}
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
@@ -302,24 +327,24 @@ function ShipmentSettings() {
 
 					<div className="grid-2">
 						<div className="form_control">
-							<label>Full Address</label>
+							<label>Street Address</label>
 
 							<CustomTextarea
-								id="originAddress.fullAddress"
-								name="originAddress.fullAddress"
-								value={originAddress.fullAddress}
+								id="originAddress.addressLine1"
+								name="originAddress.addressLine1"
+								value={originAddress.addressLine1}
 								onChange={handleChange}
 								onBlur={handleBlur}
-								placeholder="Street name, house number, etc."
+								placeholder="Street name, house number, etc. — not city/state/zip, those are above"
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
 								minHeight="70px"
 								isError={
-									touched.originAddress?.fullAddress &&
-									errors.originAddress?.fullAddress
+									touched.originAddress?.addressLine1 &&
+									errors.originAddress?.addressLine1
 								}
-								errormessage={errors.originAddress?.fullAddress}
+								errormessage={errors.originAddress?.addressLine1}
 							/>
 						</div>
 

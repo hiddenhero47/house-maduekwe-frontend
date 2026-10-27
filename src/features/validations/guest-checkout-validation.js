@@ -1,9 +1,10 @@
 import * as Yup from 'yup';
 
 export const guestCheckoutValidationSchema = Yup.object({
-	consigneesName: Yup.string()
-		.trim()
-		.required("Consignee's full name is required"),
+	consigneesName: Yup.object({
+		firstName: Yup.string().trim().required("First name is required"),
+		lastName: Yup.string().trim().required("Last name is required"),
+	}).required("Consignee's name is required"),
 	email: Yup.string()
 		.trim()
 		.email('Enter a valid email address')
@@ -22,9 +23,9 @@ export const guestCheckoutValidationSchema = Yup.object({
 		.nullable()
 		.notRequired(),
 	country: Yup.string().required('Country is required'),
-	state: Yup.string().required('State is required'),
+	state: Yup.string().trim().uppercase().required('State is required'),
 	city: Yup.string().required('City is required'),
 	zipCode: Yup.string().optional(),
 	stateLine: Yup.string().optional(),
-	fullAddress: Yup.string().trim().required('Full address is required'),
+	addressLine1: Yup.string().trim().required('Street address is required'),
 });

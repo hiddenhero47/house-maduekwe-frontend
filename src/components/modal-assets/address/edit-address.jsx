@@ -14,11 +14,7 @@ import CustomInput from '../../form-components/input/custom-input';
 import { addressValidationSchema } from '../../../features/validations/address-validation';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { HiViewGridAdd } from 'react-icons/hi';
-import {
-	getCountryOptions,
-	getStatesOptions,
-	getCitiesOptions,
-} from '../../../utilities/city-state-country';
+import ReferenceServices from '../../../features/services/custom-hooks/reference';
 import AddressServices from '../../../features/services/custom-hooks/addresses';
 import ExportFeeServices from '../../../features/services/custom-hooks/export-fee';
 
@@ -31,14 +27,14 @@ function EditAddress({ ref, closeModal, address, clear }) {
 			city: address?.city || '',
 			zipCode: address?.zipCode || '',
 			addressLine2: address?.addressLine2 || '',
-			fullAddress: address?.fullAddress || '',
+			addressLine1: address?.addressLine1 || '',
 			description: address?.description || '',
 			isDefault: address?.isDefault || false,
 		}),
 		[address]
 	);
 
-	const { data: acceptedCountries = ['US'], isLoading } =
+	const { data: acceptedCountries = ['US'] } =
 		ExportFeeServices.getAcceptedCountries();
 
 	const { mutate: updateAddress, isPending } = AddressServices.update();
@@ -73,12 +69,35 @@ function EditAddress({ ref, closeModal, address, clear }) {
 		country,
 		state,
 		city,
-		fullAddress,
+		addressLine1,
 		description,
 		isDefault,
 		zipCode,
 		addressLine2,
 	} = values;
+
+	const { data: dataCountries, isPending: isPendingCountries } =
+		ReferenceServices.getCountries();
+	const { data: dataStates } = ReferenceServices.getStates(country);
+	const { data: dataCities } = ReferenceServices.getCities(country, state);
+
+	const countryOptions = useMemo(() => {
+		if (!dataCountries?.data) return [];
+		const accepted = new Set(acceptedCountries.map((c) => c?.toUpperCase()));
+		return dataCountries.data
+			.filter((c) => accepted.has(c.isoCode))
+			.map((c) => ({ label: `${c.flag} ${c.name}`, value: c.isoCode }));
+	}, [dataCountries?.data, acceptedCountries]);
+
+	const stateOptions = useMemo(() => {
+		if (!dataStates?.data) return [];
+		return dataStates.data.map((s) => ({ label: s.name, value: s.isoCode }));
+	}, [dataStates?.data]);
+
+	const cityOptions = useMemo(() => {
+		if (!dataCities?.data) return [];
+		return dataCities.data.map((c) => ({ label: c.name, value: c.name }));
+	}, [dataCities?.data]);
 
 	return (
 		<Modal.Center
@@ -123,13 +142,13 @@ function EditAddress({ ref, closeModal, address, clear }) {
 									isError={touched.country && errors.country}
 									errormessage={errors.country}
 									placeholder={
-										isLoading ? 'Loading countries...' : 'Select country'
+										isPendingCountries ? 'Loading countries...' : 'Select country'
 									}
-									options={getCountryOptions(acceptedCountries) || []}
+									options={countryOptions}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
-									disabled={isLoading}
+									disabled={isPendingCountries}
 								/>
 							</div>
 
@@ -145,7 +164,7 @@ function EditAddress({ ref, closeModal, address, clear }) {
 									isError={touched.state && errors.state}
 									errormessage={errors.state}
 									placeholder="Select state"
-									options={getStatesOptions(country) || []}
+									options={stateOptions}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
@@ -165,7 +184,7 @@ function EditAddress({ ref, closeModal, address, clear }) {
 									isError={touched.city && errors.city}
 									errormessage={errors.city}
 									placeholder="Select city"
-									options={getCitiesOptions(country, state) || []}
+									options={cityOptions}
 									paddingX="14px"
 									paddingY="9px"
 									useBackground
@@ -196,14 +215,16 @@ function EditAddress({ ref, closeModal, address, clear }) {
 						<h4>Address Information</h4>
 
 						<div className="form_control mb-[7px]">
-							<label>Full Address</label>
+							<label>Street Address</label>
 							<CustomTextarea
-								id="fullAddress"
-								name="fullAddress"
-								value={fullAddress}
+								id="addressLine1"
+								name="addressLine1"
+								value={addressLine1}
 								onChange={handleChange}
 								onBlur={handleBlur}
-								placeholder="Street name, house number, etc."
+								isError={touched.addressLine1 && errors.addressLine1}
+								errormessage={errors.addressLine1}
+								placeholder="Street name, house number, etc. — not city/state/zip, those are above"
 								paddingX="14px"
 								paddingY="9px"
 								useBackground
