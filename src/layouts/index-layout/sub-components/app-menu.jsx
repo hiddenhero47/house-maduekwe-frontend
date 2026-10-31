@@ -24,10 +24,11 @@ import { FaCartShopping } from 'react-icons/fa6';
 import { toggleTheme } from '../../../store/slice/app-theme';
 import { toggleHoldings } from '../../../store/slice/holding';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
+import { FaInstagram, FaXTwitter, FaTiktok } from 'react-icons/fa6';
 import { TbHomeFilled } from 'react-icons/tb';
 import { ensureUser } from '../../../store/slice/auth';
 import { roleType } from '../../../utilities/app-const';
+import { SOCIAL_LINKS } from '../../../utilities/social-links';
 import { truncate } from '../../../utilities/basic-functions';
 import profile from '../../../assets/images/profile3.svg?react';
 
@@ -242,14 +243,14 @@ function LeftMenu({ closeMe, openHolding }) {
 
 			<SocialSection>
 				<div className="social_wrapper">
-					<a href="https://instagram.com" target="_blank" rel="noreferrer">
+					<a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer">
 						<FaInstagram />
 					</a>
-					<a href="https://twitter.com" target="_blank" rel="noreferrer">
+					<a href={SOCIAL_LINKS.x} target="_blank" rel="noreferrer">
 						<FaXTwitter />
 					</a>
-					<a href="https://facebook.com" target="_blank" rel="noreferrer">
-						<FaFacebookF />
+					<a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer">
+						<FaTiktok />
 					</a>
 				</div>
 

@@ -7,9 +7,7 @@ import { FiLock, FiCreditCard, FiEye } from 'react-icons/fi';
 import { MdContentPaste } from 'react-icons/md';
 import { IoMdAttach } from 'react-icons/io';
 import brandImage from '../../assets/images/53c02593-30f5-4ad0-96e3-aa4d532cb995.svg';
-
-const dummyImage = `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=
-eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80`;
+import founderImage from '../../assets/images/chinedu-founder.jpg';
 
 function Index() {
 	return (
@@ -68,7 +66,7 @@ function Index() {
 				{/* FOUNDER */}
 				<Founder className="intro-y">
 					<div className="imageHolder rounded-[12px] overflow-hidden min-h-[350px]">
-						<img src={dummyImage} alt="Chinedu Maduekwe" />
+						<img src={founderImage} alt="Chinedu Maduekwe" />
 					</div>
 
 					<div className="content">

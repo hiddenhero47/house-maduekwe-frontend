@@ -10,7 +10,8 @@ import {
 	VideoWrapper,
 } from './elements/index.style';
 import { useOutletContext } from 'react-router-dom';
-import postImage from '../../assets/images/image.avif';
+import heroPlaceholderLight from '../../assets/images/hero-placeholder-light.jpg';
+import heroPlaceholderDark from '../../assets/images/hero-placeholder-dark.jpg';
 import { VectorIcon } from '../../components/icon-components/index.style';
 import AppLogo from '../../assets/images/app-logo.svg?react';
 import { Link } from 'react-router-dom';
@@ -19,7 +20,6 @@ import ShopItem from '../../components/shop-item-display-unit/index';
 import {
 	FaInstagram,
 	FaXTwitter,
-	FaFacebookF,
 	FaTiktok,
 } from 'react-icons/fa6';
 import { useTheme } from 'styled-components';
@@ -33,6 +33,92 @@ import GroupDisplay from './elements/group-display/group-display';
 import { useNavigate } from 'react-router-dom';
 import MyVideo from './elements/video-display/video';
 import ItemGroupServices from '../../features/services/custom-hooks/item-groups';
+import InfiniteSlider from '../../components/sliders/infinite-slider';
+import skylineView from '../../assets/images/slider/skyline-view.jpg';
+import portraitFront from '../../assets/images/slider/portrait-front.jpg';
+import pensiveClose from '../../assets/images/slider/pensive-close.jpg';
+import rootsPalm from '../../assets/images/slider/roots-palm.jpg';
+import coolProfile from '../../assets/images/slider/cool-profile.jpg';
+import boxingGym from '../../assets/images/slider/boxing-gym.jpg';
+import { SOCIAL_LINKS } from '../../utilities/social-links';
+
+// Each slide can carry its own `link` (e.g. `/collections/roots` or a
+// specific product page) once real products/collections exist — leave it
+// unset until then and it falls back to the generic /products page below.
+const heroSlides = [
+	{
+		id: 'skyline',
+		image: skylineView,
+		tag: 'Rooftop Edit',
+		heading: 'Elevated\nBy Design',
+		text: "Tailored pieces photographed above the city — the same precision you'll find in every stitch.",
+		cta: 'Explore Collection',
+		align: 'left',
+		valign: 'end',
+		accent: '#7dd3fc',
+		link: null,
+	},
+	{
+		id: 'portrait',
+		image: portraitFront,
+		tag: 'The Standard',
+		heading: 'Make An\nEntrance',
+		text: 'Bold silhouettes built for presence. No filler, just fit.',
+		cta: 'Shop New Arrivals',
+		align: 'center',
+		valign: 'center',
+		accent: '#e5e5e5',
+		link: null,
+	},
+	{
+		id: 'pensive',
+		image: pensiveClose,
+		tag: 'Studio Portrait',
+		heading: 'Detail Is\nThe Statement',
+		text: "Every graphic, every seam — considered before it's worn.",
+		cta: 'View The Pieces',
+		align: 'right',
+		valign: 'center',
+		accent: '#fbbf24',
+		link: null,
+	},
+	{
+		id: 'roots',
+		image: rootsPalm,
+		tag: 'Roots Capsule',
+		heading: "Grown From\nWhere We're From",
+		text: 'Heritage prints on breathable cotton, built for warm days and long memory.',
+		cta: 'Shop Roots',
+		align: 'left',
+		valign: 'center',
+		accent: '#86efac',
+		link: null,
+	},
+	{
+		id: 'cool',
+		image: coolProfile,
+		tag: 'Off Duty',
+		heading: 'Easy.\nUnbothered.',
+		text: 'Relaxed fits that still know how to show up.',
+		cta: 'Explore Lookbook',
+		align: 'right',
+		valign: 'end',
+		accent: '#5eead4',
+		link: null,
+	},
+	{
+		id: 'boxing',
+		image: boxingGym,
+		tag: 'Built To Move',
+		heading: 'Train In It.\nLive In It.',
+		text: 'Heavyweight cotton that keeps up, round after round.',
+		cta: 'Shop Essentials',
+		align: 'left',
+		valign: 'end',
+		accent: '#fb923c',
+		link: null,
+	},
+];
 
 function Index() {
 	const { aftermath } = useOutletContext();
@@ -40,6 +126,7 @@ function Index() {
 	const navigate = useNavigate();
 	const [isVideoReady, setIsVideoReady] = useState(false);
 	const [isVideoReadyB, setIsVideoReadyB] = useState(false);
+	const [heroVideoIndex, setHeroVideoIndex] = useState(0);
 
 	const { data, isPending } = ItemGroupServices.get({
 		limit: 4,
@@ -49,8 +136,16 @@ function Index() {
 	const { data: itemGroups = [], pagination } = data || {};
 
 	// const videoOne = 'https://res.cloudinary.com/ctguffdy/video/upload/v1784499287/VIDEO-ONE_tnrmxn.mp4';
-	const videoOne = 'https://res.cloudinary.com/ctguffdy/video/upload/sp_auto/v1784499287/VIDEO-ONE_tnrmxn.m3u8';
-	const videoTwo = 'https://server.housemaduekwe.com/videos/VIDEO-ONE.mp4';
+	const videoOne =
+		'https://res.cloudinary.com/ctguffdy/video/upload/sp_auto/v1784499287/VIDEO-ONE_tnrmxn.m3u8';
+	const videoTwo =
+		'https://res.cloudinary.com/ctguffdy/video/upload/sp_auto:maxres_720p/v1793286634/VIDEO-TWO_algvd0.m3u8';
+
+	// Hero plays through these one after another, looping back to the start —
+	// add videoThree here once it exists, nothing else needs to change.
+	const heroVideos = [videoOne, videoTwo];
+	const handleHeroVideoEnded = () =>
+		setHeroVideoIndex((i) => (i + 1) % heroVideos.length);
 
 	const normalizeItems = (items) => {
 		const count = items.length;
@@ -139,21 +234,25 @@ function Index() {
 				<div className="w-full h-full relative">
 					<VideoWrapper $isLoading={!isVideoReady}>
 						<MyVideo
-							videoSrc={videoOne}
+							videoSrc={heroVideos[heroVideoIndex]}
 							isPreloaded
 							autoPlay
 							onStartNoSound
-							autoReplay
+							autoReplay={false}
 							scrubberDisplay={false}
 							timeDisplay={false}
 							useMuteOnly
 							loadingCallBack={setIsVideoReady}
+							onEnded={handleHeroVideoEnded}
 						/>
 					</VideoWrapper>
 
 					{!isVideoReady && (
 						<div className="imageHolder">
-							<img src={postImage} alt="No Image" />
+							<img
+								src={theme.mode === 'dark' ? heroPlaceholderDark : heroPlaceholderLight}
+								alt="No Image"
+							/>
 						</div>
 					)}
 
@@ -276,25 +375,11 @@ function Index() {
 					</div>
 				</div>
 
-				<div className="promo_hero" onClick={() => navigate('/products')}>
-					<div className="overlay" />
-
-					<div className="content">
-						<span className="tag">New Collection</span>
-
-						<h2>
-							Crafted To
-							<br />
-							Define Presence
-						</h2>
-
-						<p>
-							Discover bespoke pieces tailored for those who value elegance,
-							confidence, and timeless style.
-						</p>
-
-						<button>Explore Collection</button>
-					</div>
+				<div className="promo_hero">
+					<InfiniteSlider
+						slides={heroSlides}
+						onSlideClick={(slide) => navigate(slide.link || '/products')}
+					/>
 				</div>
 			</Promotion>
 
@@ -307,6 +392,8 @@ function Index() {
 					)}
 				</div>
 				<div id="inner_wrapper">
+					<img src={bannerImage} alt="House Maduekwe" className="footer_mark" />
+
 					<div id="list_info">
 						<Link to="/about-us" className="font-sans">
 							About
@@ -339,43 +426,23 @@ function Index() {
 						</a>
 					</div>
 
-					<div className="flex justify-center items-center gap-[20px] text-[22px] mx-[auto]">
-						<a
-							href="https://instagram.com"
-							target="_blank"
-							rel="noreferrer"
-							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
-						>
+					<div className="footer_divider" />
+
+					<div className="footer_socials flex justify-center items-center gap-[14px] mx-[auto]">
+						<a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer">
 							<FaInstagram />
 						</a>
-						<a
-							href="https://twitter.com"
-							target="_blank"
-							rel="noreferrer"
-							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
-						>
+						<a href={SOCIAL_LINKS.x} target="_blank" rel="noreferrer">
 							<FaXTwitter />
 						</a>
-						<a
-							href="https://facebook.com"
-							target="_blank"
-							rel="noreferrer"
-							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
-						>
-							<FaFacebookF />
-						</a>
-						<a
-							href="https://tiktok.com"
-							target="_blank"
-							rel="noreferrer"
-							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
-						>
+						<a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer">
 							<FaTiktok />
 						</a>
 					</div>
 
 					<p className="font-sans">
-						© 2026 House Maduekwe, Inc. All rights reserved.
+						© 2026 <span className="brand_name">House Maduekwe</span>, Inc. All
+						rights reserved.
 					</p>
 				</div>
 			</AppFooter>

@@ -6,10 +6,11 @@ import {
 	RightBox,
 } from './elements/index.style';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
+import { FaInstagram, FaXTwitter, FaTiktok } from 'react-icons/fa6';
 import { VectorIcon } from '../../components/icon-components/index.style';
+import { SOCIAL_LINKS } from '../../utilities/social-links';
 import AppLogo from '../../assets/images/app-logo.svg?react';
-import image1 from '../../assets/images/suits1.jpg';
+import image1 from '../../assets/images/lights-out.jpeg';
 import SignIn from './elements/sign-in/sign-in';
 import SignUp from './elements/sign-up/sign-up';
 import {
@@ -69,7 +70,7 @@ function Index() {
 				<div>
 					<span className="flex justify-center items-center gap-[20px] text-[18px] mx-[auto]">
 						<a
-							href="https://instagram.com"
+							href={SOCIAL_LINKS.instagram}
 							target="_blank"
 							rel="noreferrer"
 							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
@@ -77,7 +78,7 @@ function Index() {
 							<FaInstagram />
 						</a>
 						<a
-							href="https://twitter.com"
+							href={SOCIAL_LINKS.x}
 							target="_blank"
 							rel="noreferrer"
 							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
@@ -85,12 +86,12 @@ function Index() {
 							<FaXTwitter />
 						</a>
 						<a
-							href="https://facebook.com"
+							href={SOCIAL_LINKS.tiktok}
 							target="_blank"
 							rel="noreferrer"
 							className="transition-all duration-300 ease-in-out hover:text-[var(--intro-logo)] hover:scale-125"
 						>
-							<FaFacebookF />
+							<FaTiktok />
 						</a>
 					</span>
 				</div>

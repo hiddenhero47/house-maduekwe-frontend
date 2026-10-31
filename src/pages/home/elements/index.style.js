@@ -1,8 +1,4 @@
 import styled from 'styled-components';
-import promotionImage from '../../../assets/images/promotion.png';
-import underground from '../../../assets/images/underground.png';
-import fastLife from '../../../assets/images/fast-life.png';
-import newTestImage from '../../../assets/images/new.jpg';
 
 export const Container = styled.div`
 	display: flex;
@@ -342,7 +338,7 @@ export const IntroSection = styled.section`
 `;
 
 export const AppFooter = styled.footer`
-	height: 290px;
+	min-height: 290px;
 	width: 99%;
 	border-radius: 8px;
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
@@ -351,25 +347,112 @@ export const AppFooter = styled.footer`
 	color: ${({ theme }) => theme?.mainBody.sbText};
 	background-color: ${({ theme }) => theme?.mainBody.container};
 	position: relative;
+	overflow: hidden;
+
+	/* A thin red accent line across the top edge, with a soft glow behind it
+	   — the one always-visible touch of brand red the footer was missing. */
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: min(72%, 640px);
+		height: 2px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			${({ theme }) => theme?.intro.logo},
+			transparent
+		);
+		z-index: 3;
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: -70px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 460px;
+		height: 180px;
+		background: radial-gradient(
+			ellipse at center,
+			${({ theme }) => theme?.intro.logo}26,
+			transparent 72%
+		);
+		pointer-events: none;
+		z-index: 1;
+	}
 
 	#footer_background {
+		position: absolute;
+		inset: 0;
 		width: 100%;
 		height: 100%;
+		z-index: 0;
 	}
 
 	#inner_wrapper {
 		width: 100%;
-		height: 100%;
-		padding-inline: 32px;
+		padding: 48px 32px 36px;
 		z-index: 2;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 40px;
-		position: absolute;
-		left: 0;
-		top: 0;
+		gap: 26px;
+		position: relative;
+	}
+
+	.footer_mark {
+		width: clamp(150px, 20vw, 210px);
+		height: auto;
+		opacity: 0.96;
+	}
+
+	.footer_divider {
+		width: min(88%, 420px);
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			${({ theme }) => theme?.intro.logo}66,
+			transparent
+		);
+	}
+
+	.footer_socials a {
+		width: 42px;
+		height: 42px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		border: 1px solid ${({ theme }) => theme?.mainBody.line};
+		background: ${({ theme }) => theme?.mainBody.toolkitBg};
+		color: ${({ theme }) => theme?.mainBody.sbText};
+		font-size: 17px;
+		transition: all 0.3s ease;
+	}
+
+	.footer_socials a:hover {
+		border-color: ${({ theme }) => theme?.intro.logo};
+		background: ${({ theme }) => theme?.intro.logo};
+		color: #fff;
+		transform: translateY(-3px);
+	}
+
+	.brand_name {
+		color: ${({ theme }) => theme?.intro.logo};
+		font-weight: 600;
+	}
+
+	@media (max-width: 460px) {
+		#inner_wrapper {
+			padding: 38px 20px 28px;
+			gap: 20px;
+		}
 	}
 
 	#list_info {
@@ -586,90 +669,14 @@ export const Promotion = styled.section`
 		position: relative;
 		border-radius: 14px;
 		overflow: hidden;
-		background-image:
-			linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-			url(${promotionImage});
-		background-size: cover;
-		background-position: center;
 		min-height: 650px;
-		display: flex;
-		align-items: center;
-		padding: 60px;
-		cursor: pointer;
 
 		@media (min-width: 451px) and (max-width: 1000px) {
 			min-height: 520px;
-			padding: clamp(20px, 5vw, 40px);
 		}
 
 		@media (max-width: 450px) {
-			min-height: 420px;
-			padding: clamp(18px, 5vw, 35px);
-		}
-
-		button {
-			margin-top: 28px;
-			padding-block: 10px;
-			padding-inline: 22px;
-			border-radius: 8px;
-			border: none;
-			background: ${({ theme }) => theme.intro.logo};
-			color: white;
-			font-weight: 600;
-			cursor: pointer;
-			transition: 0.3s;
-
-			@media (max-width: 1000px) {
-				padding-block: clamp(8px, 2.2vw, 10px);
-				padding-inline: clamp(18px, 3.7vw, 22px);
-				font-size: clamp(14px, 3vw, 16px);
-			}
-		}
-
-		button:hover {
-			transform: translateY(-2px);
-		}
-	}
-
-	.content {
-		max-width: 520px;
-		z-index: 2;
-	}
-
-	.tag {
-		display: inline-block;
-		padding-inline: clamp(9px, 1.5vw, 14px);
-		padding-block: clamp(5px, 1vw, 8px);
-		border-radius: 999px;
-		background: ${({ theme }) => theme.mainBody.toolkitBgGlass};
-		backdrop-filter: blur(12px);
-		color: ${({ theme }) => theme.intro.logo};
-		font-size: clamp(11px, 1.5vw, 13px);
-		font-weight: 600;
-	}
-
-	h2 {
-		margin-top: 20px;
-		font-size: clamp(1.6rem, 5vw, 3.8rem);
-		line-height: 1.25;
-		color: white;
-		font-weight: 700;
-	}
-
-	p {
-		margin-top: 18px;
-		max-width: 460px;
-		color: rgba(255, 255, 255, 0.85);
-		font-size: 15.5px;
-		line-height: 1.8;
-
-		@media (max-width: 1000px) {
-			font-size: clamp(15px, 4vw, 15.5px);
-		}
-
-		@media (max-width: 600px) {
-			font-size: clamp(14.5px, 3vw, 15.5px);
-			line-height: 1.4;
+			min-height: 460px;
 		}
 	}
 `;
