@@ -205,6 +205,10 @@ export const Founder = styled.div`
 		gap: 10px;
 	}
 
+	.imageHolder img {
+		object-position: top;
+	}
+
 	h2 {
 		font-size: 1.2rem;
 		font-weight: 700;

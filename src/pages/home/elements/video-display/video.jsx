@@ -27,6 +27,7 @@ function MyVideo({
 	isLoading = false,
 	useMuteOnly = true,
 	loadingCallBack,
+	onEnded,
 }) {
 	const videoRef = useRef(null);
 	const [showPlayer, setShowPlayer] = useState(isPreloaded);
@@ -106,6 +107,7 @@ function MyVideo({
 						onCanPlay={() => loadingCallBack?.(true)}
 						onError={() => loadingCallBack?.(false)}
 						onLoadedData={handleLoaded}
+						onEnded={() => onEnded?.()}
 						playsInline
 					/>
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { SideBar, MenuSection, SocialSection } from './dashboard-menu.style';
 import { Link, useNavigate } from 'react-router-dom';
 import { RxDashboard } from 'react-icons/rx';
-import { FaInstagram, FaXTwitter, FaFacebookF } from 'react-icons/fa6';
+import { FaInstagram, FaXTwitter, FaTiktok } from 'react-icons/fa6';
 import { IoShirtSharp } from 'react-icons/io5';
 import { IoCreate } from 'react-icons/io5';
 import { FaLayerGroup } from 'react-icons/fa6';
@@ -15,6 +15,7 @@ import { FaUserPlus } from 'react-icons/fa';
 import { ensureRole } from '../../../store/slice/auth';
 import { roleType } from '../../../utilities/app-const';
 import { useSelector, useDispatch } from 'react-redux';
+import { SOCIAL_LINKS } from '../../../utilities/social-links';
 
 function SideMenu({ close }) {
 	const { user } = useSelector((state) => state.auth);
@@ -251,14 +252,14 @@ function SideMenu({ close }) {
 
 			<SocialSection>
 				<div className="social_wrapper">
-					<a href="https://instagram.com" target="_blank" rel="noreferrer">
+					<a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer">
 						<FaInstagram />
 					</a>
-					<a href="https://twitter.com" target="_blank" rel="noreferrer">
+					<a href={SOCIAL_LINKS.x} target="_blank" rel="noreferrer">
 						<FaXTwitter />
 					</a>
-					<a href="https://facebook.com" target="_blank" rel="noreferrer">
-						<FaFacebookF />
+					<a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer">
+						<FaTiktok />
 					</a>
 				</div>
 
