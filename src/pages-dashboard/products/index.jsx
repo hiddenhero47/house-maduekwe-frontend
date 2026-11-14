@@ -242,9 +242,7 @@ function Index() {
 										>
 											<div className="imageHolder rounded-[inherit]">
 												<Image
-													src={
-														item?.placeHolder?.url || item?.imageCatalog[0]?.url
-													}
+													src={item?.imageCatalog[0]?.url}
 													alt="Error"
 													onLoad={(e) => {
 														const img = e.currentTarget;

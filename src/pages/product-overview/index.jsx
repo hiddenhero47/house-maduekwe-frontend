@@ -52,12 +52,7 @@ function Index() {
 			return attribute.currentDisplay;
 		}
 
-		const catalog = product.imageCatalog || [];
-		const placeHolder = product.placeHolder;
-		return [
-			...catalog.filter((img) => img === placeHolder),
-			...catalog.filter((img) => img !== placeHolder),
-		];
+		return product.imageCatalog || [];
 	}, [attribute.currentDisplay, product]);
 
 	// ↔️ Slide navigation

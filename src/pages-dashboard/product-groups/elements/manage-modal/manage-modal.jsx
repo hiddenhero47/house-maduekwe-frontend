@@ -24,7 +24,7 @@ function ManageShopItemsModal({ ref, closeModal, onApply, items = [] }) {
 	const selectPlaceholder = (data) => {
 		if (!data) return '';
 
-		return data?.placeHolder?.url || data?.imageCatalog?.[0]?.url || '';
+		return data?.imageCatalog?.[0]?.url || '';
 	};
 
 	const handleSave = () => {

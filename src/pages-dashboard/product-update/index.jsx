@@ -8,8 +8,6 @@ import {
 	AttributeBox,
 	Color,
 	Size,
-	PlaceholderCard,
-	Overlay,
 	ChipBody,
 } from './elements/index.style';
 import { FiEdit } from 'react-icons/fi';
@@ -22,8 +20,7 @@ import CustomTextarea from '../../components/form-components/input/custom-textar
 import CustomSelect from '../../components/form-components/select/custom-select';
 import Comboboxes from '../../components/form-components/select/comboboxes';
 import SearchSelect from '../../components/form-components/select/search-select';
-import CustomFileInput from '../../components/form-components/file/custom-file-input';
-import ImageSelector from '../../components/form-components/image-selector/selector';
+import ImageCatalogManager from '../../components/form-components/image-catalog-manager/catalog-manager';
 import ChipsInput from '../../components/form-components/chips-input/chips-input';
 import { ItemStatusType, WEIGHT_UNITS } from '../../utilities/app-const';
 import { FaRuler } from 'react-icons/fa6';
@@ -35,7 +32,6 @@ import {
 	buildShopItemFormData,
 	generateColorImage,
 } from '../../utilities/basic-functions';
-import { BiSolidCategory } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { TbTagsFilled } from 'react-icons/tb';
 import { getCountryCurrencyOptions } from '../../utilities/city-state-country';
@@ -103,14 +99,10 @@ function Index() {
 			package: product?.package?._id || '',
 			subCategory: product?.subCategory || '',
 			quantity: product?.quantity || 1,
-			placeHolder: product?.placeHolder || {},
-			imageCatalog: product?.imageCatalog || [],
 			attributes: product?.attributes || [],
 			groupedVariants: product?.groupedVariants || [],
 			classTags: product?.classTags || [],
 			highlights: product?.highlights || [],
-			removeImages: [],
-			imageFiles: [],
 			colorSearchValue: '',
 			sizeSearchValue: '',
 		}),
@@ -168,14 +160,10 @@ function Index() {
 		package: packageId,
 		subCategory,
 		quantity,
-		placeHolder,
-		imageCatalog,
 		attributes,
 		groupedVariants,
 		classTags,
 		highlights,
-		removeImages,
-		imageFiles,
 		colorSearchValue,
 		sizeSearchValue,
 	} = values;
@@ -299,7 +287,6 @@ function Index() {
 			isDefault: false,
 			quantity: 1,
 			additionalAmount: '',
-			images: [],
 		};
 
 		setFieldValue('attributes', [...attributes, newAttribute]);
@@ -640,22 +627,6 @@ function Index() {
 												options={packageOptions || []}
 											/>
 										</div>
-
-										<div className="form_control">
-											<CustomFileInput
-												id="imageFiles"
-												name="imageFiles"
-												value={imageFiles}
-												setFieldValue={setFieldValue}
-												onBlur={handleBlur}
-												isError={touched.imageFiles && errors.imageFiles}
-												errormessage={errors.imageFiles}
-												accept="image/png, image/jpeg"
-												width="100%"
-												isMultiple
-												useBackground
-											/>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -717,66 +688,11 @@ function Index() {
 									PRODUCT MEDIA <FaImages />
 								</h3>
 
-								<div className="flex flex-wrap gap-[30px] items-start">
-									{/* Placeholder Card */}
-									<div>
-										<p className="text-[12px] font-semibold mb-[8px] opacity-70 ml-[8px]">
-											Placeholder Image
-										</p>
-
-										<ImageSelector
-											id="placeHolder"
-											name="placeHolder"
-											setFieldValue={setFieldValue}
-											onBlur={handleBlur}
-											options={imageCatalog}
-											value={placeHolder}
-										>
-											<PlaceholderCard>
-												{placeHolder?.url ? (
-													<div className="imageHolder rounded-[inherit]">
-														<img src={placeHolder.url} alt="Placeholder" />
-													</div>
-												) : (
-													<span className="text-[12px] opacity-50">
-														No Placeholder
-													</span>
-												)}
-
-												<Overlay className="overlay">
-													Change Placeholder
-												</Overlay>
-											</PlaceholderCard>
-										</ImageSelector>
-									</div>
-
-									{/* Manage Catalog */}
-									<div className="mt-[auto] mb-[30px]">
-										<p className="text-[12px] font-semibold mb-[8px] opacity-70">
-											Image Catalog
-										</p>
-
-										<ImageSelector
-											id="removeImages"
-											name="removeImages"
-											setFieldValue={setFieldValue}
-											onBlur={handleBlur}
-											options={imageCatalog}
-											value={removeImages}
-											isMultiple
-											isRemoval
-										>
-											<AddBtn type="button">
-												Manage Images
-												<IoIosArrowForward />
-											</AddBtn>
-										</ImageSelector>
-
-										<p className="text-[11px] mt-[8px] opacity-50">
-											{removeImages?.length || 0} images selected
-										</p>
-									</div>
-								</div>
+								<ImageCatalogManager
+									itemId={id}
+									imageCatalog={product?.imageCatalog || []}
+									attributes={attributes}
+								/>
 							</div>
 						</AttributeBody>
 					</div>
@@ -1011,25 +927,6 @@ function Index() {
 												>
 													<MdDelete />
 												</button>
-												<ImageSelector
-													options={imageCatalog}
-													onChange={(value) =>
-														onAttrChange({
-															AttributeId: att?.Attribute?._id,
-															key: 'images',
-															value,
-														})
-													}
-													value={getAttrValue({
-														AttributeId: att?.Attribute?._id,
-														key: 'images',
-													})}
-													isMultiple
-												>
-													<button type="button" className="edit">
-														<BiSolidCategory />
-													</button>
-												</ImageSelector>
 											</div>
 										</div>
 									))}

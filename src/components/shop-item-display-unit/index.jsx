@@ -26,6 +26,8 @@ import {
 	groupAttributesByType,
 	groupedVariantsChecker,
 	attributesError,
+	getImagesForAttribute,
+	getAttrKey,
 } from '../../utilities/basic-functions';
 import {
 	handleHolding,
@@ -323,12 +325,7 @@ function ShopItem({
 			return attribute.currentDisplay;
 		}
 
-		const catalog = product.imageCatalog || [];
-		const placeHolder = product.placeHolder;
-		return [
-			...catalog.filter((img) => img === placeHolder),
-			...catalog.filter((img) => img !== placeHolder),
-		];
+		return product.imageCatalog || [];
 	}, [attribute.currentDisplay, product]);
 
 	const attributesDisplay = useMemo(() => {
@@ -471,10 +468,18 @@ function ShopItem({
 											<Color
 												$value={attr?.Attribute?.display}
 												onClick={() => {
+													const tagged = getImagesForAttribute(
+														product?.imageCatalog,
+														getAttrKey(attr)
+													);
+
 													configAttribute({
 														...attribute,
 														currentColor: attr,
-														currentDisplay: attr?.images,
+														// Falls back to the full catalog (via the null
+														// check in productDisplay) when this color has
+														// no tagged images yet.
+														currentDisplay: tagged.length ? tagged : null,
 													});
 													setIndex(0);
 												}}
