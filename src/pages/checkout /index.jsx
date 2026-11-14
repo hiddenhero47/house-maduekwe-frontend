@@ -24,6 +24,8 @@ import StripePaymentForm from './elements/stripe/strip-form';
 import {
 	getCurrencySymbol,
 	groupAttributesByType,
+	getImagesForAttribute,
+	getAttrKey,
 } from '../../utilities/basic-functions';
 import { attributeType } from '../../utilities/app-const';
 import { getCountryByCode } from '../../utilities/city-state-country';
@@ -70,8 +72,10 @@ function Index() {
 		const colorList = grouped[attributeType.COLOR] || [];
 
 		return (
-			colorList?.[0]?.images?.[0]?.url ||
-			currentItem?.shopItem?.placeHolder?.url ||
+			getImagesForAttribute(
+				currentItem?.shopItem?.imageCatalog,
+				getAttrKey(colorList?.[0])
+			)[0]?.url ||
 			currentItem?.shopItem?.imageCatalog?.[0]?.url ||
 			null
 		);

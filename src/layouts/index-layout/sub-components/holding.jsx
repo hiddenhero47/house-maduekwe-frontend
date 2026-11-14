@@ -39,6 +39,8 @@ import ReferenceServices from '../../../features/services/custom-hooks/reference
 import {
 	pickNonEmptyValues,
 	getCurrencySymbol,
+	getImagesForAttribute,
+	getAttrKey,
 } from '../../../utilities/basic-functions';
 import { CHECKOUT_TYPES } from '../../../utilities/app-const';
 
@@ -67,10 +69,12 @@ function Holding() {
 			(attr) => attr?.Attribute?.type === attributeType.COLOR
 		);
 
-		const attrImage = colorAttr?.images?.[0]?.url;
-		const placeHolder = data.shopItem?.placeHolder?.url;
+		const attrImage = getImagesForAttribute(
+			data.shopItem?.imageCatalog,
+			getAttrKey(colorAttr)
+		)[0]?.url;
 		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
-		return attrImage || placeHolder || firstImage || '';
+		return attrImage || firstImage || '';
 	};
 
 	const cartServer = () => {

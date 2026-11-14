@@ -26,6 +26,8 @@ import {
 	groupedVariantsChecker,
 	attributesError,
 	getUnavailableInfo,
+	getImagesForAttribute,
+	getAttrKey,
 } from '../../utilities/basic-functions';
 import { attributeType, ItemStatusType } from '../../utilities/app-const';
 import Spinner from '../../components/loaders/spinners/Spinner';
@@ -136,8 +138,10 @@ function Index() {
 		const colorList = grouped[attributeType.COLOR] || [];
 
 		const image =
-			colorList?.[0]?.images?.[0]?.url ||
-			currentItem?.shopItem?.placeHolder?.url ||
+			getImagesForAttribute(
+				currentItem?.shopItem?.imageCatalog,
+				getAttrKey(colorList?.[0])
+			)[0]?.url ||
 			currentItem?.shopItem?.imageCatalog?.[0]?.url ||
 			null;
 
@@ -275,10 +279,12 @@ function Index() {
 			(attr) => attr?.Attribute?.type === attributeType.COLOR
 		);
 
-		const attrImage = colorAttr?.images?.[0]?.url;
-		const placeHolder = data.shopItem?.placeHolder?.url;
+		const attrImage = getImagesForAttribute(
+			data.shopItem?.imageCatalog,
+			getAttrKey(colorAttr)
+		)[0]?.url;
 		const firstImage = data.shopItem?.imageCatalog?.[0]?.url;
-		return attrImage || placeHolder || firstImage || '';
+		return attrImage || firstImage || '';
 	};
 
 	const removeHolding = (tempId) => {

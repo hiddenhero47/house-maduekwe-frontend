@@ -275,6 +275,18 @@ export const getAttrKey = (a) => {
 		: a.Attribute?.toString();
 };
 
+// Images now say which attribute(s) they belong to (imageCatalog[].attrTag)
+// instead of each attribute carrying its own copy — this replaces the
+// "colorAttr?.images?.[0]" idiom that used to be reimplemented at every
+// cart/checkout/PDP/order call site.
+export const getImagesForAttribute = (imageCatalog = [], attributeId) => {
+	if (!attributeId) return [];
+
+	return (imageCatalog || []).filter((img) =>
+		(img?.attrTag || []).some((id) => String(id) === String(attributeId))
+	);
+};
+
 export const groupedVariantsChecker = ({
 	selectedAttributes,
 	quantity,
