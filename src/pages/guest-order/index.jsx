@@ -15,7 +15,11 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getCountryByCode } from '../../utilities/city-state-country';
 import { OrderServices } from '../../features/services/custom-hooks/orders';
-import { groupAttributesByType } from '../../utilities/basic-functions';
+import {
+	groupAttributesByType,
+	getImagesForAttribute,
+	getAttrKey,
+} from '../../utilities/basic-functions';
 import {
 	attributeType,
 	ORDER_STATUS,
@@ -44,8 +48,10 @@ function Index() {
 		const colorList = grouped[attributeType.COLOR] || [];
 
 		return (
-			colorList?.[0]?.images?.[0]?.url ||
-			currentItem?.shopItem?.placeHolder?.url ||
+			getImagesForAttribute(
+				currentItem?.shopItem?.imageCatalog,
+				getAttrKey(colorList?.[0])
+			)[0]?.url ||
 			currentItem?.shopItem?.imageCatalog?.[0]?.url ||
 			null
 		);

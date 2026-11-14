@@ -34,6 +34,11 @@ export const CHECKOUT_TYPES = {
 
 export const WEIGHT_UNITS = ['kg', 'g', 'lb', 'oz'];
 
+// Mirrors MAX_IMAGE_CATALOG in the backend's shopItemModel.js — kept here so
+// the image manager can disable "add more" before even making the request.
+export const MAX_IMAGE_CATALOG = 24;
+export const PRODUCT_IMAGE_ACCEPT = 'image/png, image/jpeg';
+
 export const SHIPPING_PROVIDERS = {
 	INTERNAL: 'internal',
 	UPS: 'ups',

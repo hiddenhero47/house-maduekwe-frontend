@@ -27,6 +27,8 @@ import {
 	groupAttributesByType,
 	groupedVariantsChecker,
 	attributesError,
+	getImagesForAttribute,
+	getAttrKey,
 } from '../../../utilities/basic-functions';
 import { useNavigate } from 'react-router-dom';
 import { runHoldButtonTour } from '../../../features/app-tour/tours-slice/product-overview-tour';
@@ -71,10 +73,14 @@ function Details({
 
 	// COLOR SELECTOR
 	const setColor = (attr) => {
+		const tagged = getImagesForAttribute(product?.imageCatalog, getAttrKey(attr));
+
 		configAttribute((prev) => ({
 			...prev,
 			currentColor: attr,
-			currentDisplay: attr?.images ?? null,
+			// Falls back to the full catalog (via the null check below) when
+			// this color hasn't had any images tagged to it yet.
+			currentDisplay: tagged.length ? tagged : null,
 		}));
 		setIndex(0);
 	};

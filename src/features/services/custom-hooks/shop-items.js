@@ -97,6 +97,78 @@ const useDeleteShopItemMutation = () => {
 	});
 };
 
+// Images are owned by their own sub-resource routes now, independent of the
+// main product-details PUT — each of these four touches one item's
+// imageCatalog and invalidates just that item, not the whole list.
+const useAddShopItemImagesMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ id, files }) => {
+			const formData = new FormData();
+			files.forEach((file) => formData.append('images', file));
+
+			return axiosCall({
+				url: `/api/shop-items/${id}/images`,
+				method: 'POST',
+				data: formData,
+			});
+		},
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({ queryKey: ['shop-item', variables.id] });
+			toast.success('Images added successfully');
+		},
+	});
+};
+
+const useRemoveShopItemImageMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ id, imageId }) =>
+			axiosCall({
+				url: `/api/shop-items/${id}/images/${imageId}`,
+				method: 'DELETE',
+			}),
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({ queryKey: ['shop-item', variables.id] });
+			toast.success('Image removed successfully');
+		},
+	});
+};
+
+const useReorderShopItemImagesMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ id, order }) =>
+			axiosCall({
+				url: `/api/shop-items/${id}/images/reorder`,
+				method: 'PATCH',
+				data: { order },
+			}),
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({ queryKey: ['shop-item', variables.id] });
+		},
+	});
+};
+
+const useTagShopItemImageMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ id, imageId, attrTag }) =>
+			axiosCall({
+				url: `/api/shop-items/${id}/images/${imageId}/tags`,
+				method: 'PATCH',
+				data: { attrTag },
+			}),
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({ queryKey: ['shop-item', variables.id] });
+		},
+	});
+};
+
 export {
 	useGetShopItemsQuery,
 	useGetShopItemByIdQuery,
@@ -104,6 +176,10 @@ export {
 	useCreateShopItemMutation,
 	useUpdateShopItemMutation,
 	useDeleteShopItemMutation,
+	useAddShopItemImagesMutation,
+	useRemoveShopItemImageMutation,
+	useReorderShopItemImagesMutation,
+	useTagShopItemImageMutation,
 };
 
 const ShopItemServices = {
@@ -113,6 +189,10 @@ const ShopItemServices = {
 	create: useCreateShopItemMutation,
 	update: useUpdateShopItemMutation,
 	delete: useDeleteShopItemMutation,
+	addImages: useAddShopItemImagesMutation,
+	removeImage: useRemoveShopItemImageMutation,
+	reorderImages: useReorderShopItemImagesMutation,
+	tagImage: useTagShopItemImageMutation,
 };
 
 export default ShopItemServices;

@@ -12,7 +12,11 @@ import {
 } from './elements/index.style';
 import { getCountryByCode } from '../../utilities/city-state-country';
 import { OrderServices } from '../../features/services/custom-hooks/orders';
-import { groupAttributesByType } from '../../utilities/basic-functions';
+import {
+	groupAttributesByType,
+	getImagesForAttribute,
+	getAttrKey,
+} from '../../utilities/basic-functions';
 import { attributeType } from '../../utilities/app-const';
 import CandleWrapper from '../../components/loaders/candles/Candle';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -33,8 +37,10 @@ function Index() {
 		const colorList = grouped[attributeType.COLOR] || [];
 
 		const image =
-			colorList?.[0]?.images?.[0]?.url ||
-			currentItem?.shopItem?.placeHolder?.url ||
+			getImagesForAttribute(
+				currentItem?.shopItem?.imageCatalog,
+				getAttrKey(colorList?.[0])
+			)[0]?.url ||
 			currentItem?.shopItem?.imageCatalog?.[0]?.url ||
 			null;
 

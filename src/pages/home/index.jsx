@@ -193,11 +193,7 @@ function Index() {
 						if (!item) return null;
 
 						// pick primary image
-						const primaryImage = item?.placeHolder?.url
-							? {
-									url: item.placeHolder.url,
-								}
-							: item?.imageCatalog?.[0];
+						const primaryImage = item?.imageCatalog?.[0];
 
 						if (!primaryImage?.url) return null;
 

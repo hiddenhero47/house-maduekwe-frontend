@@ -73,11 +73,7 @@ function SelectShopItemsModal({ ref, closeModal, onApply }) {
 	const selectPlaceholder = (data) => {
 		if (!data) return '';
 
-		const placeHolder = data?.placeHolder?.url;
-
-		const firstImage = data?.imageCatalog?.[0]?.url;
-
-		return placeHolder || firstImage || '';
+		return data?.imageCatalog?.[0]?.url || '';
 	};
 
 	return (
