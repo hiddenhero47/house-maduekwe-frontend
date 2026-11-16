@@ -15,7 +15,9 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import Modal from '../../modal/index_modal';
 import CustomFileInput from '../file/custom-file-input';
+import BubbleSlide from '../../loaders/bubbles/BubbleSlide';
 import {
+	GridWrapper,
 	Grid,
 	Thumb,
 	ThumbIconBtn,
@@ -23,6 +25,8 @@ import {
 	UploadBtn,
 	EmptyState,
 	CapNote,
+	ReorderingNote,
+	LoadingOverlay,
 	TagModalWrapper,
 	TagChip,
 } from './catalog-manager.style';
@@ -33,9 +37,9 @@ import ShopItemServices from '../../../features/services/custom-hooks/shop-items
 import { groupAttributesByType, getAttrKey } from '../../../utilities/basic-functions';
 import { MAX_IMAGE_CATALOG, PRODUCT_IMAGE_ACCEPT } from '../../../utilities/app-const';
 
-function SortableImageThumb({ image, index, onDelete, onTag }) {
+function SortableImageThumb({ image, index, onDelete, onTag, isBusyThis, disableActions }) {
 	const { attributes, listeners, setNodeRef, transform, transition } =
-		useSortable({ id: image.id });
+		useSortable({ id: image.id, disabled: disableActions });
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
@@ -54,6 +58,7 @@ function SortableImageThumb({ image, index, onDelete, onTag }) {
 				<ThumbIconBtn
 					type="button"
 					title="Tag with attribute"
+					disabled={disableActions}
 					onPointerDown={(e) => e.stopPropagation()}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -66,6 +71,7 @@ function SortableImageThumb({ image, index, onDelete, onTag }) {
 					type="button"
 					$danger
 					title="Delete image"
+					disabled={disableActions}
 					onPointerDown={(e) => e.stopPropagation()}
 					onClick={(e) => {
 						e.stopPropagation();
@@ -75,6 +81,12 @@ function SortableImageThumb({ image, index, onDelete, onTag }) {
 					<MdDelete />
 				</ThumbIconBtn>
 			</div>
+
+			{isBusyThis && (
+				<LoadingOverlay>
+					<BubbleSlide color="var(--mainBody-text)" height="16px" />
+				</LoadingOverlay>
+			)}
 		</Thumb>
 	);
 }
@@ -83,11 +95,18 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 	const [pendingFiles, setPendingFiles] = useState([]);
 	const [uploadKey, setUploadKey] = useState(0);
 	const [editingImageId, setEditingImageId] = useState(null);
+	const [removingId, setRemovingId] = useState(null);
+	const [taggingId, setTaggingId] = useState(null);
 
 	const { mutate: addImages, isPending: isAdding } = ShopItemServices.addImages();
 	const { mutate: removeImage } = ShopItemServices.removeImage();
-	const { mutate: reorderImages } = ShopItemServices.reorderImages();
+	const { mutate: reorderImages, isPending: isReordering } =
+		ShopItemServices.reorderImages();
 	const { mutate: tagImage } = ShopItemServices.tagImage();
+
+	// Any in-flight image op disables the rest of the catalog so a second
+	// click/drag can't fire before the first one has visibly finished.
+	const isBusy = isReordering || !!removingId || !!taggingId;
 
 	const modalRef = useRef(null);
 	const openTagModal = (imageId) => {
@@ -112,7 +131,11 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 
 	const handleDelete = (imageId) => {
 		if (!window.confirm('Remove this image?')) return;
-		removeImage({ id: itemId, imageId });
+		setRemovingId(imageId);
+		removeImage(
+			{ id: itemId, imageId },
+			{ onSettled: () => setRemovingId(null) }
+		);
 	};
 
 	const handleUpload = () => {
@@ -133,13 +156,17 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 	const atCap = imageCatalog.length >= MAX_IMAGE_CATALOG;
 
 	const toggleTag = (attributeId) => {
-		if (!editingImage) return;
+		if (!editingImage || taggingId) return;
 		const current = editingImage.attrTag || [];
 		const next = current.includes(attributeId)
 			? current.filter((id) => id !== attributeId)
 			: [...current, attributeId];
 
-		tagImage({ id: itemId, imageId: editingImage.id, attrTag: next });
+		setTaggingId(editingImage.id);
+		tagImage(
+			{ id: itemId, imageId: editingImage.id, attrTag: next },
+			{ onSettled: () => setTaggingId(null) }
+		);
 	};
 
 	return (
@@ -147,28 +174,41 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 			{imageCatalog.length === 0 ? (
 				<EmptyState>No images yet — add some below.</EmptyState>
 			) : (
-				<DndContext
-					sensors={sensors}
-					collisionDetection={closestCenter}
-					onDragEnd={handleDragEnd}
-				>
-					<SortableContext
-						items={imageCatalog.map((img) => img.id)}
-						strategy={rectSortingStrategy}
-					>
-						<Grid>
-							{imageCatalog.map((image, index) => (
-								<SortableImageThumb
-									key={image.id}
-									image={image}
-									index={index}
-									onDelete={handleDelete}
-									onTag={openTagModal}
-								/>
-							))}
-						</Grid>
-					</SortableContext>
-				</DndContext>
+				<>
+					{isReordering && (
+						<ReorderingNote>
+							<BubbleSlide color="var(--mainBody-text)" height="14px" />
+							Saving new order…
+						</ReorderingNote>
+					)}
+
+					<GridWrapper>
+						<DndContext
+							sensors={sensors}
+							collisionDetection={closestCenter}
+							onDragEnd={handleDragEnd}
+						>
+							<SortableContext
+								items={imageCatalog.map((img) => img.id)}
+								strategy={rectSortingStrategy}
+							>
+								<Grid $dimmed={isBusy}>
+									{imageCatalog.map((image, index) => (
+										<SortableImageThumb
+											key={image.id}
+											image={image}
+											index={index}
+											onDelete={handleDelete}
+											onTag={openTagModal}
+											isBusyThis={removingId === image.id || taggingId === image.id}
+											disableActions={isBusy}
+										/>
+									))}
+								</Grid>
+							</SortableContext>
+						</DndContext>
+					</GridWrapper>
+				</>
 			)}
 
 			<AddSection>
@@ -212,6 +252,13 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 						</button>
 					</div>
 
+					{taggingId === editingImage?.id && (
+						<ReorderingNote>
+							<BubbleSlide color="var(--mainBody-text)" height="14px" />
+							Saving tag…
+						</ReorderingNote>
+					)}
+
 					{Object.entries(groupedAttributes).length === 0 ? (
 						<EmptyState>This product has no attributes to tag yet.</EmptyState>
 					) : (
@@ -228,6 +275,7 @@ function ImageCatalogManager({ itemId, imageCatalog = [], attributes = [] }) {
 												type="button"
 												key={attrId}
 												$active={active}
+												disabled={!!taggingId}
 												onClick={() => toggleTag(attrId)}
 											>
 												{attr?.Attribute?.name || attr?.Attribute?.value || attrId}
