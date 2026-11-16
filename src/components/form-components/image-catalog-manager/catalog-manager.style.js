@@ -1,11 +1,38 @@
 import styled from 'styled-components';
 
+export const GridWrapper = styled.div`
+	position: relative;
+`;
+
 export const Grid = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
 	gap: 14px;
 	width: 100%;
 	max-width: 620px;
+	transition: opacity 0.15s ease;
+	opacity: ${({ $dimmed }) => ($dimmed ? 0.5 : 1)};
+	pointer-events: ${({ $dimmed }) => ($dimmed ? 'none' : 'auto')};
+`;
+
+export const ReorderingNote = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	opacity: 0.7;
+	margin-bottom: 10px;
+`;
+
+export const LoadingOverlay = styled.div`
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: ${({ theme }) => theme?.mainBody?.container}b3;
+	border-radius: inherit;
+	z-index: 2;
 `;
 
 export const Thumb = styled.div`
@@ -82,9 +109,11 @@ export const ThumbIconBtn = styled.button`
 	color: ${({ $danger, theme }) =>
 		$danger ? theme.form.error : theme?.mainBody?.text};
 	border: 1px solid ${({ theme }) => theme?.mainBody?.line};
+	opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
+	cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
 	&:hover {
-		transform: scale(1.08);
+		transform: ${({ disabled }) => (disabled ? 'none' : 'scale(1.08)')};
 	}
 `;
 
@@ -179,4 +208,6 @@ export const TagChip = styled.button`
 	background: ${({ $active, theme }) =>
 		$active ? `${theme.form.blue}20` : 'transparent'};
 	color: ${({ theme }) => theme?.mainBody?.text};
+	opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+	cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
